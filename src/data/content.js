@@ -13,10 +13,10 @@ import exposition3 from '../assets/exposition 3.jpg'
 import exposition4 from '../assets/ecposition 4.jpg'
 import asrImg from '../assets/asr.jpg'
 import jumaaImg from '../assets/Jumaa.jpg'
-import puzzleImg from '../assets/puzzle.PNG'
+import puzzleImg from '../assets/puzzle.webp'
 import bagImg from '../assets/Shopping_Bag_Mockup_v01.jpg'
-import hoodieImg from '../assets/Hoodie.png'
-import blocNoteImg from '../assets/Bloc-Note.png'
+import hoodieImg from '../assets/Hoodie.webp'
+import blocNoteImg from '../assets/Bloc-Note.webp'
 
 export const VIDEO = heroVideo
 
