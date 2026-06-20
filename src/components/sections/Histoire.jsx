@@ -9,7 +9,7 @@ export default function Histoire() {
           {/* Colonne gauche : récit */}
           <div className="hist2-left">
             <span className="eyebrow red">Origines</span>
-            <h2 className="sec-title title-margin">Née d’un rêve <br /><em>divin</em></h2>
+            <h2 className="sec-title title-margin">Née d’un rêve <br className="br-mobile-hide" /><em>divin</em></h2>
             <div className="hist2-body">
               <p>Une mosquée sur la Corniche de Ouakam. Deux minarets de 45 mètres face à l’océan. Une coupole de 80 tonnes suspendue dans l’air marin.</p>
               <p>Elle existe parce qu’un homme a reçu un message, un ordre, une vision, et a choisi de ne pas le garder pour lui.</p>

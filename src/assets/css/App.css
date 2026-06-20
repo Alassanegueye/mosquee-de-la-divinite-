@@ -245,6 +245,11 @@ footer{background:#123e43}
   .section{padding:56px 0}
 }
 
+/* Masque certains sauts de ligne sur mobile (ex. titre « Née d'un rêve divin ») */
+@media(max-width:680px){
+  .br-mobile-hide{display:none}
+}
+
 /* Petits téléphones */
 @media(max-width:380px){
   .nav-logo-img{height:38px}
@@ -554,7 +559,8 @@ footer{background:#123e43}
 
 /* Responsive Visiter */
 @media(max-width:900px){
-  .vis-card{grid-template-columns:1fr;gap:40px;padding:44px 30px}
+  .vis-head{margin-bottom:24px}
+  .vis-card{grid-template-columns:1fr;gap:28px;padding:36px 26px}
   .vis-highlights{grid-template-columns:1fr;gap:0}
   .vis-hl{padding:32px 0}
   .vis-hl:first-child{padding-top:0}
@@ -688,16 +694,21 @@ footer{background:#123e43}
 
 /* Responsive événements */
 @media(max-width:900px){
-  .ev-feature-grid{grid-template-columns:1fr;gap:32px;margin-bottom:48px}
-  .ev-cols{grid-template-columns:1fr;gap:40px}
-  .ev-feature-photo img{height:280px}
-  .ev-mini-photo img{height:260px}
+  .ev-head{margin-bottom:28px}
+  .ev-feature-grid{grid-template-columns:1fr;gap:28px;margin-bottom:40px}
+  .ev-cols{grid-template-columns:1fr;gap:36px}
+  .ev-feature-photo img{height:260px}
+  /* image « entière » : pleine largeur, hauteur naturelle */
+  .ev-feature-photo--contain img{height:auto}
+  .ev-mini-photo img{height:240px}
 }
 @media(max-width:560px){
-  .ev-feature-body{padding:28px 24px}
-  .ev-feature-photo img{height:220px}
-  .ev-mini-photo img{height:220px}
-  .ev-mini-body{padding:22px 22px 24px}
+  .ev-head{margin-bottom:20px}
+  .ev-feature-body{padding:24px 22px}
+  .ev-feature-photo img{height:200px}
+  .ev-feature-photo--contain img{height:auto}
+  .ev-mini-photo img{height:200px}
+  .ev-mini-body{padding:20px 20px 22px}
 }
 
 /* ============================================================
