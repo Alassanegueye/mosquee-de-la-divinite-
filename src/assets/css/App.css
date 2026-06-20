@@ -357,7 +357,7 @@ footer{background:#123e43}
 .msg2-ar{font-family:var(--arabic);font-size:clamp(44px,5vw,64px);margin-bottom:36px;line-height:1}
 .msg2-ar.emerald{color:#0D0D0D}
 .msg2-ar.red{color:#C11616}
-.msg2-ar.outline{color:#fff;-webkit-text-stroke:1.5px #000;paint-order:stroke fill}
+.msg2-ar.hollow{color:#fff;-webkit-text-stroke:1.5px #000;paint-order:stroke fill}
 .msg2-name{font-family:var(--caps);font-size:22px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:24px;color:#123e43}
 .msg2-trans{font-family:var(--caps);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#EABA10;margin-bottom:20px}
 .msg2-body{font-family:var(--serif);font-size:19px;line-height:1.78;letter-spacing:0.02em;color:rgba(18,62,67,0.8)}
@@ -427,6 +427,8 @@ footer{background:#123e43}
   .nav-links-ref.open{transform:none;opacity:1;pointer-events:auto}
   .nav-links-ref li{width:100%}
   .nav-links-ref a{display:block;padding:15px 26px;font-size:12px;letter-spacing:0.18em;border-bottom:1px solid rgba(255,255,255,0.05)}
+  /* Affiche le bouton hamburger (la règle de base display:none est définie plus haut) */
+  .nav-toggle{display:inline-flex}
   .nav-don-desktop{display:none}
   .nav-don-mobile{display:block;border-bottom:none;padding:16px 26px 4px}
   .nav-don-mobile .nav-don{display:block;text-align:center;padding:15px 24px;border-bottom:none}
@@ -507,9 +509,13 @@ footer{background:#123e43}
   .cons-pillar:nth-child(2n){border-right:none}
 }
 @media(max-width:560px){
-  .cons-night,.cons-hands,.cons-sirat{padding:72px 0}
-  .cons-pillars{padding:64px 0}
-  .cons-pillars-grid{grid-template-columns:1fr}
-  .cons-pillar{border-right:none;border-bottom:1px solid rgba(18,62,67,0.1);padding-bottom:32px}
-  .cons-pillar:last-child{border-bottom:none}
+  .cons-night,.cons-sirat{padding:40px 0}
+  .cons-hands{padding:64px 0}
+  .cons-pillars{padding:56px 0}
+  /* KPIs en grille 2 colonnes (pas un par ligne) */
+  .cons-pillars-grid{grid-template-columns:1fr 1fr;gap:40px 0}
+  .cons-pillar{padding:0 16px;border-right:1px solid rgba(18,62,67,0.1)}
+  .cons-pillar:nth-child(2n){border-right:none}
+  .cons-pillar-sym{font-size:30px;margin-bottom:16px}
+  .cons-pillar-desc{font-size:16px}
 }

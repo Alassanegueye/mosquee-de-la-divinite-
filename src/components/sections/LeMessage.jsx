@@ -2,7 +2,7 @@
 const PILLARS = [
   ['الهُدَى', 'emerald', 'Jub', '(Droiture)', 'La rectitude du comportement. Être droit envers Dieu et envers les hommes.', false],
   ['تَقْوَى', 'red', 'Ragal Yàlla', '(Taqwa)', 'La conscience du Créateur. Nourrir en son cœur une crainte révérencielle.', true],
-  ['أَصْلَح', 'outline', 'Sellal', '(Réforme)', 'La pureté de l’âme. Un processus continu de transformation intérieure.', false],
+  ['أَصْلَح', 'hollow', 'Sellal', '(Réforme)', 'La pureté de l’âme. Un processus continu de transformation intérieure.', false],
 ]
 
 export default function LeMessage() {

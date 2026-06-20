@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import './assets/css/App.css'
 import { LanguageProvider } from './context/LanguageContext'
 import Navbar from './components/layout/Navbar'
@@ -8,6 +9,8 @@ import AppRoutes from './routes/AppRoutes'
 
 // Coquille de l'application : contexte global + mise en page (nav / contenu / footer).
 function App() {
+  const { pathname, hash } = useLocation()
+
   // Au rechargement : revenir à l'URL de base (sans #ancre) et en haut de page
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -19,6 +22,14 @@ function App() {
     }
     window.scrollTo(0, 0)
   }, [])
+
+  // À chaque changement de page (boutique, rénovation, patrimoine…), remonter
+  // en haut — sauf si un lien vise une ancre #section.
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0)
+    }
+  }, [pathname, hash])
 
   return (
     <LanguageProvider>
