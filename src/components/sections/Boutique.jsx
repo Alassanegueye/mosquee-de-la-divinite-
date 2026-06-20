@@ -16,7 +16,7 @@ export default function Boutique() {
         <div className="shop2-head">
           <div>
             <span className="eyebrow gold">Support &amp; Artisanat</span>
-            <h2 className="sec-title">Boutique <em className="red-em">Patrimoine</em></h2>
+            <h2 className="sec-title">Boutique</h2>
           </div>
         </div>
 
