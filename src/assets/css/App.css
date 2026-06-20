@@ -341,7 +341,7 @@ footer{background:#123e43}
 .tl2-body{font-family:var(--serif);font-size:17px;line-height:1.7;color:#c0c8c9}
 
 /* PRIER (réf) */
-.prayers2{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1)}
+.prayers2{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:transparent;border:none}
 .prayer2{background:#123e43;display:flex;flex-direction:column;transition:background 0.2s}
 .prayer2:hover{background:rgba(255,255,255,0.04)}
 .prayer2-top{padding:48px 16px;text-align:center}
@@ -440,6 +440,7 @@ footer{background:#123e43}
   .msg2-col.mid{border:none;border-top:1px solid rgba(18,62,67,0.1);border-bottom:1px solid rgba(18,62,67,0.1);padding-top:40px;padding-bottom:40px}
   .comm2-grid,.shop2-grid{grid-template-columns:1fr 1fr}
   .prayers2{grid-template-columns:repeat(2,1fr)}
+  .prayer2-photo{height:240px}
   .footer2-brand{text-align:left}
 }
 @media(max-width:680px){
@@ -448,6 +449,7 @@ footer{background:#123e43}
   .hist2-quote{padding:36px 28px}
   .comm2-grid,.shop2-grid{grid-template-columns:1fr}
   .prayers2{grid-template-columns:1fr}
+  .prayer2-photo{height:300px}
   .tl2-line{left:8px}
   .tl2-row{grid-template-columns:1fr;margin-bottom:56px}
   .tl2-dot{left:8px}
@@ -518,4 +520,96 @@ footer{background:#123e43}
   .cons-pillar:nth-child(2n){border-right:none}
   .cons-pillar-sym{font-size:30px;margin-bottom:16px}
   .cons-pillar-desc{font-size:16px}
+}
+
+/* ============================================================
+   VISITER — « Un lieu ouvert à tous » (carte infos + photo + 3 clés)
+   ============================================================ */
+.vis-head{margin-bottom:40px}
+
+/* Carte noire informations pratiques */
+.vis-card{display:grid;grid-template-columns:1.05fr 0.95fr;gap:44px;background:#0a0a0a;border-left:3px solid var(--red);padding:40px 44px;min-width:0}
+.vis-card-left{min-width:0}
+.vis-card-title{font-family:var(--display);font-size:clamp(26px,2.6vw,36px);color:#fff;line-height:1.12;font-weight:500;margin-bottom:22px}
+.vis-card-text{font-family:var(--serif);font-size:16px;line-height:1.7;color:rgba(255,255,255,0.72);max-width:440px}
+.vis-card-info{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.vis-info-row{display:grid;grid-template-columns:140px 1fr;gap:20px;padding:13px 0;border-top:1px solid rgba(255,255,255,0.12);align-items:start}
+.vis-info-row:last-child{border-bottom:1px solid rgba(255,255,255,0.12)}
+.vis-info-k{font-family:var(--caps);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);padding-top:2px}
+.vis-info-v{font-family:var(--serif);font-size:16px;line-height:1.5;color:rgba(255,255,255,0.92)}
+
+/* Grande photo (filet rouge en bas) */
+.vis-photo{overflow:hidden}
+.vis-photo img{width:100%;height:320px;max-width:100%;object-fit:cover;display:block}
+
+/* 3 points clés */
+.vis-highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px}
+.vis-hl{padding:0 44px;min-width:0}
+.vis-hl:first-child{padding-left:0}
+.vis-hl:last-child{padding-right:0}
+.vis-hl + .vis-hl{border-left:1px solid rgba(18,62,67,0.12)}
+.vis-hl-line{display:block;width:40px;height:2px;background:var(--green);margin-bottom:24px}
+.vis-hl-title{font-family:var(--caps);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);margin-bottom:16px}
+.vis-hl-body{font-family:var(--serif);font-size:17px;line-height:1.75;color:var(--stone)}
+
+/* Responsive Visiter */
+@media(max-width:900px){
+  .vis-card{grid-template-columns:1fr;gap:40px;padding:44px 30px}
+  .vis-highlights{grid-template-columns:1fr;gap:0}
+  .vis-hl{padding:32px 0}
+  .vis-hl:first-child{padding-top:0}
+  .vis-hl + .vis-hl{border-left:none;border-top:1px solid rgba(18,62,67,0.12)}
+}
+@media(max-width:900px){
+  .vis-photo img{height:240px}
+}
+
+/* ============================================================
+   PRIER — Jumaah (vendredi) + Prières spéciales (fêtes)
+   Fonds teal de la charte (pas de noir)
+   ============================================================ */
+.jumaah{margin-top:88px}
+.jumaah .eyebrow{margin-bottom:22px}
+.jumaah-photo{overflow:hidden;border-bottom:3px solid var(--red)}
+.jumaah-photo img{width:100%;height:520px;object-fit:cover;display:block}
+.jumaah-card{display:grid;grid-template-columns:0.75fr 1.25fr;gap:28px;align-items:center;background:#0c2c31;border-left:3px solid var(--red);padding:24px 32px;min-width:0}
+.jumaah-ar{font-family:var(--arabic);font-size:clamp(34px,3.5vw,48px);color:#EABA10;text-align:center;line-height:1}
+.jumaah-content{min-width:0}
+.jumaah-label{font-family:var(--caps);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.85);display:block;margin-bottom:8px}
+.jumaah-time{font-family:var(--display);font-size:clamp(19px,1.8vw,24px);color:#fff;font-weight:500;margin-bottom:16px}
+.jumaah-note{background:rgba(255,255,255,0.04);border-left:3px solid #EABA10;padding:12px 16px}
+.jumaah-note-k{font-family:var(--caps);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#EABA10;display:block;margin-bottom:5px}
+.jumaah-note p{font-family:var(--serif);font-size:15px;line-height:1.5;color:rgba(255,255,255,0.85)}
+
+.special{margin-top:88px}
+.special .eyebrow{margin-bottom:32px}
+.special-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.special-card{background:#0c2c31;min-width:0}
+.special-photo{position:relative;overflow:hidden;border-bottom:3px solid var(--red)}
+.special-photo img{width:100%;height:300px;object-fit:cover;display:block}
+.special-caption{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--caps);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.92);padding:0 20px;line-height:1.4;text-shadow:0 1px 8px rgba(0,0,0,0.85)}
+.special-body{text-align:center;padding:22px 24px 26px}
+.special-ar{font-family:var(--arabic);font-size:clamp(24px,2.4vw,32px);color:#EABA10;margin-bottom:10px;line-height:1}
+.special-name{font-family:var(--caps);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#fff;margin-bottom:8px}
+.special-sub{font-family:var(--serif);font-size:14px;font-style:italic;color:rgba(255,255,255,0.7);margin-bottom:12px}
+.special-time{font-family:var(--display);font-size:clamp(18px,1.7vw,21px);color:#fff;font-weight:500}
+
+@media(max-width:900px){
+  .jumaah-card{grid-template-columns:1fr;gap:28px;padding:36px 28px;text-align:center}
+  .jumaah-note{text-align:left}
+  .special-grid{grid-template-columns:1fr;gap:28px}
+  .jumaah-photo img{height:280px}
+  .special-photo img{height:240px}
+}
+@media(max-width:560px){
+  .jumaah{margin-top:56px}
+  .special{margin-top:56px}
+  .jumaah-photo img{height:200px}
+  .special-photo img{height:200px}
+  .special-caption{font-size:9px}
+}
+@media(max-width:560px){
+  .vis-card{padding:36px 22px}
+  .vis-info-row{grid-template-columns:1fr;gap:6px;padding:14px 0}
+  .vis-photo img{height:180px}
 }
