@@ -1,3 +1,5 @@
+import mainsNuesImg from '../../assets/photo/A mains nues 2.jpg'
+
 // CONSTRUCTION — récit de l'édification de la mosquée en 4 temps
 const HANDS = [
   'Refus total de machines de levage lourdes par fidélité au rêve originel.',
@@ -34,10 +36,12 @@ export default function Construction() {
       <div className="cons-hands">
         <div className="sw cons-hands-grid">
           <div>
-            <h3 className="cons-h3">Bâtie à <em>mains nues</em></h3>
+            <span className="eyebrow gold">Construction</span>
+            <h3 className="cons-hands-title">Bâtie à mains nues.</h3>
+            <span className="eyebrow gold">Bâtie à mains nues par toute une communauté.</span>
             <p className="cons-lead">
-              Le chantier fut une prouesse humaine sans précédent. Hommes, femmes et
-              enfants de la communauté Naby Allah se sont relayés pendant 5 ans et 5 mois.
+              Le chantier fut une prouesse humaine sans précédent. Hommes, femmes et enfants
+              de la communauté Naby Allah se sont relayés pendant 5 ans et 5 mois.
             </p>
             <ul className="cons-list">
               {HANDS.map((t) => (
@@ -50,7 +54,7 @@ export default function Construction() {
           </div>
           <div className="cons-hands-visual">
             <div className="cons-hands-frame">
-              <span className="cons-ar-big">بناء</span>
+              <img src={mainsNuesImg} alt="La mosquée bâtie à mains nues par la communauté" loading="lazy" />
             </div>
           </div>
         </div>

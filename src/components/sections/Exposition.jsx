@@ -55,7 +55,7 @@ export default function Exposition() {
           Les photographies sont la propriété exclusive du Mouvement Naby Allah. Toute reproduction
           requiert une autorisation expresse.
         </p>
-        <a href="#visiter" className="btn-dk">Planifier une visite →</a>
+        <a href="#visiter" className="btn-teal">Planifier une visite →</a>
       </div>
     </section>
   )

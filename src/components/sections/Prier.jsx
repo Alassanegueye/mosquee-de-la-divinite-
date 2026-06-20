@@ -2,6 +2,8 @@ import { images } from '../../data/content'
 import Placeholder from '../ui/Placeholder'
 import koriteImg from '../../assets/photo/Korite.jpg'
 import tabaskiImg from '../../assets/photo/Tabaski.jpg'
+import fayfaatImg from '../../assets/photo/Fayfaat.jpg'
+import tasbihImg from '../../assets/photo/Journées prieres.jpg'
 
 // PRIER — « Les Heures Sacrées » : grille des 5 prières (réf)
 const PRAYERS = [
@@ -32,13 +34,40 @@ const SPECIALS = [
   },
 ]
 
+// Prières propres à la Mosquée de la Divinité
+const PROPRES = [
+  {
+    img: fayfaatImg,
+    ar: 'صَلَاة الفَيْفَات',
+    name: 'Salatul Fayfaat',
+    when: 'Dernier vendredi du Ramadan, après le Jumaah',
+    desc: 'Une prière de réparation. Pour les prières accomplies imparfaitement ou oubliées sans le vouloir, afin de les réparer devant Dieu.',
+  },
+  {
+    img: tasbihImg,
+    ar: 'صَلَاة التَّسْبِيح',
+    name: 'Salatul Tasbih',
+    when: 'Dernier ou avant-dernier vendredi de décembre, après le Jumaah',
+    desc: 'La prière de glorification. Allah pardonne vos péchés passés et futurs, grands et petits, oubliés ou intentionnels.',
+  },
+]
+
 export default function Prier() {
   return (
     <section id="prier" className="section bg-teal">
       <div className="sw">
-        <div className="sec-head-center">
-          <span className="eyebrow gold">La Communion</span>
-          <h2 className="sec-title light">Les Heures <em>Sacrées</em></h2>
+        <div className="prier-head">
+          <div className="prier-head-left">
+            <span className="eyebrow red">Prière</span>
+            <h2 className="prier-title">La prière,<br />au cœur du lieu.</h2>
+            <span className="eyebrow gold">Les Cinq Prières Quotidiennes</span>
+          </div>
+          <div className="prier-head-right">
+            <p>
+              La Mosquée de la Divinité accueille les cinq prières quotidiennes et l’ensemble
+              du calendrier islamique. Tous les fidèles sont les bienvenus.
+            </p>
+          </div>
         </div>
 
         <div className="prayers2">
@@ -91,6 +120,27 @@ export default function Prier() {
                   <p className="special-name">{s.name}</p>
                   <p className="special-sub">{s.sub}</p>
                   <p className="special-time">{s.time}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        {/* Prières propres à la Mosquée de la Divinité */}
+        <div className="pp">
+          <span className="eyebrow gold">Prières propres à la Mosquée de la Divinité</span>
+          <div className="pp-grid">
+            {PROPRES.map((p) => (
+              <article className="pp-card" key={p.name}>
+                <div className="pp-photo">
+                  <img src={p.img} alt={p.name} loading="lazy" />
+                </div>
+                <div className="pp-body">
+                  <p className="pp-ar">{p.ar}</p>
+                  <h4 className="pp-name">{p.name}</h4>
+                  <p className="pp-when">{p.when}</p>
+                  <div className="pp-rule" aria-hidden="true" />
+                  <p className="pp-desc">{p.desc}</p>
                 </div>
               </article>
             ))}

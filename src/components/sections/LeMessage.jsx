@@ -7,7 +7,7 @@ const PILLARS = [
 
 export default function LeMessage() {
   return (
-    <section id="message" className="section bg-cream">
+    <section id="message" className="section bg-white">
       <div className="sw">
         <div className="sec-head-center">
           <span className="eyebrow red">La Réforme Naby Allah</span>

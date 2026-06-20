@@ -38,7 +38,7 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;z-index:300;display:flex;alig
 /* LAYOUT */
 .sw{max-width:1200px;margin:0 auto;padding:0 56px;position:relative;z-index:1}
 .section{padding:120px 0}
-.bg-white{background:#FAF7F0}.bg-cream{background:var(--cream)}.bg-dk{background:var(--green-dk)}.bg-black{background:var(--black)}
+.bg-white{background:#FFFFFF}.bg-cream{background:var(--cream)}.bg-dk{background:var(--green-dk)}.bg-black{background:var(--black)}
 
 /* EYEBROWS */
 .ey{font-family:var(--caps);font-size:9px;letter-spacing:0.26em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:13px}
@@ -274,7 +274,8 @@ footer{background:#123e43}
 .nav-don-mobile{display:none}
 
 /* Eyebrow & titres (Cinzel) */
-.eyebrow{font-family:var(--caps);font-size:10px;letter-spacing:0.36em;text-transform:uppercase;display:block;margin-bottom:22px}
+.eyebrow{font-family:var(--caps);font-size:10px;letter-spacing:0.36em;text-transform:uppercase;display:inline-flex;align-items:center;gap:13px;margin-bottom:22px;vertical-align:middle}
+.eyebrow::before{content:'';width:28px;height:1px;background:currentColor;display:inline-block;flex:0 0 auto}
 .eyebrow.red{color:#C11616}
 .eyebrow.gold{color:#EABA10}
 .eyebrow.emerald{color:#10b981}
@@ -475,15 +476,14 @@ footer{background:#123e43}
 /* Bâtie à mains nues */
 .cons-hands{background:#fff;color:#123e43;padding:120px 0}
 .cons-hands-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.cons-h3{font-family:var(--caps);font-size:clamp(28px,3.6vw,48px);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:36px;color:#123e43;font-weight:500}
-.cons-h3 em{color:#C11616;font-style:italic;font-weight:400}
-.cons-lead{font-family:var(--serif);font-size:20px;line-height:1.7;color:rgba(18,62,67,0.85);margin-bottom:44px}
+.cons-hands-title{font-family:var(--display);font-size:clamp(34px,4.4vw,60px);color:#123e43;font-weight:500;line-height:1.05;margin:18px 0 16px}
+.cons-lead{font-family:var(--serif);font-size:18px;line-height:1.7;color:rgba(18,62,67,0.85);margin:18px 0 36px}
 .cons-list{list-style:none;display:flex;flex-direction:column;gap:24px}
 .cons-list li{display:flex;align-items:flex-start;gap:16px;font-family:var(--serif);font-size:18px;font-style:italic;line-height:1.6;color:rgba(18,62,67,0.8)}
 .cons-dash{flex:0 0 auto;width:24px;height:1px;background:#EABA10;margin-top:14px}
 .cons-hands-visual{position:relative}
-.cons-hands-frame{aspect-ratio:1/1;background:#efefef;border:1px solid rgba(18,62,67,0.1);display:flex;align-items:center;justify-content:center;padding:36px;overflow:hidden}
-.cons-ar-big{font-family:var(--arabic);font-size:clamp(120px,20vw,200px);color:rgba(18,62,67,0.06);line-height:1}
+.cons-hands-frame{aspect-ratio:1/1;background:#efefef;border:1px solid rgba(18,62,67,0.1);overflow:hidden}
+.cons-hands-frame img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* Pont Al Sirat */
 .cons-sirat{background:#123e43;color:#fff;padding:48px 0}
@@ -565,12 +565,27 @@ footer{background:#123e43}
 }
 
 /* ============================================================
+   PRIER — en-tête « La prière, au cœur du lieu »
+   ============================================================ */
+.prier-head{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:end;margin-bottom:72px}
+.prier-head-left{min-width:0}
+.prier-title{font-family:var(--display);font-size:clamp(38px,5vw,72px);line-height:1.06;color:#fff;font-weight:500;margin:24px 0 28px}
+.prier-head-left .eyebrow:last-child{margin-bottom:0}
+.prier-head-right{padding-bottom:10px;min-width:0}
+.prier-head-right p{font-family:var(--serif);font-size:clamp(17px,1.5vw,20px);line-height:1.7;color:rgba(255,255,255,0.78)}
+@media(max-width:900px){
+  .prier-head{grid-template-columns:1fr;gap:24px;align-items:start;margin-bottom:48px}
+  .prier-head-right{padding-bottom:0}
+}
+
+/* ============================================================
    PRIER — Jumaah (vendredi) + Prières spéciales (fêtes)
    Fonds teal de la charte (pas de noir)
    ============================================================ */
 .jumaah{margin-top:88px}
 .jumaah .eyebrow{margin-bottom:22px}
-.jumaah-photo{overflow:hidden;border-bottom:3px solid var(--red)}
+
+.jumaah-photo{overflow:hidden}
 .jumaah-photo img{width:100%;height:520px;object-fit:cover;display:block}
 .jumaah-card{display:grid;grid-template-columns:0.75fr 1.25fr;gap:28px;align-items:center;background:#0c2c31;border-left:3px solid var(--red);padding:24px 32px;min-width:0}
 .jumaah-ar{font-family:var(--arabic);font-size:clamp(34px,3.5vw,48px);color:#EABA10;text-align:center;line-height:1}
@@ -585,14 +600,14 @@ footer{background:#123e43}
 .special .eyebrow{margin-bottom:32px}
 .special-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .special-card{background:#0c2c31;min-width:0}
-.special-photo{position:relative;overflow:hidden;border-bottom:3px solid var(--red)}
+.special-photo{position:relative;overflow:hidden}
 .special-photo img{width:100%;height:300px;object-fit:cover;display:block}
 .special-caption{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--caps);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.92);padding:0 20px;line-height:1.4;text-shadow:0 1px 8px rgba(0,0,0,0.85)}
-.special-body{text-align:center;padding:22px 24px 26px}
-.special-ar{font-family:var(--arabic);font-size:clamp(24px,2.4vw,32px);color:#EABA10;margin-bottom:10px;line-height:1}
-.special-name{font-family:var(--caps);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#fff;margin-bottom:8px}
-.special-sub{font-family:var(--serif);font-size:14px;font-style:italic;color:rgba(255,255,255,0.7);margin-bottom:12px}
-.special-time{font-family:var(--display);font-size:clamp(18px,1.7vw,21px);color:#fff;font-weight:500}
+.special-body{text-align:center;padding:20px 24px 24px}
+.special-ar{font-family:var(--arabic);font-size:clamp(22px,2.2vw,30px);color:#EABA10;margin-bottom:14px;line-height:1}
+.special-name{font-family:var(--caps);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#fff;margin-bottom:6px}
+.special-sub{font-family:var(--serif);font-size:14px;font-style:italic;color:rgba(255,255,255,0.7);margin-bottom:10px}
+.special-time{font-family:var(--display);font-size:clamp(15px,1.4vw,17px);color:#fff;font-weight:500}
 
 @media(max-width:900px){
   .jumaah-card{grid-template-columns:1fr;gap:28px;padding:36px 28px;text-align:center}
@@ -608,8 +623,106 @@ footer{background:#123e43}
   .special-photo img{height:200px}
   .special-caption{font-size:9px}
 }
+
+/* Prières propres à la Mosquée de la Divinité */
+.pp{margin-top:88px}
+.pp .eyebrow{margin-bottom:52px}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;min-width:0}
+.pp-card{background:#0c2c31;min-width:0}
+.pp-photo{overflow:hidden}
+.pp-photo img{width:100%;height:320px;object-fit:cover;display:block;max-width:100%}
+.pp-body{padding:20px 24px 24px}
+.pp-ar{font-family:var(--arabic);font-size:clamp(22px,2.2vw,30px);color:#EABA10;text-align:center;margin-bottom:14px;line-height:1}
+.pp-name{font-family:var(--caps);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#fff;margin-bottom:6px}
+.pp-when{font-family:var(--serif);font-size:14px;color:#EABA10;margin-bottom:12px}
+.pp-rule{height:1px;background:rgba(255,255,255,0.15);margin-bottom:12px}
+.pp-desc{font-family:var(--serif);font-size:14px;font-style:italic;line-height:1.55;color:rgba(255,255,255,0.78)}
+@media(max-width:900px){
+  .pp-grid{grid-template-columns:1fr;gap:28px}
+  .pp-photo img{height:260px}
+}
+@media(max-width:560px){
+  .pp{margin-top:56px}
+  .pp-body{padding:28px 24px 30px}
+  .pp-photo img{height:220px}
+}
 @media(max-width:560px){
   .vis-card{padding:36px 22px}
   .vis-info-row{grid-template-columns:1fr;gap:6px;padding:14px 0}
   .vis-photo img{height:180px}
+}
+
+/* ============================================================
+   ÉVÉNEMENTS — « Un calendrier vivant »
+   ============================================================ */
+.ev-section{background:var(--cream)}
+.ev-head{margin-bottom:48px}
+
+/* Deux commémorations majeures */
+.ev-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:64px;min-width:0}
+.ev-feature{display:flex;flex-direction:column;min-width:0}
+.ev-feature-photo{overflow:hidden}
+.ev-feature-photo img{width:100%;height:380px;object-fit:cover;display:block;max-width:100%}
+/* Image entière : le cadre s'adapte à la hauteur naturelle de l'image (pas de bandes) */
+.ev-feature-photo--contain img{height:auto;object-fit:contain}
+.ev-feature-body{background:#fff;padding:28px 32px;flex:1}
+.ev-eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--caps);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+.ev-eyebrow::before{content:'';width:28px;height:1px;background:var(--red);display:inline-block;flex:0 0 auto}
+.ev-feature-title{font-family:var(--display);font-size:clamp(24px,2.4vw,32px);color:var(--ink);line-height:1.1;font-weight:500;margin-bottom:16px}
+.ev-feature-text{font-family:var(--serif);font-size:16px;line-height:1.65;color:var(--stone)}
+
+/* Deux colonnes : nocturnes / autres */
+.ev-cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;min-width:0}
+.ev-col{min-width:0}
+.ev-col-eyebrow{display:block;font-family:var(--caps);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:28px;padding-top:22px;border-top:2px solid currentColor}
+.ev-col-eyebrow.gold{color:#EABA10}
+.ev-col-eyebrow.red{color:var(--red)}
+.ev-mini{margin-bottom:32px;min-width:0}
+.ev-mini:last-child{margin-bottom:0}
+.ev-mini-photo{overflow:hidden}
+.ev-mini-photo img{width:100%;height:300px;object-fit:cover;display:block;max-width:100%}
+.ev-mini-body{background:#fff;padding:24px 28px 28px}
+.ev-mini-tag{display:block;font-family:var(--caps);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ev-mini-name{font-family:var(--caps);font-size:15px;letter-spacing:0.06em;text-transform:uppercase;color:#123e43;margin-bottom:8px}
+.ev-mini-detail{font-family:var(--serif);font-size:15px;font-style:italic;line-height:1.5;color:var(--stone)}
+
+/* Responsive événements */
+@media(max-width:900px){
+  .ev-feature-grid{grid-template-columns:1fr;gap:32px;margin-bottom:48px}
+  .ev-cols{grid-template-columns:1fr;gap:40px}
+  .ev-feature-photo img{height:280px}
+  .ev-mini-photo img{height:260px}
+}
+@media(max-width:560px){
+  .ev-feature-body{padding:28px 24px}
+  .ev-feature-photo img{height:220px}
+  .ev-mini-photo img{height:220px}
+  .ev-mini-body{padding:22px 22px 24px}
+}
+
+/* ============================================================
+   PATRIMOINE — « Une archive vivante » (accueil)
+   Fond vert foncé de la charte
+   ============================================================ */
+.pat-section{background:var(--cream);color:var(--ink)}
+.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;min-width:0}
+.pat-left{min-width:0}
+.pat-title{font-family:var(--display);font-size:clamp(40px,5vw,72px);color:#123e43;font-weight:500;line-height:1.04;margin:22px 0 0}
+.pat-rule{display:block;width:60px;height:3px;background:var(--red);margin:24px 0 32px}
+.pat-text{font-family:var(--serif);font-size:18px;line-height:1.75;color:var(--stone);margin-bottom:24px;max-width:46rem}
+.pat-cta{margin-top:18px}
+
+.pat-box{border:1px solid rgba(2,43,51,0.12);border-left:2px solid #EABA10;background:#fff;padding:14px 40px;min-width:0;box-shadow:0 4px 30px rgba(0,0,0,0.05)}
+.pat-row{display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid rgba(2,43,51,0.1)}
+.pat-row:last-child{border-bottom:none}
+.pat-k{font-family:var(--display);font-size:30px;color:#EABA10;line-height:1;display:flex;align-items:center}
+.pat-v{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--stone)}
+@media(max-width:900px){
+  .pat-grid{grid-template-columns:1fr;gap:40px}
+  .pat-box{padding:8px 24px}
+}
+@media(max-width:560px){
+  .pat-row{grid-template-columns:72px 1fr;gap:16px;padding:18px 0}
+  .pat-k{font-size:24px}
+  .pat-v{font-size:15px}
 }
