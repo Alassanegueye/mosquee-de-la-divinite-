@@ -1,3 +1,4 @@
+import '../assets/css/Home.css'
 import Hero from '../components/sections/Hero'
 import Histoire from '../components/sections/Histoire'
 import Sangabi from '../components/sections/Sangabi'

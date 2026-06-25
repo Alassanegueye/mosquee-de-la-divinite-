@@ -1,0 +1,552 @@
+/* ============================================================
+   PAGE RÉNOVATION — « Elle sera restaurée par des mains »
+   Page d'appel au don / contribution.
+   Palette du site (cf. Home & Boutique) : base crème #FAF7F0,
+   sections blanc/crème, hero & formulaire en teal sombre,
+   accents teal #123e43, or #EABA10, rouge #C11616.
+   Le global (nav, footer) reste dans App.css.
+   ============================================================ */
+
+:root{
+  --don-cream:#FAF7F0;
+  --don-white:#ffffff;
+  --don-teal:#123e43;
+  --don-teal-dk:#022b33;
+  --don-gold:#EABA10;
+  --don-red:#C11616;
+  --don-ink:#0D0D0D;
+  --don-stone:#4A4A4A;
+  --don-line:rgba(18,62,67,0.10);
+  --don-shadow:0 8px 40px rgba(2,43,51,0.08);
+}
+
+.don-page{background:var(--don-cream);color:var(--don-ink)}
+
+.renovation-body-reset {
+  background-color: #FAF7F0 !important;
+  color: #0D0D0D !important;
+}
+.don-page em{font-style:italic}
+
+/* Eyebrow commun */
+.don-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--caps);font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--don-stone)}
+.don-eyebrow--gold{color:#b58e00}
+.don-dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.don-dot--red{background:var(--don-red)}
+.don-dot--gold{background:var(--don-gold)}
+
+/* Boutons hero */
+.don-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--caps);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;padding:17px 32px;text-decoration:none;transition:all 0.25s;cursor:pointer;border:none}
+.don-btn--red{background:var(--don-red);color:#fff}
+.don-btn--red:hover{background:var(--red-lt);transform:translateY(-2px)}
+.don-btn--ghost{background:transparent;color:var(--don-teal);border:1px solid rgba(18,62,67,0.3)}
+.don-btn--ghost:hover{border-color:var(--don-teal);background:rgba(18,62,67,0.05)}
+
+/* ---------- HERO (fond beige clair) ---------- */
+.don-hero{position:relative;background:#ffffff;color:var(--don-ink);padding:48px 0 88px;overflow:hidden;border-bottom:1px solid var(--don-line)}
+.don-hero::after{content:'';position:absolute;inset:0;opacity:0.05;pointer-events:none;background-image:radial-gradient(rgba(18,62,67,1) 1px,transparent 1px);background-size:38px 38px}
+.don-hero-grid{position:relative;display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;min-height:76vh}
+.don-hero-text{max-width:600px}
+.don-hero-title{font-family:var(--display);font-size:clamp(44px,5.6vw,82px);line-height:1.02;font-weight:500;margin:26px 0 0;color:var(--don-teal)}
+.don-hero-title em{display:block;color:var(--don-gold);margin-top:10px}
+.don-hero-rule{display:block;width:90px;height:2px;background:var(--don-red);margin:36px 0 28px}
+.don-hero-sub{font-family:var(--caps);font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--don-teal);margin-bottom:22px}
+.don-hero-lead{font-family:var(--serif);font-size:19px;line-height:1.7;color:var(--don-stone);margin-bottom:40px}
+.don-hero-ctas{display:flex;gap:16px;flex-wrap:wrap}
+
+/* Cartes empilées du hero */
+.don-hero-cards{position:relative;height:580px}
+.don-card{position:absolute;border-radius:16px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.12);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0.3s}
+.don-card img{width:100%;height:100%;object-fit:cover;display:block}
+.don-card img.is-gray{filter:grayscale(1) contrast(1.1) brightness(0.88)}
+.don-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 22px 16px;font-family:var(--caps);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#fff;background:linear-gradient(to top,rgba(0,0,0,0.82),transparent)}
+.don-card--1{width:340px;height:240px;top:-10px;left:0;transform:rotate(-6deg);z-index:1}
+.don-card--2{width:370px;height:300px;top:150px;left:120px;transform:rotate(3deg);z-index:3;border-color:rgba(234,186,16,0.5)}
+.don-card--3{width:300px;height:260px;top:330px;left:40px;transform:rotate(-3deg);z-index:2}
+
+/* Animations de survol des cartes */
+.don-card--1:hover {
+  transform: rotate(-1deg) translateY(-16px) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+}
+.don-card--2:hover {
+  transform: rotate(0deg) translateY(-16px) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+}
+.don-card--3:hover {
+  transform: rotate(1deg) translateY(-16px) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+}
+
+/* Largeur de page un peu plus généreuse que le reste du site (plus d'air) */
+.don-page .sw{max-width:1280px}
+
+/* ---------- CORPS : formulaire (gauche, fixe) + contenu (droite, défile) ---------- */
+.don-body{display:grid;grid-template-columns:360px 1fr;gap:56px;align-items:start;padding-top:80px;padding-bottom:100px}
+/* Simulateur à gauche (col 1, collant) ; contenu défile à droite (col 2).
+   Ordre DOM = contenu puis formulaire → formulaire en bas sur mobile. */
+.don-aside{grid-column:1;grid-row:1;position:sticky;top:96px;height:fit-content;align-self:start}
+.don-main{grid-column:2;grid-row:1;min-width:0;display:flex;flex-direction:column;gap:72px}
+
+/* Fonds de sauvegarde — carte de progression (blanche) */
+.don-fonds{background:var(--don-white);border:1px solid var(--don-line);border-radius:12px;padding:28px 32px;box-shadow:var(--don-shadow)}
+.don-fonds-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:18px}
+.don-fonds-eyebrow{font-family:var(--caps);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#0a6e82;display:block;margin-bottom:8px}
+.don-fonds-title{font-family:var(--display);font-size:clamp(20px,2.2vw,28px);font-weight:500;color:var(--don-teal);line-height:1.08}
+.don-fonds-pct{font-family:var(--caps);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--don-stone);white-space:nowrap;padding-top:6px}
+.don-fonds-bar{height:8px;border-radius:999px;background:rgba(18,62,67,0.1);box-shadow:inset 0 1px 3px rgba(2,43,51,0.12);margin-bottom:20px}
+.don-fonds-bar i{position:relative;display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#C11616,#e8901a,#EABA10,#3fae6a)}
+.don-fonds-bar i::after{content:'';position:absolute;right:-2px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%;background:#3fae6a;border:2px solid var(--don-white);box-shadow:0 2px 8px rgba(63,174,106,0.5)}
+.don-fonds-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--don-line)}
+.don-fonds-k{font-family:var(--caps);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#0a6e82;display:block;margin-bottom:8px}
+.don-fonds-v{font-family:var(--display);font-size:clamp(20px,2.4vw,30px);font-weight:500;color:var(--don-teal);line-height:1}
+.don-fonds-v--muted{color:#9a8a4a}
+.don-fonds-note{display:flex;gap:8px;align-items:flex-start;margin-top:18px;font-family:var(--serif);font-size:13.5px;font-style:italic;line-height:1.6;color:var(--don-stone)}
+.don-fonds-note svg{flex:0 0 auto;margin-top:2px;color:var(--don-gold);font-size:15px}
+
+/* Sections */
+.don-sec{display:flex;flex-direction:column;gap:28px}
+.don-sec-head{display:flex;flex-direction:column;gap:16px}
+.don-h2{font-family:var(--display);font-size:clamp(30px,3.4vw,48px);line-height:1.08;font-weight:500;color:var(--don-teal);max-width:100%}
+.don-h2 em{color:var(--don-gold)}
+.don-h2--anchor{position:relative;padding-left:32px;max-width:100%}
+.don-h2--anchor::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--don-red)}
+.don-p{font-family:var(--serif);font-size:18px;line-height:1.72;color:var(--don-stone);max-width:64ch}
+
+/* Relief au survol des cartes */
+.don-hand,.don-way,.don-fonds{transition:transform 0.3s,box-shadow 0.3s}
+.don-hand:hover,.don-way:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(2,43,51,0.13)}
+
+/* Mains ordinaires */
+.don-hands{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.don-hand{background:var(--don-white);border:1px solid var(--don-line);border-radius:12px;padding:30px 28px;box-shadow:var(--don-shadow)}
+.don-hand-k{font-family:var(--caps);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#b58e00;display:block;margin-bottom:16px}
+.don-hand-v{font-family:var(--serif);font-size:19px;font-style:italic;line-height:1.5;color:var(--don-teal)}
+
+/* Aujourd'hui + dégradation */
+.don-today{position:relative;background:var(--don-white);border:1px solid var(--don-line);border-radius:12px;padding:28px 32px;overflow:hidden;box-shadow:var(--don-shadow)}
+.don-watermark{position:absolute;top:-6px;right:24px;font-family:var(--display);font-size:80px;font-weight:600;color:rgba(18,62,67,0.05);line-height:1;pointer-events:none}
+.don-today .don-p{color:var(--don-teal);font-size:17px;line-height:1.6;position:relative}
+
+.don-alert{position:relative;overflow:hidden;border-radius:12px;padding:32px 36px;background:var(--don-teal-dk);box-shadow:0 18px 50px rgba(2,43,51,0.25)}
+.don-alert::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(120,12,12,0.55),transparent 70%);pointer-events:none}
+.don-alert-ico{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:150px;color:rgba(193,22,22,0.22);pointer-events:none}
+.don-alert-title{position:relative;font-family:var(--caps);font-size:clamp(22px,2.8vw,36px);text-transform:uppercase;color:#ef4444;font-weight:600;margin-bottom:12px;line-height:1.05}
+.don-alert-1{position:relative;font-family:var(--serif);font-size:17px;font-style:italic;color:rgba(255,255,255,0.92);margin-bottom:10px}
+.don-alert-2{position:relative;font-family:var(--caps);font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--don-gold)}
+
+.don-transmit{background:var(--don-white);border:1px solid var(--don-line);border-left:4px solid var(--don-teal);border-radius:12px;padding:28px 32px;box-shadow:var(--don-shadow)}
+.don-transmit > p{font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--don-teal)}
+.don-transmit-rule{display:block;width:80px;height:1px;background:rgba(18,62,67,0.2);margin:16px 0}
+.don-transmit-gold{font-family:var(--caps);font-size:12px;letter-spacing:0.18em;text-transform:uppercase}
+
+/* ---------- PHASES (style épuré beige et blanc avec badge flottant) ---------- */
+.don-ph {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.don-ph + .don-ph {
+  margin-top: 80px;
+}
+
+.don-ph-media {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: block;
+  overflow: visible;
+}
+.don-ph:not(.don-ph--rev) .don-ph-media {
+  aspect-ratio: 1 / 1;
+}
+.don-ph--rev .don-ph-media {
+  aspect-ratio: 1.6 / 1;
+}
+.don-ph-media-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: var(--don-white);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+.don-ph--rev .don-ph-media-inner {
+  background: #f4f5f6;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+.don-ph-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.don-ph-media:hover img {
+  transform: scale(1.06);
+}
+
+/* Badges de phase */
+.don-ph-badge {
+  position: absolute;
+  padding: 14px 28px;
+  font-family: var(--caps);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+.don-ph-badge--red {
+  background: var(--don-red);
+  bottom: -16px;
+  right: -16px;
+}
+.don-ph-badge--teal {
+  background: var(--don-teal-dk);
+  top: -16px;
+  left: -16px;
+}
+
+/* Corps du texte */
+.don-ph-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
+  color: var(--don-ink);
+}
+.don-ph-body--anchor {
+  position: relative;
+  padding-left: 48px;
+}
+.don-ph-body--anchor::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--don-red);
+}
+.don-ph-body--anchor-r {
+  position: relative;
+  padding-right: 48px;
+}
+.don-ph-body--anchor-r::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--don-red);
+}
+
+.don-ph-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.2vw, 44px);
+  font-weight: 400;
+  color: var(--don-teal);
+  line-height: 1.15;
+  margin: 0 0 18px 0;
+  text-align: left;
+}
+.don-ph-text {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--don-stone);
+  margin: 0 0 24px 0;
+  text-align: left;
+}
+
+/* Liste à puces Phase 1 */
+.don-ph-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.don-ph-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--don-teal);
+  line-height: 1.45;
+  text-align: left;
+}
+.don-ph-list li svg {
+  flex: 0 0 auto;
+  font-size: 20px;
+}
+.don-ph-list--red svg {
+  color: var(--don-red);
+}
+
+/* Mots-clés Phase 2 */
+.don-ph-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 10px;
+  margin-top: 8px;
+  max-width: 480px;
+}
+.don-ph-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: 1px solid rgba(18, 62, 67, 0.16);
+  font-family: var(--caps);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--don-teal);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+.don-ph-tag:hover {
+  border-color: var(--don-teal);
+  background: rgba(18, 62, 67, 0.03);
+}
+
+/* Rapport d'activité & Transparence */
+.don-report {
+  background: var(--don-teal-dk);
+  border-radius: 12px;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: var(--don-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.don-report-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--don-gold);
+}
+.don-report-icon {
+  font-size: 18px;
+  color: var(--don-gold);
+  flex-shrink: 0;
+}
+.don-report-head span {
+  font-family: var(--caps);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.don-report-text {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+  text-align: left;
+}
+
+/* Trois façons */
+.don-ways{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.don-way{position:relative;overflow:hidden;background:var(--don-white);border:1px solid var(--don-line);border-radius:14px;padding:32px 20px;display:flex;flex-direction:column;gap:12px;min-height:380px;box-shadow:var(--don-shadow)}
+.don-way-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.1;z-index:0}
+.don-way--img > *:not(.don-way-bg){position:relative;z-index:1}
+.don-way-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.don-way-ico{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(18,62,67,0.07);color:var(--don-teal)}
+.don-way-ico--red{background:rgba(193,22,22,0.1);color:var(--don-red)}
+.don-way-tag{font-family:var(--caps);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--don-stone);white-space:nowrap}
+.don-way-tag--solid{background:var(--don-teal);color:#fff;padding:6px 12px;border-radius:4px;letter-spacing:0.14em;white-space:nowrap}
+.don-way-title{font-family:var(--caps);font-size:15px;letter-spacing:0.04em;text-transform:uppercase;color:var(--don-teal);margin-top:4px}
+.don-way-lead{font-family:var(--serif);font-size:17px;font-style:italic;color:#b58e00}
+.don-way-text{font-family:var(--serif);font-size:14.5px;line-height:1.55;color:var(--don-stone)}
+.don-way-quote{font-family:var(--serif);font-size:14.5px;font-style:italic;color:#b58e00;margin-top:14px}
+.don-way-chip{margin-top:14px;font-family:monospace;font-size:12px;letter-spacing:0.04em;color:var(--don-teal);background:var(--don-cream);border:1px solid var(--don-line);border-radius:6px;padding:12px 14px}
+.don-way-chip--gold{font-family:var(--serif);font-style:italic;color:#8a6d00;background:rgba(234,186,16,0.1);border-color:rgba(234,186,16,0.35);border-left:3px solid var(--don-gold)}
+.don-way-ship{display:flex;align-items:center;gap:8px;font-family:var(--caps);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b58e00;margin-top:14px;line-height:1.5}
+
+/* Boutons CTA des cartes */
+.don-way-btn{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-family:var(--caps);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px;border-radius:8px;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap}
+.don-way-btn--red{background:var(--don-red);color:#fff}
+.don-way-btn--red:hover{background:var(--red-lt)}
+.don-way-btn--teal{background:var(--don-teal);color:#fff}
+.don-way-btn--teal:hover{background:#0d2e33}
+.don-way-btn--ghost{background:transparent;color:var(--don-teal);border:1px solid rgba(18,62,67,0.25)}
+.don-way-btn--ghost:hover{border-color:var(--don-teal);background:rgba(18,62,67,0.04)}
+
+/* ---------- FORMULAIRE DE CONTRIBUTION (carte teal sombre, sticky) ---------- */
+.don-form{background:var(--don-teal);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(2,43,51,0.22)}
+.don-form-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.don-form-heart{color:#ff5a5a;font-size:20px}
+.don-form-head h3{font-family:var(--caps);font-size:14px;letter-spacing:0.18em;text-transform:uppercase;color:#fff}
+.don-label{font-family:var(--caps);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:8px;display:block}
+.don-label:not(:first-of-type){margin-top:16px}
+
+.don-amounts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.don-amount{font-family:var(--serif);font-size:18px;color:rgba(255,255,255,0.88);background:rgba(2,43,51,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px 10px;cursor:pointer;transition:all 0.2s}
+.don-amount:hover{border-color:rgba(234,186,16,0.5)}
+.don-amount--free{grid-column:1 / -1}
+.don-amount.is-active{background:rgba(234,186,16,0.14);border-color:var(--don-gold);color:var(--don-gold)}
+
+.don-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.don-method{font-family:var(--caps);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.85);background:rgba(2,43,51,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px 6px;cursor:pointer;transition:all 0.2s;font-weight:600}
+.don-method--orange{color:#f59e0b}
+.don-method:hover{border-color:rgba(234,186,16,0.5)}
+.don-method.is-active{background:rgba(234,186,16,0.14);border-color:var(--don-gold)}
+
+.don-input{width:100%;background:rgba(2,43,51,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;font-family:var(--serif);font-size:16px;color:#fff;margin-bottom:8px;transition:border-color 0.2s}
+.don-input::placeholder{color:rgba(255,255,255,0.4)}
+.don-input:focus{outline:none;border-color:var(--don-gold)}
+.don-input--amount{margin-top:12px;margin-bottom:0}
+
+.don-submit{margin-top:16px;width:100%;background:var(--don-red);color:#fff;font-family:var(--caps);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;border:none;border-radius:8px;padding:14px;cursor:pointer;transition:all 0.2s}
+.don-submit:hover{background:var(--red-lt)}
+.don-thanks{margin-top:12px;font-family:var(--serif);font-size:14px;font-style:italic;line-height:1.5;color:#ffe08e;background:rgba(234,186,16,0.12);border:1px solid rgba(234,186,16,0.3);border-radius:8px;padding:10px 12px}
+.don-form-note{margin-top:10px;font-family:var(--serif);font-size:12px;font-style:italic;color:rgba(255,255,255,0.5);text-align:center;line-height:1.5}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:1080px){
+  .don-body{grid-template-columns:1fr;gap:48px;padding-top:56px}
+  .don-aside{position:static;grid-column:1;grid-row:auto;max-width:560px}
+  .don-main{grid-column:1;grid-row:auto;gap:56px}
+}
+@media(max-width:980px){
+  .don-hero-grid{grid-template-columns:1fr;gap:40px;min-height:0}
+  .don-hero-cards{position:static;height:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .don-card{position:relative;transform:none!important;width:auto;height:180px;top:auto;left:auto}
+  .don-card--2{order:-1}
+  .don-hands{grid-template-columns:1fr}
+  .don-ways{grid-template-columns:1fr}
+  .don-ph, .don-ph--rev {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .don-ph + .don-ph {
+    margin-top: 56px;
+  }
+  .don-ph-media {
+    order: -1;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: auto;
+  }
+  .don-ph-body {
+    padding: 16px 0;
+  }
+  .don-ph-body--anchor,
+  .don-ph-body--anchor-r {
+    padding-left: 28px;
+    padding-right: 0;
+  }
+  .don-ph-body--anchor::before,
+  .don-ph-body--anchor-r::after {
+    left: 0;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+}
+@media(max-width:560px){
+  .don-hero{padding:24px 0 48px}
+  .don-hero-cards{grid-template-columns:1fr;gap:16px}
+  .don-card{height:160px}
+  
+  /* Hands */
+  .don-hand{padding:20px 18px}
+  .don-hand-v{font-size:16px}
+  
+  /* Compact cards on mobile */
+  .don-today,
+  .don-alert,
+  .don-transmit,
+  .don-report,
+  .don-fonds {
+    padding:20px 20px
+  }
+  
+  .don-watermark{font-size:60px;top:0}
+  .don-today .don-p,
+  .don-transmit > p {
+    font-size:15px;
+    line-height:1.55;
+  }
+  
+  .don-alert{padding:24px 20px}
+  .don-alert-ico{font-size:100px}
+  .don-alert-title{font-size:24px;margin-bottom:8px}
+  .don-alert-1{font-size:15px}
+  .don-alert-2{font-size:12px}
+  
+  .don-transmit-rule{margin:12px 0}
+  .don-transmit-gold{font-size:11px}
+  
+  /* Report Card */
+  .don-report {
+    gap: 12px;
+  }
+  .don-report-text {
+    font-size:14.5px;
+    line-height:1.55;
+  }
+  
+  /* Progression Card */
+  .don-fonds-head{flex-direction:column;gap:8px;margin-bottom:12px}
+  .don-fonds-title{font-size:19px}
+  .don-fonds-pct{font-size:10.5px;padding-top:0}
+  .don-fonds-bar{margin-bottom:16px}
+  .don-fonds-stats{grid-template-columns:1fr;gap:12px;padding-bottom:16px}
+  .don-fonds-k{margin-bottom:6px}
+  .don-fonds-v{font-size:22px}
+  .don-fonds-note{margin-top:14px;font-size:12.5px}
+  
+  /* Form */
+  .don-form{padding:20px 18px}
+  .don-amounts{grid-template-columns:1fr 1fr}
+  
+  /* Ways to contribute */
+  .don-way{padding:24px 20px;min-height:auto;gap:12px}
+  .don-way-title{font-size:15px}
+  .don-way-text{font-size:14.5px;line-height:1.5}
+  
+  /* Phases */
+  .don-ph-title{font-size:24px;margin-bottom:12px}
+  .don-ph-text{font-size:15px;margin-bottom:16px}
+  .don-ph-list li{font-size:14.5px;gap:10px}
+  .don-ph-list li svg{font-size:18px}
+  .don-ph-tags{margin-top:4px}
+  .don-ph-tag{padding:8px 14px;font-size:9.5px}
+  .don-ph-body--anchor,
+  .don-ph-body--anchor-r {
+    padding-left: 20px;
+    padding-right: 0;
+  }
+  
+  .don-ph-badge {
+    padding: 10px 18px;
+    font-size: 10px;
+  }
+  .don-ph-badge--red {
+    bottom: -10px;
+    right: -10px;
+  }
+  .don-ph-badge--teal {
+    top: -10px;
+    left: -10px;
+  }
+}
