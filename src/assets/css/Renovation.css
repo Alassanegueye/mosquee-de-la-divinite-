@@ -154,43 +154,48 @@
   margin-top: 80px;
 }
 
+/* --- MODIFICATION POUR ACCUEILLIR DEUX IMAGES SUPPERPOSÉES --- */
 .don-ph-media {
   position: relative;
   margin: 0;
   padding: 0;
-  display: block;
+  display: flex;         /* Devient un flexbox vertical */
+  flex-direction: column; 
+  gap: 20px;             /* Espace de 20px entre les deux images */
   overflow: visible;
+  width: 100%;
 }
-.don-ph:not(.don-ph--rev) .don-ph-media {
-  aspect-ratio: 1 / 1;
-}
+
+/* Suppression des contraintes d'aspect-ratio absolues */
+.don-ph:not(.don-ph--rev) .don-ph-media,
 .don-ph--rev .don-ph-media {
-  aspect-ratio: 1.6 / 1;
+  aspect-ratio: auto; /* Laisse le contenu gérer la hauteur naturellement */
 }
+
+/* Ajustement des conteneurs d'images individuels */
 .don-ph-media-inner {
-  position: absolute;
-  inset: 0;
+  position: relative;    /* Changé de absolute à relative */
+  width: 100%;
+  height: 280px;         /* Définis une hauteur fixe fixe pour chaque image (ex: 280px) */
   border-radius: 12px;
   background: var(--don-white);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
   overflow: hidden;
 }
+
 .don-ph--rev .don-ph-media-inner {
   background: #f4f5f6;
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
+
 .don-ph-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover;     /* Coupe proprement l'image pour remplir ses 280px de haut */
   display: block;
   border-radius: 12px;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.don-ph-media:hover img {
-  transform: scale(1.06);
-}
-
 /* Badges de phase */
 .don-ph-badge {
   position: absolute;
@@ -419,7 +424,7 @@
 .don-form-note{margin-top:10px;font-family:var(--serif);font-size:12px;font-style:italic;color:rgba(255,255,255,0.5);text-align:center;line-height:1.5}
 
 /* ---------- RESPONSIVE ---------- */
-@media(max-width:1080px){
+@media(max-width:980px){
   .don-body{grid-template-columns:1fr;gap:48px;padding-top:56px}
   .don-aside{position:static;grid-column:1;grid-row:auto;max-width:560px}
   .don-main{grid-column:1;grid-row:auto;gap:56px}
@@ -439,12 +444,18 @@
     margin-top: 56px;
   }
   .don-ph-media {
-    order: -1;
+   order: -1;
     max-width: 500px;
     width: 100%;
     margin: 0 auto;
-    min-height: auto;
+    display: flex;          /* Assure le maintien des 2 lignes sur mobile */
+    flex-direction: column;
+    gap: 16px;
   }
+   .don-ph-media-inner {
+    height: 220px;          /* Légèrement plus petit sur mobile pour économiser l'écran */
+  }
+}
   .don-ph-body {
     padding: 16px 0;
   }
