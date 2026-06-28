@@ -6,7 +6,8 @@ import cardPerspective from '../assets/photo/DJI_0681.jpg'
 import cardChantier from '../assets/photo/13-Khalif-Chantier.jpg'
 import cardMosaique from '../assets/photo/DJI_0419.jpg'
 import phase1Img from '../assets/photo/image3-mosquee.jpg'
-import phase2Img from '../assets/photo/khalife-site.jpg'
+import phase2Img from '../assets/photo/Avant-Projet.png'
+import phase2Img2 from '../assets/photo/Rendu-AvantP.png'
 
 // Cartes empilées du hero
 const HERO_CARDS = [
@@ -208,7 +209,8 @@ export default function RenovationPage() {
               </div>
               <figure className="don-ph-media">
                 <div className="don-ph-media-inner">
-                  <img src={phase2Img} alt="Le Complexe Mouhamed Seyni Gueye" />
+                  <img src={phase2Img} />
+                  <img src={phase2Img2} alt="Le Complexe Mouhamed Seyni Gueye" />
                 </div>
                 <div className="don-ph-badge don-ph-badge--teal">PHASE 2</div>
               </figure>
