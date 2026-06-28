@@ -209,7 +209,7 @@ export default function RenovationPage() {
               </div>
               <figure className="don-ph-media">
                 <div className="don-ph-media-inner">
-                  <img src={phase2Img} />
+                  <img src={phase2Img} alt="Le Complexe Mouhamed Seyni Gueye" />
                   <img src={phase2Img2} alt="Le Complexe Mouhamed Seyni Gueye" />
                 </div>
                 <div className="don-ph-badge don-ph-badge--teal">PHASE 2</div>
