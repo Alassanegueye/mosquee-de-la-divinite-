@@ -1,4 +1,5 @@
 import mainsNuesImg from '../../assets/photo/A mains nues 2.jpg'
+import SiratImg from '../../assets/photo/Sirat.jpg'
 
 // CONSTRUCTION — récit de l'édification de la mosquée en 4 temps
 const HANDS = [
@@ -67,7 +68,7 @@ export default function Construction() {
           <h3 className="cons-sirat-title">Le Pont Al Sirat</h3>
           <div className="cons-sirat-banner-img">
             <img 
-            src={Sirat.jpg} alt="Passerelle du Pont Al Sirat entre les deux minarets" loading="lazy" />
+            src={SiratImg} alt="Passerelle du Pont Al Sirat entre les deux minarets" loading="lazy" />
           </div>
           <p className="cons-sirat-quote">
             Reliant les deux minarets à 45 mètres de hauteur, cette passerelle symbolise
