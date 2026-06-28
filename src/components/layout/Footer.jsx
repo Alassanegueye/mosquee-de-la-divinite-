@@ -4,12 +4,12 @@ import { FOOTER_NAV } from '../../data/content'
 
 // Réseaux sociaux : icône monochrome + lien (à remplacer par les vraies URL).
 const SOCIAL_LINKS = [
-  { Icon: FaYoutube, label: 'YouTube', url: '#' },
-  { Icon: FaFacebookF, label: 'Facebook', url: '#' },
-  { Icon: FaInstagram, label: 'Instagram', url: '#' },
-  { Icon: FaXTwitter, label: 'X (Twitter)', url: '#' },
-  { Icon: FaTiktok, label: 'TikTok', url: '#' },
-  { Icon: FaSnapchat, label: 'Snapchat', url: '#' },
+  { Icon: FaYoutube, label: 'YouTube', url: 'https://www.youtube.com/user/divinitetv' },
+  { Icon: FaFacebookF, label: 'Facebook', url: 'https://www.facebook.com/mosqueedeladivinite' },
+  { Icon: FaInstagram, label: 'Instagram', url: 'https://www.instagram.com/mosqueedeladivinite/' },
+  { Icon: FaXTwitter, label: 'X (Twitter)', url: 'https://twitter.com/mosqueedivinite' },
+  { Icon: FaTiktok, label: 'TikTok', url: 'http://www.tiktok.com/@mosqueedeladivinite' },
+  { Icon: FaSnapchat, label: 'Snapchat', url: 'https://www.snapchat.com/@mosqueedivinite' },
 ]
 
 export default function Footer() {
