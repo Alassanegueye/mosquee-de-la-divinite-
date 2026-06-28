@@ -67,8 +67,7 @@ export default function Construction() {
           <span className="cons-eyebrow">L’Audace Architecturale</span>
           <h3 className="cons-sirat-title">Le Pont Al Sirat</h3>
           <div className="cons-sirat-banner-img">
-            <img 
-            src={SiratImg} alt="Passerelle du Pont Al Sirat entre les deux minarets" loading="lazy" />
+            <img src={SiratImg} alt="Passerelle du Pont Al Sirat entre les deux minarets" loading="lazy" />
           </div>
           <p className="cons-sirat-quote">
             Reliant les deux minarets à 45 mètres de hauteur, cette passerelle symbolise
