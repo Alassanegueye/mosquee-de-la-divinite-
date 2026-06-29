@@ -25,6 +25,26 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 body{font-family:var(--serif);background:#123e43;color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:clip;width:100%;max-width:100%;position:relative;font-size:20px;line-height:1.78}
 ::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--green)}
 img{display:block;max-width:100%}
+img:not(.nav-logo-img){border-radius:4px}
+
+/* Bordures arrondies simples pour toutes les images et conteneurs (identique à l'exposition) */
+.sangabi-photo,
+.hist2-img,
+.vis-photo,
+.prayer2-photo,
+.jumaah-photo,
+.special-photo,
+.pp-photo,
+.ev-feature-photo,
+.ev-mini-photo,
+.cons-hands-frame,
+.cons-sirat-banner-img,
+.shop2-card .thumb,
+.shopg-media,
+.don-card {
+  border-radius: 4px !important;
+  overflow: hidden;
+}
 
 /* Le contenu commence sous la nav fixe (74px) */
 main{padding-top:74px}
@@ -33,7 +53,8 @@ main{padding-top:74px}
 .ph{width:100%;height:100%;object-fit:cover;display:block}
 
 /* NAV (fixe, superposée au hero en glass) */
-nav{position:fixed;top:0;left:0;right:0;width:100%;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:74px;background:rgba(2,43,51,0.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07);transform:translateZ(0);will-change:transform}
+nav{position:fixed;top:0;left:0;right:0;width:100%;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:74px;background:rgba(2,43,51,0.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07);transform:translateZ(0);will-change:transform;transition:transform 0.3s ease}
+nav.nav-hidden{transform:translateY(-100%)}
 .nav-logo{text-decoration:none;display:flex;align-items:center;gap:10px}
 .nav-logo-img{height:46px;width:auto}
 .nav-logo-txt{display:flex;flex-direction:column}
@@ -160,6 +181,7 @@ footer{background:#123e43}
 @media(max-width:1024px){
   nav{padding:0 20px}
   .nav-toggle{display:flex}
+  .lang-switcher{display:none}
   .nav-links{position:fixed;top:74px;left:0;right:0;flex-direction:column;gap:0;background:rgba(2,43,51,0.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.1);padding:6px 0;display:none}
   .nav-links.open{display:flex}
   .nav-links li{width:100%}
@@ -201,6 +223,4 @@ footer{background:#123e43}
   .nav-logo-img{height:38px}
   .nav-logo-main{font-size:12px}
   .nav-logo-sub{font-size:9.5px}
-  .lang-switcher{margin-left:8px}
-  .lang-btn{padding:6px 9px}
 }

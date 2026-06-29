@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { FiMenu, FiX } from 'react-icons/fi'
 import logo from '../../assets/photo/Logo.png'
@@ -31,6 +31,32 @@ export default function Navbar() {
   const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [lastPath, setLastPath] = useState(location.pathname)
+  const [visible, setVisible] = useState(true)
+  const [prevScrollPos, setPrevScrollPos] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY
+
+      // Ne pas masquer la navbar si le menu mobile est ouvert
+      if (menuOpen) return
+
+      // Évite les problèmes de rebond (bounce) sur iOS
+      if (currentScrollPos < 0) return
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      if (currentScrollPos > maxScroll) return
+
+      // Affiche la navbar si on remonte ou si on est tout en haut
+      const isScrollingUp = prevScrollPos > currentScrollPos
+      const isAtTop = currentScrollPos < 74
+
+      setVisible(isScrollingUp || isAtTop)
+      setPrevScrollPos(currentScrollPos)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [prevScrollPos, menuOpen])
 
   const isSubPage = SUBPAGES.includes(location.pathname)
   const links = isSubPage ? SUBPAGE_LINKS : GLOBAL_LINKS
@@ -62,7 +88,7 @@ export default function Navbar() {
   )
 
   return (
-    <nav>
+    <nav className={cx(!visible && 'nav-hidden')}>
       {Logo}
 
       <ul className={cx('nav-links-ref', menuOpen && 'open')}>
