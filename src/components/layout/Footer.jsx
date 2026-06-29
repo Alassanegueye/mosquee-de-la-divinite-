@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="footer-main">
-        <img src={logo} alt="Mosquée de la Divinité" style={{ height: 60 }} />
+        <img src={logo} alt="Mosquée de la Divinité" style={{ height: 44 }} />
         <div>
           <span className="footer-brand-name">Mosquée de la Divinité</span>
           <span className="footer-brand-sub">

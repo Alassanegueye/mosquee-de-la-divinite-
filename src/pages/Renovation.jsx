@@ -100,7 +100,7 @@ export default function RenovationPage() {
           <div className="don-hero-cards">
             {HERO_CARDS.map((c) => (
               <figure className={`don-card ${c.cls}`} key={c.label}>
-                <img src={c.img} alt={c.label} className={c.gray ? 'is-gray' : ''} />
+                <img src={c.img} alt={c.label} className={c.gray ? 'is-gray' : ''} decoding="async" />
                 <figcaption>{c.label}</figcaption>
               </figure>
             ))}
@@ -168,7 +168,7 @@ export default function RenovationPage() {
             <div className="don-ph">
               <figure className="don-ph-media">
                 <div className="don-ph-media-inner">
-                  <img src={phase1Img} alt="Restaurer la Mosquée" />
+                  <img src={phase1Img} alt="Restaurer la Mosquée" loading="lazy" decoding="async" />
                 </div>
                 <div className="don-ph-badge don-ph-badge--red">PHASE 1</div>
               </figure>
@@ -209,8 +209,8 @@ export default function RenovationPage() {
               </div>
               <figure className="don-ph-media">
                 <div className="don-ph-media-inner">
-                  <img src={phase2Img} alt="Le Complexe Mouhamed Seyni Gueye" />
-                  <img src={phase2Img2} alt="Le Complexe Mouhamed Seyni Gueye" />
+                  <img src={phase2Img} alt="Le Complexe Mouhamed Seyni Gueye" loading="lazy" decoding="async" />
+                  <img src={phase2Img2} alt="Le Complexe Mouhamed Seyni Gueye" loading="lazy" decoding="async" />
                 </div>
                 <div className="don-ph-badge don-ph-badge--teal">PHASE 2</div>
               </figure>

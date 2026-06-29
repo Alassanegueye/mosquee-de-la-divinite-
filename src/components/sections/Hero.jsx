@@ -12,7 +12,7 @@ export default function Hero() {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
       >
         <source src={VIDEO} type="video/mp4" />
       </video>

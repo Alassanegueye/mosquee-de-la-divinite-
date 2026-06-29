@@ -1,0 +1,142 @@
+/* ============================================================
+   PATRIMOINE — styles propres à la page Archives & Mémoire.
+   Importé uniquement par pages/Patrimoine.jsx.
+   Reprend les tokens globaux (App.css) : --red, --green, --caps…
+   ============================================================ */
+
+/* Conteneur largeur de page (aligné sur .sw global) */
+.pat-container{max-width:1200px;margin:0 auto;padding:0 56px;width:100%}
+
+/* Couleurs locales reprises de la maquette */
+.pat-page{
+  --pat-primary:#00272c;
+  --pat-container-c:#123e43;
+  --pat-on-variant:#414849;
+  --pat-green:#045926;
+  --pat-low:#f3f3f4;
+  --pat-outline:#c0c8c9;
+  background:#fff;
+  color:var(--pat-primary);
+}
+
+/* Apparition au scroll */
+.pat-reveal{opacity:0;transform:translateY(40px);transition:opacity 1s ease,transform 1s ease}
+.pat-reveal.is-visible{opacity:1;transform:none}
+
+/* ---------- HERO ---------- */
+.pat-hero{position:relative;background:#fff;display:flex;align-items:flex-end;overflow:hidden}
+.pat-hero-inner{position:relative;z-index:10;padding-top:96px;padding-bottom:72px}
+.pat-hero-text{max-width:66%}
+.pat-anchor{border-left:2px solid var(--red);padding-left:24px;margin-bottom:16px}
+.pat-eyebrow{
+  font-family:var(--caps);font-size:11px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--red);font-weight:600;display:block;
+}
+.pat-hero-title{
+  font-family:var(--display);font-size:clamp(48px,8vw,84px);line-height:1.0;
+  letter-spacing:-0.02em;font-weight:400;color:var(--pat-primary);margin-bottom:24px;
+}
+.pat-hero-title em{font-style:italic;color:var(--pat-green)}
+.pat-hero-lead{
+  font-family:var(--serif);font-size:19px;line-height:1.75;
+  max-width:42rem;color:var(--pat-on-variant);
+}
+
+/* ---------- LEGACY (citation + image fondatrice) ---------- */
+.pat-section{padding:120px 0}
+.pat-legacy{background:#fff}
+.pat-legacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.pat-legacy-card{
+  position:relative;background:#fff;padding:16px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);transform:rotate(1deg);
+  transition:transform 0.5s ease,box-shadow 0.5s ease;
+}
+.pat-legacy-card:hover{transform:rotate(0deg) translateY(-6px);box-shadow:0 28px 60px rgba(0,0,0,0.2)}
+.pat-legacy-card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.pat-legacy-card::after{content:'';position:absolute;inset:0;border:1px solid rgba(0,0,0,0.05);pointer-events:none}
+.pat-legacy-text{display:flex;flex-direction:column;gap:32px}
+.pat-legacy-quote{
+  font-family:var(--serif);font-size:clamp(36px,5vw,60px);line-height:1.05;
+  color:var(--pat-primary);border-left:4px solid var(--red);padding-left:32px;font-style:italic;
+}
+.pat-legacy-body{display:flex;flex-direction:column;gap:24px;
+  font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--pat-on-variant)}
+
+/* ---------- STATS ---------- */
+.pat-stats{background:var(--cream)}
+.pat-stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:32px;text-align:center}
+.pat-stat{
+  display:flex;flex-direction:column;align-items:center;gap:6px;cursor:default;
+  padding-top:28px;border-top:1px solid rgba(193,22,22,0.3);
+}
+.pat-stat-num{
+  font-family:var(--display);font-size:clamp(40px,5vw,56px);line-height:1;
+  color:var(--red);font-weight:500;transition:transform 0.3s ease;
+}
+.pat-stat:hover .pat-stat-num{transform:translateY(-4px)}
+.pat-stat-num.pulse{animation:patPulse 2s ease-in-out infinite}
+.pat-stat-label{font-family:var(--caps);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--pat-primary);margin-top:6px}
+.pat-stat-sub{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--muted)}
+@keyframes patPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ---------- MÉDIATHÈQUE (bento) ---------- */
+.pat-media-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:64px;flex-wrap:wrap}
+.pat-media-eyebrow{font-family:var(--caps);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:16px}
+.pat-media-title{font-family:var(--serif);font-size:clamp(36px,5vw,60px);line-height:1.05;color:var(--pat-primary)}
+.pat-media-note{
+  font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.6;
+  color:var(--pat-on-variant);border-left:2px solid var(--pat-outline);padding-left:24px;max-width:28rem;
+}
+.pat-media-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:32px}
+.pat-media-main{grid-column:span 7;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--pat-primary)}
+.pat-media-main iframe{width:100%;height:100%;border:0;display:block}
+.pat-media-side{grid-column:span 5;display:flex;flex-direction:column;gap:32px}
+.pat-media-card{
+  padding:32px;background:var(--pat-low);border-right:4px solid var(--red);
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  transition:background 0.3s ease,transform 0.3s ease;
+}
+.pat-media-card:hover{background:#ececed;transform:translateY(-3px)}
+.pat-media-card-ico{color:var(--red);font-size:30px;margin-bottom:16px}
+.pat-media-card h4{font-family:var(--caps);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.pat-media-card p{font-family:var(--serif);font-size:16px;line-height:1.6;color:var(--pat-on-variant);margin-bottom:16px}
+.pat-progress{width:100%;height:4px;background:rgba(192,200,201,0.25);position:relative}
+.pat-progress i{position:absolute;left:0;top:0;height:100%;width:33%;background:var(--pat-green)}
+.pat-media-cardlink{
+  font-family:var(--caps);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pat-green);
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-top:8px;transition:transform 0.3s ease;
+}
+.pat-media-cardlink:hover{transform:translateX(8px)}
+.pat-media-thumb{grid-column:span 4;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--pat-primary)}
+.pat-media-thumb iframe{width:100%;height:100%;border:0;display:block}
+.pat-media-cta{margin-top:64px;display:flex;justify-content:center}
+.pat-media-cta a{
+  display:inline-flex;align-items:center;gap:16px;padding:16px 32px;
+  border:2px solid var(--red);color:var(--red);font-family:var(--caps);
+  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;
+}
+.pat-media-cta a:hover{background:var(--red);color:#fff}
+.pat-media-cta a svg{transition:transform 0.3s ease}
+.pat-media-cta a:hover svg{transform:translateX(8px)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1024px){
+  .pat-container{padding:0 22px}
+  .pat-section{padding:72px 0}
+  .pat-hero-text{max-width:100%}
+}
+@media(max-width:768px){
+  .pat-legacy-grid{grid-template-columns:1fr;gap:48px}
+  .pat-legacy-figure{order:2}
+  .pat-legacy-text{order:1}
+  .pat-stats-grid{grid-template-columns:repeat(2,1fr);gap:40px 24px}
+  .pat-stat--wide{grid-column:span 2}
+  .pat-media-head{flex-direction:column;align-items:flex-start}
+  .pat-media-grid{grid-template-columns:1fr}
+  .pat-media-main,.pat-media-side,.pat-media-thumb{grid-column:auto}
+}
+@media(max-width:680px){
+  .pat-section{padding:56px 0}
+}
