@@ -1,15 +1,17 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import './assets/css/App.css'
 import { LanguageProvider } from './context/LanguageContext'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import BackToTop from './components/layout/BackToTop'
+import RenovationPopup from './components/ui/RenovationPopup'
 import AppRoutes from './routes/AppRoutes'
 
 // Coquille de l'application : contexte global + mise en page (nav / contenu / footer).
 function App() {
   const { pathname, hash } = useLocation()
+  const [isRenovationPopupOpen, setIsRenovationPopupOpen] = useState(true)
 
   // Au rechargement : revenir à l'URL de base (sans #ancre) et en haut de page
   useEffect(() => {
@@ -39,6 +41,9 @@ function App() {
       </main>
       <Footer />
       <BackToTop />
+      {isRenovationPopupOpen && (
+        <RenovationPopup onClose={() => setIsRenovationPopupOpen(false)} />
+      )}
     </LanguageProvider>
   )
 }

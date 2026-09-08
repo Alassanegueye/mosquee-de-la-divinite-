@@ -17,7 +17,7 @@ import Boutique from '../components/sections/Boutique'
 // Page d'accueil : assemble les sections dans l'ordre de la maquette de référence.
 export default function Home() {
   return (
-    <>
+    <div className="home-page">
       <Hero />
       <Histoire />
       <Sangabi />
@@ -32,6 +32,6 @@ export default function Home() {
       <Renovation />
       <Patrimoine />
       <Boutique />
-    </>
+    </div>
   )
 }

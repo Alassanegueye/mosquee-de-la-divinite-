@@ -11,7 +11,6 @@ const GLOBAL_LINKS = [
   ['Prier', '/#prier'],
   ['Le Message', '/#message'],
   ['Communauté', '/#communaute'],
-  ['Rénovation', '/renovation'],
   ['Boutique', '/boutique'],
 ]
 
@@ -24,7 +23,7 @@ const SUBPAGE_LINKS = [
 ]
 
 // Pages qui partagent cette navbar « secondaire »
-const SUBPAGES = ['/boutique', '/renovation', '/patrimoine']
+const SUBPAGES = ['/boutique', '/renovation', '/patrimoine', '/dons']
 
 export default function Navbar() {
   const { lang, setLang } = useLanguage()
@@ -60,7 +59,7 @@ export default function Navbar() {
 
   const isSubPage = SUBPAGES.includes(location.pathname)
   const links = isSubPage ? SUBPAGE_LINKS : GLOBAL_LINKS
-  const donHref = isSubPage ? '/#renovation' : '#renovation'
+  const donHref = '/dons'
   const closeMenu = () => setMenuOpen(false)
 
   // Ferme le menu mobile quand on change de page (navigation, retour navigateur…)
@@ -106,9 +105,9 @@ export default function Navbar() {
         })}
         {/* Bouton « don » repris dans le menu déroulant mobile */}
         <li className="nav-don-mobile">
-          <a href={donHref} className="nav-don" onClick={closeMenu}>
+          <Link to={donHref} className="nav-don" onClick={closeMenu}>
             Faire un don
-          </a>
+          </Link>
         </li>
       </ul>
 
@@ -125,9 +124,9 @@ export default function Navbar() {
             </button>
           ))}
         </div>
-        <a href={donHref} className="nav-don nav-don-desktop">
+        <Link to={donHref} className="nav-don nav-don-desktop">
           Faire un don
-        </a>
+        </Link>
         <button
           type="button"
           className="nav-toggle"

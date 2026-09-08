@@ -1,4 +1,5 @@
 import { VIDEO, HERO_STATS } from '../../data/content'
+import { Link } from 'react-router-dom'
 
 // HERO — vidéo aérienne en fond + contenu éditorial à gauche + barre de stats en bas.
 // Reproduit la maquette de référence (Masdjidou Rabbani).
@@ -22,7 +23,8 @@ export default function Hero() {
         <div className="hero-v-content">
           <span className="hero-anchor" />
           <span className="hero-eye">Ouakam · Dakar · Sénégal</span>
-          <h1 className="hero-title">Masdjidou Rabbani</h1>
+          <h1 className="hero-title">Mosquée de la Divinité</h1>
+          <h4 className="hero-eye">Masdjidou Rabbani | Mosque of the Divinity</h4>
           <p className="hero-quote">
             «&nbsp;Dans la nuit du <span className="g">28 au 29 juin 1973</span>, une voix ordonna
             à Sangabi de suivre une maquette lumineuse jusqu’à la baie de Ouakam.&nbsp;»
@@ -30,7 +32,7 @@ export default function Hero() {
           <div className="hero-ctas">
             <a href="#histoire" className="btn-w">Découvrir l’histoire</a>
             <a href="#visiter" className="btn-w">Visiter la mosquée</a>
-            <a href="#renovation" className="btn-gold">Faire un don</a>
+            <Link to="/dons" className="btn-gold">Faire un don</Link>
           </div>
         </div>
       </div>

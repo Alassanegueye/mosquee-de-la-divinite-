@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart, FiShare2, FiArrowRight, FiCheckCircle, FiCheck, FiAlertTriangle, FiShoppingBag, FiInfo } from 'react-icons/fi'
+import { FiHeart, FiShare2, FiArrowRight, FiCheckCircle, FiAlertTriangle, FiShoppingBag, FiInfo } from 'react-icons/fi'
 import '../assets/css/Renovation.css'
 import cardPerspective from '../assets/photo/DJI_0681.jpg'
 import cardChantier from '../assets/photo/13-Khalif-Chantier.jpg'
@@ -92,7 +92,7 @@ export default function RenovationPage() {
               de l’Atlantique mais porté éternellement par la ferveur des hommes.
             </p>
             <div className="don-hero-ctas">
-              <a href="#don-form" className="don-btn don-btn--red">Prêter mes mains <FiArrowRight /></a>
+              <Link to="/dons" className="don-btn don-btn--red">Faire un don<FiArrowRight /></Link>
               <a href="#phases" className="don-btn don-btn--ghost">Découvrir le projet</a>
             </div>
           </div>
@@ -238,7 +238,8 @@ export default function RenovationPage() {
                   ou d’un ami du Sénégal.
                 </p>
                 <div className="don-way-chip">Wave · OM · Carte · Virement</div>
-                <a href="#don-form" className="don-way-btn don-way-btn--red">Je fais un don</a>
+                <Link to="/dons" className="don-way-btn don-way-btn--red">Je fais un don</Link>
+                
               </div>
 
               {/* Boutique */}
@@ -319,80 +320,7 @@ export default function RenovationPage() {
             </p>
           </div>
         </main>
-
-        {/* ---------- Formulaire de contribution (sticky) ---------- */}
-        <aside className="don-aside" id="don-form">
-          <form className="don-form" onSubmit={handleSubmit}>
-            <div className="don-form-head">
-              <FiHeart className="don-form-heart" />
-              <h3>Faire une contribution</h3>
-            </div>
-
-            <span className="don-label">Montant du don (FCFA)</span>
-            <div className="don-amounts">
-              {AMOUNTS.map((a) => (
-                <button
-                  type="button"
-                  key={a}
-                  className={`don-amount${!customMode && amount === a ? ' is-active' : ''}`}
-                  onClick={() => { setAmount(a); setCustomMode(false) }}
-                >
-                  {a.toLocaleString('fr-FR')} F
-                </button>
-              ))}
-              <button
-                type="button"
-                className={`don-amount don-amount--free${customMode ? ' is-active' : ''}`}
-                onClick={() => setCustomMode(true)}
-              >
-                Montant Libre
-              </button>
-            </div>
-            {customMode && (
-              <input
-                type="number"
-                min="500"
-                step="500"
-                className="don-input don-input--amount"
-                placeholder="Saisir un montant en FCFA"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-              />
-            )}
-
-            <span className="don-label">Méthode de paiement</span>
-            <div className="don-methods">
-              {METHODS.map((m) => (
-                <button
-                  type="button"
-                  key={m}
-                  className={`don-method${method === m ? ' is-active' : ''} ${m === 'Orange' ? 'don-method--orange' : ''}`}
-                  onClick={() => setMethod(m)}
-                >
-                  {m === 'CB / VISA' ? 'CB / VISA' : m.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            <span className="don-label">Vos informations personnelles</span>
-            <input type="text" className="don-input" placeholder="Nom complet ou Famille" required />
-            <input type="tel" className="don-input" placeholder="Téléphone (WhatsApp de préférence)" />
-
-            <button type="submit" className="don-submit">
-              Contribuer · {amount.toLocaleString('fr-FR')} F via {method}
-            </button>
-
-            {done && (
-              <p className="don-thanks">
-                Merci ! Votre intention de don de {amount.toLocaleString('fr-FR')} F via {method} a bien été enregistrée.
-                Un membre du mouvement Naby Allah vous recontactera.
-              </p>
-            )}
-
-            <p className="don-form-note">
-              Transaction sécurisée · Les fonds soutiennent exclusivement la restauration et la transmission.
-            </p>
-          </form>
+        <aside className="don-aside">
         </aside>
       </div>
     </div>

@@ -71,7 +71,7 @@ nav.nav-hidden{transform:translateY(-100%)}
 .nav-links-ref{display:flex;gap:36px;align-items:center;list-style:none}
 .nav-links-ref a{font-family:var(--caps);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--on-surface,#e2e2e2);text-decoration:none;transition:color 0.3s}
 .nav-links-ref a:hover{color:#EABA10}
-.nav-don{font-family:var(--caps);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;background:#eaba10;padding:11px 24px;text-decoration:none;transition:all 0.25s;white-space:nowrap}
+.nav-don{font-family:var(--caps);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#123e43;background:gradient(to right, rgb(249, 231, 130), #EABA10);padding:11px 24px;text-decoration:none;transition:all 0.25s;white-space:nowrap}
 .nav-don:hover{background:#fff;color:#123e43}
 /* Bouton hamburger (mobile) — masqué sur desktop */
 .nav-toggle{display:none;align-items:center;justify-content:center;background:transparent;border:none;color:var(--white);font-size:24px;cursor:pointer;padding:6px;margin-left:4px;line-height:0;transition:color 0.2s}

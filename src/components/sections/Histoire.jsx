@@ -3,7 +3,7 @@ import { images } from '../../data/content'
 // HISTOIRE — « Née d'un rêve divin » (mise en page de référence : texte / citation + grille d'images)
 export default function Histoire() {
   return (
-    <section id="histoire" className="section bg-cream">
+    <section id="histoire" className="section hist2-section">
       <div className="sw">
         <div className="hist2-grid">
           {/* Colonne gauche : récit */}
