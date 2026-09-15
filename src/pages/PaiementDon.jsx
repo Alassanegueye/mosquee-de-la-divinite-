@@ -151,9 +151,9 @@ export default function PaiementDon() {
                         : 'bg-[#121414] border-white/10 hover:border-white/20'
                     }`}
                   >
-                    <span className="text-xl">🌊</span>
-                    <p className="font-bold text-white mt-2">Wave Sénégal</p>
-                    <p className="text-xs text-[#a4ced4]">Lien direct &amp; QR Code</p>
+                    <span className="payment-brand payment-brand-wave" aria-hidden="true">W</span>
+                    <p className="payment-brand-name payment-brand-name-wave">Wave Sénégal</p>
+                    <p className="payment-brand-description">Lien direct &amp; QR Code</p>
                   </button>
 
                   <button
@@ -165,9 +165,9 @@ export default function PaiementDon() {
                         : 'bg-[#121414] border-white/10 hover:border-white/20'
                     }`}
                   >
-                    <span className="text-xl">🟠</span>
-                    <p className="font-bold text-white mt-2">Orange Money</p>
-                    <p className="text-xs text-orange-300">Code marchand &amp; USSD</p>
+                    <span className="payment-brand payment-brand-orange" aria-hidden="true">OM</span>
+                    <p className="payment-brand-name payment-brand-name-orange">Orange Money</p>
+                    <p className="payment-brand-description payment-brand-description-orange">Code marchand &amp; USSD</p>
                   </button>
                 </div>
               </div>
@@ -260,8 +260,13 @@ export default function PaiementDon() {
                   : 'bg-gradient-to-b from-[#241306] to-[#121414] border-[#f97316]/40'
               }`}>
                 <div className="flex justify-between items-center">
-                  <h3 className="font-cinzel text-base text-white font-bold">
-                    {operator === 'wave' ? 'Wave Sénégal' : 'Orange Money'}
+                  <h3 className="font-cinzel text-base font-bold flex items-center gap-2">
+                    <span className={`payment-brand payment-brand-small ${operator === 'wave' ? 'payment-brand-wave' : 'payment-brand-orange'}`} aria-hidden="true">
+                      {operator === 'wave' ? 'W' : 'OM'}
+                    </span>
+                    <span className={operator === 'wave' ? 'payment-brand-name-wave' : 'payment-brand-name-orange'}>
+                      {operator === 'wave' ? 'Wave Sénégal' : 'Orange Money'}
+                    </span>
                   </h3>
                   <span className="font-cormorant text-2xl font-bold text-[#f1c11c]">
                     {currentAmount.toLocaleString('fr-FR')} FCFA
@@ -358,9 +363,13 @@ export default function PaiementDon() {
             
             <div className="border-b border-white/10 pb-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <span className="font-cinzel text-xs text-[#f1c11c] tracking-widest uppercase font-bold flex items-center gap-2">
+                  <span className="font-cinzel text-xs text-[#9a7800] tracking-widest uppercase font-bold flex items-center gap-2">
                   <Building2 size={16} /> Relevé d'Identité Bancaire Officiel (RIB)
                 </span>
+                  <div className="payment-bank-brand" aria-label="Compte PAMECAS">
+                    <span className="payment-pamecas-mark">pamecas</span>
+                    <span className="payment-pamecas-tag">Partenaire bancaire</span>
+                  </div>
                 <h2 className="font-cormorant text-2xl sm:text-3xl text-white font-medium mt-1">
                   Coordonnées pour Virement Bancaire
                 </h2>
