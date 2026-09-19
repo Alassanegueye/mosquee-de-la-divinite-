@@ -229,10 +229,10 @@ export default function RenovationView() {
       color: '#C11616',
       badge: 'Priorité 1 · Sauvegarde Urgente',
       image: projectAImage,
-      summary: 'Renforcement du squelette en béton haute résistance et d’acier marin, sécurisation des deux minarets de 45 mètres et de la coupole centrale.',
+      summary: 'Renforcement du squelette avec du béton haute résistance et de l’acier marin, sécurisation des deux minarets de 45 mètres et de la coupole centrale.',
       works: [
-        'Renforcement de la structure en béton marin',
-        'Renforcement de la structure en fer et passivation des armatures',
+        'Renforcement de la structure avec du béton haute résistance',
+        'Renforcement de la structure avec de l’acier marin et passivation des armatures',
         'Sécurisation des minarets de 45 m et de la coupole'
       ],
       progress: 0
@@ -247,11 +247,11 @@ export default function RenovationView() {
       color: '#0e4b50',
       badge: 'Confort & Salubrité des Fidèles',
       image: projectBImage,
-      summary: 'Édification de blocs sanitaires modernes et d’espaces d’ablutions carrelés répartis sur deux niveaux indépendants.',
+      summary: 'Édification de blocs sanitaires et d’espaces d’ablutions modernes répartis sur deux niveaux indépendants.',
       works: [
-        'Rez-de-chaussée moderne aménagé pour les hommes',
-        'Premier étage indépendant dédié pour les femmes',
-        'Raccordement assainissement étanche et robinetterie hydro-économe'
+        'Blocs sanitaires modernes : rez-de-chaussée pour les hommes',
+        'Premier étage indépendant dédié aux femmes',
+        'Raccordement à un assainissement étanche et robinetterie hydro-économe'
       ],
       progress: 0
     },
@@ -268,7 +268,7 @@ export default function RenovationView() {
       summary: 'Remise aux normes intégrale des réseaux électriques et installation d’une centrale solaire photovoltaïque pour la mosquée et ses abords.',
       works: [
         'Installation de nouveaux circuits électriques sécurisés',
-        'Éclairage architectural de la mosquée et des environs',
+        'Éclairage architectural de la mosquée et de ses abords',
         'Installation de panneaux solaires photovoltaïques haute efficacité'
       ],
       progress: 0
@@ -283,11 +283,11 @@ export default function RenovationView() {
       color: '#167078',
       badge: 'Acoustique & Mémoire Numérique',
       image: projectDImage,
-      summary: 'Équipement acoustique haute fidélité tropicalisé résistant aux embruns marins, régie audio couplée au solaire et numérisation des prêches.',
+      summary: 'Équipement acoustique haute-fidélité tropicalisé résistant aux embruns marins, régie audio et numérisation des activités de la mosquée.',
       works: [
-        'Système de sonorisation performante pour minarets et esplanade',
-        'Intégration du système à l’énergie Solaire',
-        'Sauvegarde numérique des données et des archives des prêches'
+        'Système de sonorisation performant pour les minarets et l’esplanade',
+        'Sauvegarde numérique et archivage des enregistrements des activités de la mosquée : prêches, cérémonies…',
+        'Régie audio et gestion des évènements de la mosquée'
       ],
       progress: 0
     }
@@ -333,26 +333,26 @@ export default function RenovationView() {
     {
       id: 'm-naby',
       name: 'Mouhamed Naby Gueye',
-      roleTitle: 'Actuel Khalif du Mouvement Naby-Allah',
-      responsibility: 'Autorité Morale & Haut Patronage Spirituel',
+      roleTitle: 'Actuel Khalife du Mouvement Naby-Allah',
+      responsibility: 'Autorité morale & haut patronage spirituel',
       image: leaderNabyImage,
-      bio: 'Mouhamed Naby Gueye est le fils aîné et Khalif de Mouhamed Seyni Gueye, Bâtisseur de la Mosquée de la Divinité. Sous son Khalifa, d’importants travaux ont déjà été réalisés à la mosquée. Il assure le haut patronage et la supervision globale de ce grand chantier de rénovation.'
+      bio: 'Mouhamed Naby Gueye est le fils aîné et Khalife de Mouhamed Seyni Gueye, bâtisseur de la Mosquée de la Divinité. Sous son Khalifat, d’importants travaux ont déjà été réalisés à la mosquée. Il assure le haut patronage et la supervision globale de ce grand chantier de rénovation.'
     },
     {
       id: 'ababacar-ndoye',
       name: 'Ababacar Sadikh Ndoye',
       roleTitle: 'Président du Mouvement Naby-Allah',
-      responsibility: 'Responsable Technique des Travaux & Ingénieur',
+      responsibility: 'Responsable technique des travaux & ingénieur',
       image: leaderAbabacarImage,
-      bio: 'Ababacar Sadikh Ndoye est un ingénieur en télécommunications. Il a été le bras droit de Mouhamed Seyni Gueye lors de la construction de la mosquée en 1992. Il dirige la commission technique, valide les devis d’ingénierie et pilote l’exécution des 4 chantiers.'
+      bio: 'Ingénieur en télécommunications et ancien collaborateur direct de Mouhamed Seyni Gueye lors de la construction de la mosquée en 1992. Il dirige la commission technique et pilote l’exécution des quatre chantiers.'
     },
     {
       id: 'tidiane-gueye',
       name: 'Cheikh Ahmet Tidiane Gueye',
       roleTitle: 'Responsable de la Communication',
-      responsibility: 'Consultant International & Relations Mécènes',
+      responsibility: 'Consultant international & relations mécènes',
       image: leaderTidianeImage,
-      bio: 'Cheikh Ahmet Tidiane Gueye est un consultant international en communication. Il est en charge de la communication du Mouvement Naby-Allah depuis plusieurs années. Il supervise la campagne de mobilisation des dons, les relations médias et les partenariats institutionnels.'
+      bio: 'Consultant international en communication, il supervise la campagne de mobilisation des dons, les relations médias et les partenariats institutionnels.'
     }
   ];
 
@@ -390,7 +390,7 @@ export default function RenovationView() {
               <span>CAMPAGNE OFFICIELLE DE SAUVEGARDE</span>
             </div>
             <div className="bg-[#fcf3f3] border border-[#f5c6c6] text-[#C11616] px-4 py-2 rounded-full font-bold">
-              <span>FI SABILILAH · DAKAR</span>
+              <span>FI SABÎLILAH · DAKAR</span>
             </div>
           </div>
 
@@ -421,7 +421,7 @@ export default function RenovationView() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#e8f1f2]/95 backdrop-blur-sm border border-[#b8d4d7] text-[#0e4b50] text-xs uppercase tracking-[0.2em] font-bold shadow-xs">
               <Building size={14} className="text-[#C11616]" />
-              <span>La Mosquée a Besoin de Vous · 30 Ans face à l'Océan</span>
+              <span>La mosquée a besoin de vous · 30 ans face à l'océan</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-light text-[#0c282b] leading-[1.08] tracking-tight">
@@ -431,10 +431,10 @@ export default function RenovationView() {
             {/* Citation officielle de la brochure */}
             <div className="bg-white/95 backdrop-blur-md border-l-4 border-[#C11616] p-5 rounded-r-xl shadow-md border-y border-r border-slate-200">
               <p className="text-xs text-[#0e4b50] uppercase tracking-wider font-bold mb-1">
-                30 Ans d'Existence face à l'Érosion Maritime
+                30 ans d’existence face à l’érosion maritime
               </p>
               <p className="text-lg sm:text-xl text-[#243e41] italic leading-relaxed">
-                « Depuis plus de 30 ans, la Mosquée de la Divinité résiste vaillamment à l’érosion maritime et aux embruns de l'Atlantique. Aujourd'hui, préserver ce sanctuaire sacré exige la mobilisation solidaire de chacun. »
+                « Depuis plus de 30 ans, la Mosquée de la Divinité résiste vaillamment à l’érosion maritime et aux embruns de l’Atlantique. Aujourd’hui, préserver ce sanctuaire sacré exige la mobilisation solidaire de chacun. »
               </p>
             </div>
 
@@ -613,13 +613,13 @@ export default function RenovationView() {
           <div className="max-w-3xl space-y-4 text-left">
             <div className="inline-flex items-center gap-2 text-[#C11616] text-xs tracking-[0.25em] uppercase font-bold">
               <Layers size={16} />
-              <span>Programme d'Exécution · 4 Chantiers Prioritaires</span>
+              <span>Programme d’exécution · 4 chantiers prioritaires</span>
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#0c282b] font-light tracking-tight leading-tight">
-              Quatre Projets pour Sauvegarder la Mosquée
+              Quatre projets pour sauvegarder la mosquée
             </h2>
             <p className="text-lg md:text-xl text-[#39575a] leading-relaxed">
-              « Votre contribution servira à financer un ensemble de projets de rénovation de la mosquée. » Chaque projet fait l’objet d’un devis technique rigoureux et peut être financé individuellement.
+              « Votre contribution servira à financer un ensemble de projets de rénovation de la mosquée. Chaque projet fait l’objet d’un devis technique rigoureux et peut être financé et exécuté individuellement. »
             </p>
           </div>
 
@@ -776,10 +776,10 @@ export default function RenovationView() {
               <span>Gouvernance &amp; Exécution des Travaux</span>
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-white font-light tracking-tight leading-tight">
-              Responsables des Travaux de Rénovation
+              Responsables des travaux de rénovation
             </h2>
             <p className="text-lg md:text-xl text-[#d0e5e7] leading-relaxed">
-              La conduite, l'engagement financier et la responsabilité technique du présent chantier sont assurés collégialement par les trois responsables en activité ci-dessous.
+              La conduite, l’engagement financier et la responsabilité technique du présent chantier sont assurés collégialement par les trois responsables en activité ci-dessous.
             </p>
           </div>
 
@@ -845,7 +845,7 @@ export default function RenovationView() {
                 Feu Mouhamed Seyni Gueye (Sanga bi, 1926-2007)
               </h4>
               <p className="text-sm text-[#d4ebea] leading-relaxed italic">
-                Bâtisseur originel de la Mosquée de la Divinité en 1992, rappelé à Dieu. Ce grand chantier perpétue sa vision sacrée sous la responsabilité exclusive du Khalife Mouhamed Naby Gueye, du Président des Travaux Ababacar Sadikh Ndoye et du Responsable Communication Cheikh Ahmet Tidiane Gueye.
+                Bâtisseur originel de la Mosquée de la Divinité en 1992, rappelé à Dieu. Ce grand chantier perpétue sa vision sacrée sous la responsabilité exclusive du khalife Mouhamed Naby Gueye, du président des travaux Ababacar Sadikh Ndoye et du responsable communication Cheikh Ahmet Tidiane Gueye.
               </p>
             </div>
           </div>
@@ -865,10 +865,10 @@ export default function RenovationView() {
               <span>Modalités Officielles de Contribution</span>
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#0c282b] font-light tracking-tight leading-tight">
-              Comment Participer ?
+              Comment participer ?
             </h2>
             <p className="text-lg md:text-xl text-[#39575a] leading-relaxed">
-              Pour que chaque fidèle et bienfaiteur puisse apporter sa pierre à l'édifice selon ses moyens, quatre voies sécurisées et directes sont ouvertes.
+              Pour que chaque fidèle et bienfaiteur puisse apporter sa pierre à l’édifice selon ses moyens, quatre voies sécurisées et directes sont ouvertes.
             </p>
           </div>
 
