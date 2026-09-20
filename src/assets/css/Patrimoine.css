@@ -5,14 +5,14 @@
    ============================================================ */
 
 /* Conteneur largeur de page (aligné sur .sw global) */
-.pat-container{max-width:1200px;margin:0 auto;padding:0 56px;width:100%}
+.pat-container{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);width:100%}
 
 /* Couleurs locales reprises de la maquette */
 .pat-page{
   --pat-primary:#00272c;
   --pat-container-c:#123e43;
   --pat-on-variant:#414849;
-  --pat-green:#045926;
+  --pat-green:#8F6E08;
   --pat-low:#f3f3f4;
   --pat-outline:#c0c8c9;
   background:#fff;
@@ -25,7 +25,7 @@
 
 /* ---------- HERO ---------- */
 .pat-hero{position:relative;background:#fff;display:flex;align-items:flex-end;overflow:hidden}
-.pat-hero-inner{position:relative;z-index:10;padding-top:96px;padding-bottom:72px}
+.pat-hero-inner{position:relative;z-index:10;padding-top:clamp(44px,7vw,96px);padding-bottom:clamp(12px,2vw,28px)}
 .pat-hero-text{max-width:66%}
 .pat-anchor{border-left:2px solid var(--red);padding-left:24px;margin-bottom:16px}
 .pat-eyebrow{
@@ -33,7 +33,7 @@
   text-transform:uppercase;color:var(--red);font-weight:600;display:block;
 }
 .pat-hero-title{
-  font-family:var(--display);font-size:clamp(48px,8vw,84px);line-height:1.0;
+  font-family:var(--display);font-size:clamp(34px,7vw,78px);line-height:1.0;
   letter-spacing:-0.02em;font-weight:400;color:var(--pat-primary);margin-bottom:24px;
 }
 .pat-hero-title em{font-style:italic;color:var(--pat-green)}
@@ -43,20 +43,20 @@
 }
 
 /* ---------- LEGACY (citation + image fondatrice) ---------- */
-.pat-section{padding:120px 0}
-.pat-legacy{background:#fff}
+.pat-section{padding:var(--sec-y) 0}
+.pat-legacy{background:#fff;padding-top:clamp(36px,5vw,72px)}
 .pat-legacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
 .pat-legacy-card{
-  position:relative;background:#fff;padding:16px;
+  position:relative;background:#fff;padding:14px;border-radius:var(--r);
   box-shadow:0 20px 50px rgba(0,0,0,0.15);transform:rotate(1deg);
   transition:transform 0.5s ease,box-shadow 0.5s ease;
 }
 .pat-legacy-card:hover{transform:rotate(0deg) translateY(-6px);box-shadow:0 28px 60px rgba(0,0,0,0.2)}
-.pat-legacy-card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
-.pat-legacy-card::after{content:'';position:absolute;inset:0;border:1px solid rgba(0,0,0,0.05);pointer-events:none}
+.pat-legacy-card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:var(--r-sm)}
+.pat-legacy-card::after{content:'';position:absolute;inset:0;border:1px solid rgba(0,0,0,0.05);border-radius:var(--r);pointer-events:none}
 .pat-legacy-text{display:flex;flex-direction:column;gap:32px}
 .pat-legacy-quote{
-  font-family:var(--serif);font-size:clamp(36px,5vw,60px);line-height:1.05;
+  font-family:var(--serif);font-size:clamp(24px,4.4vw,52px);line-height:1.05;
   color:var(--pat-primary);border-left:4px solid var(--red);padding-left:32px;font-style:italic;
 }
 .pat-legacy-body{display:flex;flex-direction:column;gap:24px;
@@ -80,19 +80,19 @@
 @keyframes patPulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
 /* ---------- MÉDIATHÈQUE (bento) ---------- */
-.pat-media-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:64px;flex-wrap:wrap}
+.pat-media-head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:clamp(32px,4.5vw,64px);flex-wrap:wrap}
 .pat-media-eyebrow{font-family:var(--caps);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:16px}
-.pat-media-title{font-family:var(--serif);font-size:clamp(36px,5vw,60px);line-height:1.05;color:var(--pat-primary)}
+.pat-media-title{font-family:var(--serif);font-size:clamp(28px,4.6vw,54px);line-height:1.05;color:var(--pat-primary)}
 .pat-media-note{
   font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.6;
   color:var(--pat-on-variant);border-left:2px solid var(--pat-outline);padding-left:24px;max-width:28rem;
 }
-.pat-media-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:32px}
-.pat-media-main{grid-column:span 7;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--pat-primary)}
+.pat-media-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2.4vw,32px)}
+.pat-media-main{grid-column:span 7;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:var(--pat-primary)}
 .pat-media-main iframe{width:100%;height:100%;border:0;display:block}
 .pat-media-side{grid-column:span 5;display:flex;flex-direction:column;gap:32px}
 .pat-media-card{
-  padding:32px;background:var(--pat-low);border-right:4px solid var(--red);
+  padding:clamp(22px,2.6vw,32px);background:var(--pat-low);border-radius:var(--r);border-right:4px solid var(--red);
   flex:1;display:flex;flex-direction:column;justify-content:center;
   transition:background 0.3s ease,transform 0.3s ease;
 }
@@ -107,13 +107,13 @@
   display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-top:8px;transition:transform 0.3s ease;
 }
 .pat-media-cardlink:hover{transform:translateX(8px)}
-.pat-media-thumb{grid-column:span 4;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--pat-primary)}
+.pat-media-thumb{grid-column:span 4;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:var(--pat-primary)}
 .pat-media-thumb iframe{width:100%;height:100%;border:0;display:block}
-.pat-media-cta{margin-top:64px;display:flex;justify-content:center}
+.pat-media-cta{margin-top:clamp(36px,5vw,64px);display:flex;justify-content:center}
 .pat-media-cta a{
-  display:inline-flex;align-items:center;gap:16px;padding:16px 32px;
-  border:2px solid var(--red);color:var(--red);font-family:var(--caps);
-  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;
+  display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:15px 32px;
+  border:1px solid var(--red);border-radius:var(--r-pill);color:var(--red);font-family:var(--caps);
+  font-size:10px;letter-spacing:0.16em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;
 }
 .pat-media-cta a:hover{background:var(--red);color:#fff}
 .pat-media-cta a svg{transition:transform 0.3s ease}
@@ -139,4 +139,12 @@
 }
 @media(max-width:680px){
   .pat-section{padding:56px 0}
+}
+
+/* Titre du hero : italique or profond, cohérent avec le reste du site */
+.pat-hero-title em{color:var(--gold-dp)}
+@media(max-width:560px){
+  .pat-media-cta a{width:100%}
+  .pat-legacy-quote{padding-left:20px;border-left-width:3px}
+  .pat-anchor{padding-left:18px}
 }

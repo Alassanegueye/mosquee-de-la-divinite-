@@ -419,6 +419,27 @@
   letter-spacing: -.04em;
 }
 .paiement-page .payment-brand-small { width: 28px; height: 28px; border-radius: 8px; font-size: 12px; }
+
+/* Pastille portant un vrai logo.
+   Le fond coloré et la lettre de repli disparaissent : le logo apporte
+   ses propres couleurs, et un aplat derrière lui le ferait ressortir
+   comme une vignette collée. L'image occupe tout le cadre, en `contain`
+   pour qu'un logo en bannière ne soit pas rogné. */
+.paiement-page .payment-brand--image {
+  background: #fff;
+  padding: 0;
+  overflow: hidden;
+}
+/* `cover` et non `contain` : le logo Wave porte déjà ses propres marges
+   blanches, que `contain` ajoutait aux siennes — la pastille se retrouvait
+   presque vide. Les deux visuels étant carrés comme leur cadre, remplir ne
+   rogne rien. */
+.paiement-page .payment-brand--image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .paiement-page .payment-brand-wave { background: #20bce8; color: #063e50; }
 .paiement-page .payment-brand-orange { background: #ff7900; color: #fff; }
 .paiement-page .payment-brand-name { margin-top: 10px; font-family: "Cinzel", serif; font-weight: 700; }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { FiMic, FiImage, FiArrowRight } from 'react-icons/fi'
 import '../assets/css/Patrimoine.css'
 import sangabiImg from '../assets/photo/Khalife de Dieu.jpg'
+import { useT } from '../utils/useT'
 
 // Chiffres-clés de l'archive (compteurs architecturaux)
 const STATS = [
@@ -14,6 +15,7 @@ const STATS = [
 // Page Patrimoine — Archives & Mémoire de la Mosquée de la Divinité.
 // La Navbar et le Footer sont fournis par le gabarit (App.jsx).
 export default function PatrimoinePage() {
+  const t = useT()
   const pageRef = useRef(null)
 
   // Apparition progressive des sections au défilement (IntersectionObserver)
@@ -41,16 +43,14 @@ export default function PatrimoinePage() {
         <div className="pat-container pat-hero-inner">
           <div className="pat-hero-text">
             <div className="pat-anchor">
-              <span className="pat-eyebrow">Archives &amp; Mémoire</span>
+              <span className="pat-eyebrow">{t('Archives & Mémoire')}</span>
             </div>
             <h1 className="pat-hero-title">
-              Pour ceux qui ne l’ont pas connu.<br />
-              <em>Et pour ceux qui ne sont pas encore nés.</em>
+              {t('Pour ceux qui ne l’ont pas connu.')}<br />
+              <em>{t('Et pour ceux qui ne sont pas encore nés.')}</em>
             </h1>
             <p className="pat-hero-lead">
-              La Mosquée de la Divinité est un lieu de mémoire autant qu’un lieu de culte.
-              Plus de 50 ans d’archives documentées. Des témoignages oraux, des photos, des
-              documents fondateurs, un patrimoine unique en cours de numérisation et de préservation.
+              {t('La Mosquée de la Divinité est un lieu de mémoire autant qu’un lieu de culte. Plus de 50 ans d’archives documentées. Des témoignages oraux, des photos, des documents fondateurs, un patrimoine unique en cours de numérisation et de préservation.')}
             </p>
           </div>
         </div>
@@ -63,25 +63,23 @@ export default function PatrimoinePage() {
             <div className="pat-legacy-card">
               <img
                 src={sangabiImg}
-                alt="Mouhamed Seyni Gueye, dit Sangabi — documents et héritage fondateurs"
+                alt={t('Mouhamed Seyni Gueye, dit Sangabi — documents et héritage fondateurs')}
                 loading="lazy"
                 decoding="async"
               />
             </div>
           </figure>
           <div className="pat-legacy-text">
-            <span className="pat-eyebrow">L’héritage de Sangabi</span>
+            <span className="pat-eyebrow">{t('L’héritage de Sangabi')}</span>
             <blockquote className="pat-legacy-quote">
-              « Pour ceux qui ne l’ont jamais rencontré, pour ceux qui n’ont pas vu la mosquée se construire. »
+              « {t('Pour ceux qui ne l’ont jamais rencontré, pour ceux qui n’ont pas vu la mosquée se construire.')} »
             </blockquote>
             <div className="pat-legacy-body">
               <p>
-                Dans vingt ans, d’autres le porteront, des gens qui ne l’ont jamais rencontré,
-                qui n’ont pas vu la mosquée se construire, qui n’ont pas entendu sa voix.
+                {t('Dans vingt ans, d’autres le porteront, des gens qui ne l’ont jamais rencontré, qui n’ont pas vu la mosquée se construire, qui n’ont pas entendu sa voix.')}
               </p>
               <p>
-                Préserver cette mémoire, c’est transmettre aux générations futures une part du
-                patrimoine religieux, architectural et humain de Dakar et du Sénégal.
+                {t('Préserver cette mémoire, c’est transmettre aux générations futures une part du patrimoine religieux, architectural et humain de Dakar et du Sénégal.')}
               </p>
             </div>
           </div>
@@ -95,14 +93,14 @@ export default function PatrimoinePage() {
             {STATS.map(([num, label, sub]) => (
               <div className="pat-stat" key={label}>
                 <span className="pat-stat-num">{num}</span>
-                <span className="pat-stat-label">{label}</span>
-                <span className="pat-stat-sub">{sub}</span>
+                <span className="pat-stat-label">{t(label)}</span>
+                <span className="pat-stat-sub">{t(sub)}</span>
               </div>
             ))}
             <div className="pat-stat pat-stat--wide">
               <span className="pat-stat-num pulse">↻</span>
-              <span className="pat-stat-label">En cours</span>
-              <span className="pat-stat-sub">Archive numérique</span>
+              <span className="pat-stat-label">{t('En cours')}</span>
+              <span className="pat-stat-sub">{t('Archive numérique')}</span>
             </div>
           </div>
         </div>
@@ -113,12 +111,11 @@ export default function PatrimoinePage() {
         <div className="pat-container">
           <div className="pat-media-head">
             <div>
-              <span className="pat-media-eyebrow">Médiathèque</span>
-              <h2 className="pat-media-title">Les voix de l’histoire.</h2>
+              <span className="pat-media-eyebrow">{t('Médiathèque')}</span>
+              <h2 className="pat-media-title">{t('Les voix de l’histoire.')}</h2>
             </div>
             <p className="pat-media-note">
-              Les photographies montrent un visage. Les archives racontent une histoire.
-              Mais la voix transmet quelque chose d’autre.
+              {t('Les photographies montrent un visage. Les archives racontent une histoire. Mais la voix transmet quelque chose d’autre.')}
             </p>
           </div>
 
@@ -127,7 +124,7 @@ export default function PatrimoinePage() {
             <div className="pat-media-main">
               <iframe
                 src="https://www.youtube.com/embed/videoseries?si=_9N7G3DxA4oE-3TC&list=PLn-4i5RmTZrEngicK9AUtKRHQrU-WS1Ya"
-                title="Archives vidéo de la Mosquée de la Divinité"
+                title={t('Archives vidéo de la Mosquée de la Divinité')}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
@@ -138,35 +135,35 @@ export default function PatrimoinePage() {
             <div className="pat-media-side">
               <div className="pat-media-card">
                 <FiMic className="pat-media-card-ico" />
-                <h4>Sermon Historique</h4>
-                <p>Le premier appel public du 1er Juillet 1977. Restauration numérique haute fidélité.</p>
+                <h4>{t('Sermon Historique')}</h4>
+                <p>{t('Le premier appel public du 1er Juillet 1977. Restauration numérique haute fidélité.')}</p>
                 <div className="pat-progress"><i /></div>
               </div>
               <div className="pat-media-card">
                 <FiImage className="pat-media-card-ico" />
-                <h4>Galerie Photos</h4>
-                <p>420 clichés argentiques numérisés illustrant la ferveur de la communauté Ouakamoise.</p>
+                <h4>{t('Galerie Photos')}</h4>
+                <p>{t('420 clichés argentiques numérisés illustrant la ferveur de la communauté Ouakamoise.')}</p>
                 <a className="pat-media-cardlink" href="#">
-                  Consulter l’album <FiArrowRight />
+                  {t('Consulter l’album')} <FiArrowRight />
                 </a>
               </div>
             </div>
 
             {/* Vignettes vidéo secondaires */}
             <div className="pat-media-thumb">
-              <iframe src="https://www.youtube.com/embed/AVHTdd3obBI" title="Archive vidéo 1" allowFullScreen />
+              <iframe src="https://www.youtube.com/embed/AVHTdd3obBI" title={t('Archive vidéo')+' 1'} allowFullScreen />
             </div>
             <div className="pat-media-thumb">
-              <iframe src="https://www.youtube.com/embed/j7pBLJyXjZA" title="Archive vidéo 2" allowFullScreen />
+              <iframe src="https://www.youtube.com/embed/j7pBLJyXjZA" title={t('Archive vidéo')+' 2'} allowFullScreen />
             </div>
             <div className="pat-media-thumb">
-              <iframe src="https://www.youtube.com/embed/GMaNQHtJ6to" title="Archive vidéo 3" allowFullScreen />
+              <iframe src="https://www.youtube.com/embed/GMaNQHtJ6to" title={t('Archive vidéo')+' 3'} allowFullScreen />
             </div>
           </div>
 
           <div className="pat-media-cta">
             <a href="#">
-              Voir toutes les vidéos <FiArrowRight />
+              {t('Voir toutes les vidéos')} <FiArrowRight />
             </a>
           </div>
         </div>

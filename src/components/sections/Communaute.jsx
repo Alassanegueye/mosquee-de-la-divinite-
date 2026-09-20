@@ -1,4 +1,4 @@
-import actionNdogou from '../../assets/photo/Korite.jpg'
+﻿import actionNdogou from '../../assets/photo/Korite.jpg'
 import actionSchool from '../../assets/photo/Fayfaat.jpg'
 import actionBlood from '../../assets/photo/1er Octobre.jpg'
 import actionMedical from '../../assets/photo/659156031_18319742143264052_4431240640787869140_n.jpg'

@@ -1,5 +1,6 @@
 import mainsNuesImg from '../../assets/photo/A mains nues 2.jpg'
 import SiratImg from '../../assets/photo/Sirat.jpg'
+import { useT } from '../../utils/useT'
 
 // CONSTRUCTION — récit de l'édification de la mosquée en 4 temps
 const HANDS = [
@@ -17,6 +18,8 @@ const PILLARS = [
 ]
 
 export default function Construction() {
+  const t = useT()
+
   return (
     <section id="construction">
       {/* Nuit Fondatrice */}
@@ -24,11 +27,9 @@ export default function Construction() {
         <div className="cons-night-bg" aria-hidden="true" />
         <div className="sw cons-night-inner">
           <p className="cons-ar-glow">الله أكبر</p>
-          <h3 className="cons-night-title">Nuit Fondatrice</h3>
+          <h3 className="cons-night-title">{t('Nuit Fondatrice')}</h3>
           <p className="cons-night-quote">
-            « Sous la voûte étoilée de 1973, l’étincelle divine traça les contours de ce
-            qui allait devenir le phare spirituel de la côte dakaroise. Une nuit où le
-            silence parla plus fort que le ressac. »
+            « {t('Sous la voûte étoilée de 1973, l’étincelle divine traça les contours de ce qui allait devenir le phare spirituel de la côte dakaroise. Une nuit où le silence parla plus fort que le ressac.')} »
           </p>
         </div>
       </div>
@@ -37,25 +38,24 @@ export default function Construction() {
       <div className="cons-hands">
         <div className="sw cons-hands-grid">
           <div>
-            <span className="eyebrow gold">Construction</span>
-            <h3 className="cons-hands-title">Bâtie à mains nues.</h3>
-            <span className="eyebrow gold">Bâtie à mains nues par toute une communauté.</span>
+            <span className="eyebrow gold">{t('Construction')}</span>
+            <h3 className="cons-hands-title">{t('Bâtie à mains nues.')}</h3>
+            <span className="eyebrow gold">{t('Bâtie à mains nues par toute une communauté.')}</span>
             <p className="cons-lead">
-              Le chantier fut une prouesse humaine sans précédent. Hommes, femmes et enfants
-              de la communauté Naby Allah se sont relayés pendant 5 ans et 5 mois.
+              {t('Le chantier fut une prouesse humaine sans précédent. Hommes, femmes et enfants de la communauté Naby Allah se sont relayés pendant 5 ans et 5 mois.')}
             </p>
             <ul className="cons-list">
-              {HANDS.map((t) => (
-                <li key={t}>
+              {HANDS.map((txt) => (
+                <li key={txt}>
                   <span className="cons-dash" aria-hidden="true" />
-                  {t}
+                  {t(txt)}
                 </li>
               ))}
             </ul>
           </div>
           <div className="cons-hands-visual">
             <div className="cons-hands-frame">
-              <img src={mainsNuesImg} alt="La mosquée bâtie à mains nues par la communauté" loading="lazy" />
+              <img src={mainsNuesImg} alt={t('La mosquée bâtie à mains nues par la communauté')} loading="lazy" />
             </div>
           </div>
         </div>
@@ -64,15 +64,13 @@ export default function Construction() {
       {/* Pont Al Sirat */}
       <div className="cons-sirat">
         <div className="sw cons-sirat-inner">
-          <span className="cons-eyebrow">L’Audace Architecturale</span>
-          <h3 className="cons-sirat-title">Le Pont Al Sirat</h3>
+          <span className="cons-eyebrow">{t('L’Audace Architecturale')}</span>
+          <h3 className="cons-sirat-title">{t('Le Pont Al Sirat')}</h3>
           <div className="cons-sirat-banner-img">
-            <img src={SiratImg} alt="Passerelle du Pont Al Sirat entre les deux minarets" loading="lazy" />
+            <img src={SiratImg} alt={t('Passerelle du Pont Al Sirat entre les deux minarets')} loading="lazy" />
           </div>
           <p className="cons-sirat-quote">
-            Reliant les deux minarets à 45 mètres de hauteur, cette passerelle symbolise
-            le passage périlleux vers la félicité éternelle. Construite par de jeunes
-            bâtisseurs au cœur vaillant, elle défie les vents marins et le vertige.
+            {t('Reliant les deux minarets à 45 mètres de hauteur, cette passerelle symbolise le passage périlleux vers la félicité éternelle. Construite par de jeunes bâtisseurs au cœur vaillant, elle défie les vents marins et le vertige.')}
           </p>
         </div>
       </div>
@@ -83,8 +81,8 @@ export default function Construction() {
           {PILLARS.map(([sym, label, desc]) => (
             <div className="cons-pillar" key={label}>
               <span className="cons-pillar-sym">{sym}</span>
-              <p className="cons-pillar-label">{label}</p>
-              <p className="cons-pillar-desc">{desc}</p>
+              <p className="cons-pillar-label">{t(label)}</p>
+              <p className="cons-pillar-desc">{t(desc)}</p>
             </div>
           ))}
         </div>

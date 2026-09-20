@@ -4,6 +4,7 @@ import laylatImg from '../../assets/photo/Leylatul Qadr.jpg'
 import maouloudImg from '../../assets/photo/Malwloud.jpg'
 import octobreImg from '../../assets/photo/1er Octobre.jpg'
 import decembreImg from '../../assets/photo/Journées prieres.jpg'
+import { useT } from '../../utils/useT'
 
 // ÉVÉNEMENTS — « Un calendrier vivant » : 2 commémorations majeures + événements nocturnes / autres
 const FEATURED = [
@@ -53,55 +54,59 @@ const AUTRES = [
 ]
 
 function MiniEvent({ ev, theme }) {
+  const t = useT()
+
   return (
     <article className={`ev-mini ev-mini--${theme}`}>
       <div className="ev-mini-photo">
         <img src={ev.img} alt={ev.name} loading="lazy" />
       </div>
       <div className="ev-mini-body">
-        <span className="ev-mini-tag">{ev.tag}</span>
-        <h4 className="ev-mini-name">{ev.name}</h4>
-        <p className="ev-mini-detail">{ev.detail}</p>
+        <span className="ev-mini-tag">{t(ev.tag)}</span>
+        <h4 className="ev-mini-name">{t(ev.name)}</h4>
+        <p className="ev-mini-detail">{t(ev.detail)}</p>
       </div>
     </article>
   )
 }
 
 export default function Evenements() {
+  const t = useT()
+
   return (
     <section id="evenements" className="section ev-section">
       <div className="sw">
         <div className="ev-head">
-          <div className="ey ey-g">Événements</div>
-          <h2 className="h2 h2-dk">Un calendrier vivant.</h2>
+          <div className="ey ey-g">{t('Événements')}</div>
+          <h2 className="h2 h2-dk">{t('Un calendrier vivant.')}</h2>
         </div>
 
         {/* Deux commémorations majeures */}
-        <div className="ev-feature-grid">
+        <div className="ev-feature-grid" data-reveal>
           {FEATURED.map((f) => (
             <article className="ev-feature" key={f.title}>
               <div className={`ev-feature-photo${f.fit === 'contain' ? ' ev-feature-photo--contain' : ''}`}>
                 <img src={f.img} alt={f.title} loading="lazy" />
               </div>
               <div className="ev-feature-body">
-                <span className="ev-eyebrow">{f.tag}</span>
-                <h3 className="ev-feature-title">{f.title}</h3>
-                <p className="ev-feature-text">{f.text}</p>
+                <span className="ev-eyebrow">{t(f.tag)}</span>
+                <h3 className="ev-feature-title">{t(f.title)}</h3>
+                <p className="ev-feature-text">{t(f.text)}</p>
               </div>
             </article>
           ))}
         </div>
 
         {/* Événements nocturnes / Autres événements */}
-        <div className="ev-cols">
+        <div className="ev-cols" data-reveal>
           <div className="ev-col">
-            <span className="ev-col-eyebrow gold">Événements nocturnes</span>
+            <span className="ev-col-eyebrow gold">{t('Événements nocturnes')}</span>
             {NOCTURNES.map((ev) => (
               <MiniEvent ev={ev} theme="gold" key={ev.name} />
             ))}
           </div>
           <div className="ev-col">
-            <span className="ev-col-eyebrow red">Autres événements</span>
+            <span className="ev-col-eyebrow red">{t('Autres événements')}</span>
             {AUTRES.map((ev) => (
               <MiniEvent ev={ev} theme="red" key={ev.name} />
             ))}

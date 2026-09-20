@@ -1,3 +1,5 @@
+import { useT } from '../../utils/useT'
+
 // TIMELINE — « Le Fil du Temps » : chronologie sacrée en alternance (réf)
 const STEPS = [
   ['1973', 'La révélation en songe', 'Dans la nuit du 28 au 29 juin, Sangabi voit une maquette lumineuse descendre du ciel. Une voix le conduit jusqu’à la baie de Ouakam. Sur la porte de droite : ALLAHOU AKBAR en lettres d’or. Il dessine. Il attend.'],
@@ -10,23 +12,25 @@ const STEPS = [
 ]
 
 export default function Timeline() {
+  const t = useT()
+
   return (
     <section id="timeline" className="section bg-teal">
       <div className="sw">
         <div className="sec-head-center">
-          <span className="eyebrow red">Chronologie Sacrée</span>
-          <h2 className="sec-title light">Le Fil du <em>Temps</em></h2>
+          <span className="eyebrow red">{t('Chronologie Sacrée')}</span>
+          <h2 className="sec-title light">{t('Le Fil du')} <em>{t('Temps')}</em></h2>
         </div>
 
         <div className="timeline2">
           <span className="tl2-line" />
           {STEPS.map(([year, title, body], i) => (
-            <div className={`tl2-row ${i % 2 === 0 ? 'left' : 'right'}`} key={year}>
+            <div className={`tl2-row ${i % 2 === 0 ? 'left' : 'right'}`} key={year} data-reveal>
               <span className="tl2-dot" />
               <div className="tl2-card">
-                <p className="tl2-year">{year}</p>
-                <h4 className="tl2-title">{title}</h4>
-                <p className="tl2-body">{body}</p>
+                <p className="tl2-year">{t(year)}</p>
+                <h4 className="tl2-title">{t(title)}</h4>
+                <p className="tl2-body">{t(body)}</p>
               </div>
             </div>
           ))}

@@ -1,10 +1,23 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
-// Contexte de langue (FR par défaut) — alimente le sélecteur FR/EN du header.
+// Contexte de langue (FR par défaut) — alimente le sélecteur FR/EN du header
+// et la traduction des textes (cf. utils/i18n.js).
 const LanguageContext = createContext(null)
 
+const STORAGE_KEY = 'mdld-langue'
+
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('FR')
+  // Choix mémorisé d'une visite à l'autre ; anglais proposé si le navigateur l'est
+  const [lang, setLang] = useState(() => {
+    const memo = localStorage.getItem(STORAGE_KEY)
+    if (memo === 'FR' || memo === 'EN') return memo
+    return navigator.language?.toLowerCase().startsWith('en') ? 'EN' : 'FR'
+  })
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, lang)
+    document.documentElement.lang = lang === 'EN' ? 'en' : 'fr'
+  }, [lang])
 
   return (
     <LanguageContext.Provider value={{ lang, setLang }}>

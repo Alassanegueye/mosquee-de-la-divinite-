@@ -1,0 +1,210 @@
+/* ============================================================
+   BOUTIQUE — bouton flottant, tiroir panier et tunnel de commande
+   Chargé par components/boutique/Panier.jsx.
+   Les tokens (couleurs, rayons, ombres) viennent de App.css.
+   ============================================================ */
+
+/* Bouton d'accès au panier. Positionné au-dessus de la barre d'appel au
+   don sur mobile : sinon les deux se superposent en bas d'écran. */
+.btn-panier{
+  position:fixed;right:18px;bottom:78px;z-index:260;
+  width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--teal);color:#fff;font-size:21px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--sh-2);transition:transform .2s var(--ease),background .2s;
+}
+.btn-panier:hover{background:var(--teal-dk);transform:translateY(-2px)}
+.btn-panier-badge{
+  position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 6px;
+  border-radius:var(--r-pill);background:var(--gold);color:var(--teal-dk);
+  font-family:var(--sans,'Inter',system-ui,sans-serif);font-size:11px;font-weight:700;
+  font-variant-numeric:lining-nums tabular-nums;
+  display:flex;align-items:center;justify-content:center;border:2px solid var(--cream);
+}
+@media(max-width:900px){
+  .btn-panier{width:50px;height:50px;font-size:19px;right:14px;bottom:82px}
+  body.has-dock .btn-panier{bottom:150px}
+}
+
+/* ---- Tiroir ---- */
+.pan{position:fixed;inset:0;z-index:400;display:flex;justify-content:flex-end}
+.pan-voile{
+  position:absolute;inset:0;background:rgba(6,26,29,0.6);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:panFondu .3s var(--ease);
+}
+@keyframes panFondu{from{opacity:0}to{opacity:1}}
+.pan-tiroir{
+  position:relative;width:min(460px,100%);height:100%;
+  background:var(--cream);display:flex;flex-direction:column;
+  box-shadow:var(--sh-3);animation:panEntree .32s var(--ease);
+}
+@keyframes panEntree{from{transform:translateX(100%)}to{transform:none}}
+
+.pan-entete{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:20px 22px;border-bottom:1px solid var(--line-soft);background:var(--cream);
+}
+.pan-titre{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--caps);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);
+}
+.pan-compteur{
+  min-width:22px;height:22px;padding:0 7px;border-radius:var(--r-pill);
+  background:var(--gold);color:var(--teal-dk);font-size:11px;font-weight:700;
+  font-variant-numeric:lining-nums tabular-nums;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.pan-retour{
+  display:inline-flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;
+  font-family:var(--caps);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);
+}
+.pan-fermer{
+  width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(18,62,67,0.06);color:var(--teal);font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;
+}
+.pan-fermer:hover{background:rgba(18,62,67,0.12)}
+
+.pan-corps{flex:1;overflow-y:auto;padding:20px 22px}
+.pan-vide{
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  padding:56px 20px;text-align:center;color:var(--muted);
+}
+.pan-vide svg{font-size:38px;color:var(--line-strong)}
+
+/* ---- Lignes ---- */
+.pan-lignes{list-style:none;display:flex;flex-direction:column;gap:16px}
+.pan-ligne{
+  display:grid;grid-template-columns:64px 1fr auto;gap:14px;
+  padding-bottom:16px;border-bottom:1px solid var(--line-soft);
+}
+.pan-ligne:last-child{border-bottom:none}
+.pan-ligne-visuel{
+  width:64px;height:64px;border-radius:var(--r-sm);overflow:hidden;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:var(--line-strong);
+  border:1px solid var(--line-soft);
+}
+.pan-ligne-visuel img{width:100%;height:100%;object-fit:contain;padding:6px;border-radius:0}
+.pan-ligne-nom{font-family:var(--serif);font-size:16px;color:var(--teal);line-height:1.3;margin-bottom:3px}
+.pan-ligne-prix{font-size:13px;color:var(--muted);font-variant-numeric:lining-nums tabular-nums}
+.pan-qte{
+  display:inline-flex;align-items:center;gap:2px;margin-top:8px;
+  border:1px solid var(--line);border-radius:var(--r-pill);overflow:hidden;background:#fff;
+}
+.pan-qte button{
+  width:30px;height:30px;border:none;background:none;cursor:pointer;
+  font-size:15px;color:var(--teal);display:flex;align-items:center;justify-content:center;
+}
+.pan-qte button:hover{background:rgba(18,62,67,0.06)}
+.pan-qte span{min-width:26px;text-align:center;font-size:14px;font-variant-numeric:lining-nums tabular-nums}
+.pan-ligne-fin{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px}
+.pan-ligne-total{
+  font-family:var(--display);font-size:15px;font-weight:600;color:var(--teal);
+  white-space:nowrap;font-variant-numeric:lining-nums tabular-nums;
+}
+.pan-supprimer{background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px;padding:4px}
+.pan-supprimer:hover{color:var(--red)}
+
+/* ---- Pied ---- */
+.pan-pied{
+  padding:18px 22px calc(18px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line-soft);background:#fff;
+}
+.pan-total{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+.pan-total span{font-family:var(--caps);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted)}
+.pan-total strong{font-family:var(--display);font-size:22px;color:var(--teal);font-variant-numeric:lining-nums tabular-nums}
+.pan-note{font-size:12.5px;font-style:italic;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.pan-pied .btn-gold{width:100%}
+
+/* ---- Formulaire ---- */
+.pan-form{display:flex;flex-direction:column}
+.pan-form-intro{font-size:13.5px;line-height:1.6;color:var(--stone);margin-bottom:18px}
+.pan-erreur{
+  background:rgba(193,22,22,0.08);border:1px solid rgba(193,22,22,0.25);color:#8E0F0F;
+  border-radius:var(--r-sm);padding:11px 13px;font-size:13px;line-height:1.5;margin-bottom:14px;
+}
+.pan-champ{display:block;margin-bottom:14px}
+.pan-champ > span{
+  display:block;font-family:var(--caps);font-size:9.5px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--stone);margin-bottom:6px;
+}
+.pan-champ input,.pan-champ textarea{
+  width:100%;background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:12px 14px;font-family:var(--serif);font-size:16px;color:var(--ink);min-height:46px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.pan-champ textarea{resize:vertical;min-height:70px}
+.pan-champ input:focus,.pan-champ textarea:focus{
+  outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(234,186,16,0.15);
+}
+.pan-grille-2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+
+.pan-modes{border:none;margin:6px 0 16px}
+.pan-modes legend{
+  font-family:var(--caps);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:10px;
+}
+.pan-mode{
+  display:block;position:relative;background:#fff;border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .2s;
+}
+.pan-mode input{position:absolute;opacity:0;pointer-events:none}
+.pan-mode.actif{border-color:var(--gold);box-shadow:0 0 0 3px rgba(234,186,16,0.14)}
+.pan-mode-titre{display:block;font-family:var(--serif);font-size:16px;color:var(--teal)}
+.pan-mode-note{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;font-variant-numeric:lining-nums}
+
+.pan-recap{
+  background:#fff;border:1px solid var(--line-soft);border-radius:var(--r-sm);
+  padding:14px 16px;margin:6px 0 16px;display:grid;gap:7px;
+}
+.pan-recap > div{display:flex;justify-content:space-between;gap:14px;font-size:14px;color:var(--stone);font-variant-numeric:lining-nums tabular-nums}
+.pan-recap strong{font-variant-numeric:lining-nums tabular-nums;color:var(--ink)}
+.pan-recap-total{padding-top:9px;border-top:1px solid var(--line-soft);font-size:16px}
+.pan-recap-total strong{font-family:var(--display);font-size:19px;color:var(--teal)}
+.pan-submit{width:100%;margin-bottom:10px}
+
+/* ---- Confirmation ---- */
+.pan-confirmation{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding-top:48px}
+.pan-confirmation-ico{font-size:48px;color:#0f9d76}
+.pan-confirmation h3{font-family:var(--display);font-size:26px;color:var(--teal);font-weight:500}
+.pan-reference{
+  font-family:var(--caps);font-size:20px;letter-spacing:0.12em;color:var(--gold-dp);
+  background:rgba(234,186,16,0.1);border:1px dashed rgba(234,186,16,0.5);
+  border-radius:var(--r-sm);padding:10px 20px;
+}
+.pan-confirmation-txt{font-size:14.5px;line-height:1.7;color:var(--stone);max-width:34ch}
+.pan-confirmation-recap{
+  width:100%;background:#fff;border:1px solid var(--line-soft);border-radius:var(--r-sm);
+  padding:14px 16px;display:grid;gap:8px;margin:6px 0;
+}
+.pan-confirmation-recap > div{display:flex;justify-content:space-between;gap:14px;font-size:14px;color:var(--stone)}
+.pan-confirmation-recap strong{color:var(--teal);font-variant-numeric:lining-nums tabular-nums}
+
+@media(max-width:560px){
+  .pan-tiroir{width:100%}
+  .pan-grille-2{grid-template-columns:1fr}
+}
+
+/* ---- États du catalogue dynamique (page Boutique) ---- */
+.shopg-chargement{text-align:center;padding:48px 20px;color:var(--muted);font-style:italic}
+.shopg-hors-ligne{
+  background:rgba(234,186,16,0.1);border:1px solid rgba(234,186,16,0.35);
+  border-left:3px solid var(--gold);border-radius:var(--r-sm);
+  padding:12px 16px;margin-bottom:24px;font-size:14px;color:#7a6209;line-height:1.6;
+}
+.shopg-add--indispo{background:rgba(18,62,67,0.08);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.shopg-add--indispo:hover{background:rgba(18,62,67,0.08);transform:none}
+.shopg-add--ok{background:#0f9d76;color:#fff}
+.shopg-add--ok:hover{background:#0f9d76}
+.shopg-add:disabled{opacity:.6;cursor:not-allowed}
+
+/* ---- Aperçu boutique de l accueil : bouton d ajout ---- */
+.shop2-add{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  margin-top:12px;min-height:42px;padding:11px 14px;border:1px solid var(--line);
+  border-radius:var(--r-pill);background:#fff;cursor:pointer;
+  font-family:var(--caps);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--teal);transition:all .2s var(--ease);
+}
+.shop2-add:hover{background:var(--gold);border-color:var(--gold);color:var(--teal-dk)}
+

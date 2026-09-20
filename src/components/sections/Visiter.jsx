@@ -1,4 +1,5 @@
 import visuelMosquee from '../../assets/photo/DJI_0681.jpg'
+import { useT } from '../../utils/useT'
 
 // VISITER — « Un lieu ouvert à tous » : carte infos pratiques + photo + 3 points clés
 const INFOS = [
@@ -24,48 +25,48 @@ const HIGHLIGHTS = [
 ]
 
 export default function Visiter() {
+  const t = useT()
+
   return (
     <section id="visiter" className="section bg-cream">
       <div className="sw">
-        <div className="ey ey-g">Visiter</div>
-        <h2 className="h2 h2-dk vis-head">Un lieu ouvert à tous.</h2>
+        <div className="ey ey-g">{t('Visiter')}</div>
+        <h2 className="h2 h2-dk vis-head">{t('Un lieu ouvert à tous.')}</h2>
 
         {/* Carte noire — informations pratiques */}
-        <div className="vis-card">
+        <div className="vis-card" data-reveal>
           <div className="vis-card-left">
-            <h3 className="vis-card-title">Corniche-Ouest,<br />Ouakam.</h3>
+            <h3 className="vis-card-title">{t('Corniche-Ouest,')}<br />Ouakam.</h3>
             <p className="vis-card-text">
-              Perchée entre les falaises et l’Atlantique, la Mosquée de la Divinité est l’un des
-              monuments les plus photographiés du Sénégal. Elle accueille fidèles et voyageurs du
-              monde entier.
+              {t('Perchée entre les falaises et l’Atlantique, la Mosquée de la Divinité est l’un des monuments les plus photographiés du Sénégal. Elle accueille fidèles et voyageurs du monde entier.')}
             </p>
           </div>
           <div className="vis-card-info">
             {INFOS.map(([k, v]) => (
               <div className="vis-info-row" key={k}>
-                <span className="vis-info-k">{k}</span>
-                <span className="vis-info-v">{v}</span>
+                <span className="vis-info-k">{t(k)}</span>
+                <span className="vis-info-v">{t(v)}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Grande photo aérienne */}
-        <div className="vis-photo">
+        <div className="vis-photo" data-reveal>
           <img
             src={visuelMosquee}
-            alt="Vue aérienne de la Mosquée de la Divinité sur la baie de Ouakam"
+            alt={t('Vue aérienne de la Mosquée de la Divinité sur la baie de Ouakam')}
             loading="lazy"
           />
         </div>
 
         {/* 3 points clés */}
-        <div className="vis-highlights">
+        <div className="vis-highlights" data-reveal>
           {HIGHLIGHTS.map(([title, body]) => (
             <div className="vis-hl" key={title}>
               <span className="vis-hl-line" aria-hidden="true" />
-              <h4 className="vis-hl-title">{title}</h4>
-              <p className="vis-hl-body">{body}</p>
+              <h4 className="vis-hl-title">{t(title)}</h4>
+              <p className="vis-hl-body">{t(body)}</p>
             </div>
           ))}
         </div>

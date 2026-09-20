@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0B2C30" />
+    <meta
+      name="description"
+      content="Mosquée de la Divinité — Masdjidou Rabbani, Ouakam, Dakar. Histoire, visite, prières, patrimoine et campagne de rénovation : participez à la restauration du monument."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mosquée de la Divinité" />
+    <meta property="og:title" content="Mosquée de la Divinité — Masdjidou Rabbani" />
+    <meta
+      property="og:description"
+      content="Bâtie à mains nues par toute une communauté. Aujourd’hui, la mosquée se restaure : découvrez le projet et soutenez la campagne de rénovation."
+    />
+    <meta property="og:locale" content="fr_SN" />
     <!-- Polices du gabarit : Cormorant Garamond (texte) + Cinzel (majuscules) + Noto Naskh Arabic -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,46 +30,6 @@
       href="https://api.fontshare.com/v2/css?f[]=tarif@400,500,700&display=swap"
       rel="stylesheet"
     />
-    <!-- Tailwind CSS CDN pour la Boutique (Preflight désactivé pour éviter les conflits CSS avec l'accueil) -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-      tailwind.config = {
-        corePlugins: {
-          preflight: false,
-        },
-        theme: {
-          extend: {
-            colors: {
-              primary: "#EABA10", // Doré officiel de la mosquée
-              secondary: "#C11616", // Rouge officiel de la mosquée
-              surface: "#FAF7F0", // Fond crème officiel de la mosquée (remplace le blanc moderne)
-              "on-surface": "#0D0D0D", // Noir d'encre officiel
-              "on-surface-variant": "#4A4A4A", // Gris pierre officiel
-              "outline-variant": "rgba(2, 43, 51, 0.08)", // Filet vert sapin
-              "surface-container-lowest": "#FFFFFF" // Blanc pur (pour détacher les cartes produits)
-            },
-            fontFamily: {
-              headline: ["Cormorant Garamond", "serif"],
-              display: ["Tarif", "Cormorant Garamond", "serif"],
-              body: ["Cormorant Garamond", "serif"], // Police à empattement de l'accueil
-              label: ["Cinzel", "serif"], // Police majuscule de marque
-              arabic: ["Noto Naskh Arabic", "serif"]
-            },
-            borderRadius: {
-              "DEFAULT": "0px",
-              "lg": "0px",
-              "xl": "0px",
-              "full": "9999px"
-            },
-            spacing: {
-              'gutter-h': '5%',
-              'section-v-desktop': '120px',
-              'section-v-mobile': '64px'
-            }
-          }
-        }
-      }
-    </script>
     <title>Mosquée de la Divinité</title>
   </head>
   <body>

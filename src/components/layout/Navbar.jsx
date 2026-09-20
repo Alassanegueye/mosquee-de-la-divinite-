@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { FiMenu, FiX } from 'react-icons/fi'
 import logo from '../../assets/photo/Logo.png'
 import { useLanguage } from '../../context/LanguageContext'
 import { cx } from '../../utils/helpers'
+import { useT } from '../../utils/useT'
 
 const GLOBAL_LINKS = [
   ['Histoire', '/#histoire'],
@@ -27,35 +28,57 @@ const SUBPAGES = ['/boutique', '/renovation', '/patrimoine', '/dons']
 
 export default function Navbar() {
   const { lang, setLang } = useLanguage()
+  const t = useT()
   const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [lastPath, setLastPath] = useState(location.pathname)
   const [visible, setVisible] = useState(true)
-  const [prevScrollPos, setPrevScrollPos] = useState(0)
+  const headerRef = useRef(null)
+  const prevScroll = useRef(0)
+
+  // Hauteur réelle de l'en-tête exposée en CSS : --header-h.
+  // Elle pilote le décalage du contenu, les ancres et le menu mobile.
+  const mesurer = useCallback(() => {
+    const h = headerRef.current?.offsetHeight
+    if (h) document.documentElement.style.setProperty('--header-h', `${h}px`)
+  }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY
-
-      // Ne pas masquer la navbar si le menu mobile est ouvert
-      if (menuOpen) return
-
-      // Évite les problèmes de rebond (bounce) sur iOS
-      if (currentScrollPos < 0) return
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      if (currentScrollPos > maxScroll) return
-
-      // Affiche la navbar si on remonte ou si on est tout en haut
-      const isScrollingUp = prevScrollPos > currentScrollPos
-      const isAtTop = currentScrollPos < 74
-
-      setVisible(isScrollingUp || isAtTop)
-      setPrevScrollPos(currentScrollPos)
+    mesurer()
+    const ro = new ResizeObserver(mesurer)
+    if (headerRef.current) ro.observe(headerRef.current)
+    window.addEventListener('resize', mesurer)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', mesurer)
     }
+  }, [mesurer])
 
-    window.addEventListener('scroll', handleScroll)
+  // Menu mobile ouvert : on bloque le défilement de la page derrière
+  useEffect(() => {
+    if (!menuOpen) return
+    const precedent = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = precedent
+    }
+  }, [menuOpen])
+
+  // Masquage de l'en-tête au défilement vers le bas (gain d'écran sur mobile)
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY
+      if (menuOpen) return
+      if (y < 0) return
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      if (y > maxScroll) return
+
+      setVisible(prevScroll.current > y || y < 90)
+      prevScroll.current = y
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [prevScrollPos, menuOpen])
+  }, [menuOpen])
 
   const isSubPage = SUBPAGES.includes(location.pathname)
   const links = isSubPage ? SUBPAGE_LINKS : GLOBAL_LINKS
@@ -68,75 +91,95 @@ export default function Navbar() {
     setMenuOpen(false)
   }
 
+  const marque = (
+    <>
+      <img src={logo} alt="Mosquée de la Divinité" className="nav-logo-img" />
+      <span className="nav-logo-txt">
+        <span className="nav-logo-main">Mosquée de la Divinité</span>
+        <span className="nav-logo-sub">Masdjidou Rabbani</span>
+      </span>
+    </>
+  )
+
   const Logo = isSubPage ? (
-    <Link to="/" className="nav-logo" onClick={closeMenu}>
-      <img src={logo} alt="Mosquée de la Divinité" className="nav-logo-img" />
-      <span className="nav-logo-txt">
-        <span className="nav-logo-main">Mosquée de la Divinité</span>
-        <span className="nav-logo-sub">Masdjidou Rabbani</span>
-      </span>
-    </Link>
+    <Link to="/" className="nav-logo" onClick={closeMenu}>{marque}</Link>
   ) : (
-    <a href="#hero" className="nav-logo" onClick={closeMenu}>
-      <img src={logo} alt="Mosquée de la Divinité" className="nav-logo-img" />
-      <span className="nav-logo-txt">
-        <span className="nav-logo-main">Mosquée de la Divinité</span>
-        <span className="nav-logo-sub">Masdjidou Rabbani</span>
-      </span>
-    </a>
+    <a href="#hero" className="nav-logo" onClick={closeMenu}>{marque}</a>
   )
 
   return (
-    <nav className={cx(!visible && 'nav-hidden')}>
-      {Logo}
+    <header className={cx('site-header', !visible && 'is-hidden')} ref={headerRef}>
+      <nav aria-label={t('Navigation principale')}>
+        {Logo}
 
-      <ul className={cx('nav-links-ref', menuOpen && 'open')}>
-        {links.map(([label, href]) => {
-          const isAnchor = href.startsWith('/#') || href.startsWith('#')
-          return (
-            <li key={href}>
-              {isAnchor ? (
-                <a href={href} onClick={closeMenu}>{label}</a>
-              ) : (
-                <Link to={href} onClick={closeMenu}>{label}</Link>
-              )}
-            </li>
-          )
-        })}
-        {/* Bouton « don » repris dans le menu déroulant mobile */}
-        <li className="nav-don-mobile">
-          <Link to={donHref} className="nav-don" onClick={closeMenu}>
-            Faire un don
+        <ul className={cx('nav-links-ref', menuOpen && 'open')}>
+          {links.map(([label, href]) => {
+            const isAnchor = href.startsWith('/#') || href.startsWith('#')
+            const courant = !isAnchor && location.pathname === href
+            return (
+              <li key={href}>
+                {isAnchor ? (
+                  <a href={href} onClick={closeMenu}>{t(label)}</a>
+                ) : (
+                  <Link to={href} onClick={closeMenu} aria-current={courant ? 'page' : undefined}>
+                    {t(label)}
+                  </Link>
+                )}
+              </li>
+            )
+          })}
+          {/* Choix de langue repris dans le menu déroulant mobile : le
+              sélecteur de droite est masqué à cette largeur. */}
+          <li className="nav-lang-mobile">
+            <span className="nav-lang-label">{t('Langue')}</span>
+            <div className="lang-switcher">
+              {['FR', 'EN'].map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  className={cx('lang-btn', lang === code && 'active')}
+                  onClick={() => setLang(code)}
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+          </li>
+          {/* Bouton « don » repris dans le menu déroulant mobile */}
+          <li className="nav-don-mobile">
+            <Link to={donHref} className="nav-don" onClick={closeMenu}>
+              {t('Faire un don')}
+            </Link>
+          </li>
+        </ul>
+
+        <div className="nav-right">
+          <div className="lang-switcher">
+            {['FR', 'EN'].map((code) => (
+              <button
+                key={code}
+                type="button"
+                className={cx('lang-btn', lang === code && 'active')}
+                onClick={() => setLang(code)}
+              >
+                {code}
+              </button>
+            ))}
+          </div>
+          <Link to={donHref} className="nav-don nav-don-desktop">
+            {t('Faire un don')}
           </Link>
-        </li>
-      </ul>
-
-      <div className="nav-right">
-        <div className="lang-switcher">
-          {['FR', 'EN'].map((code) => (
-            <button
-              key={code}
-              type="button"
-              className={cx('lang-btn', lang === code && 'active')}
-              onClick={() => setLang(code)}
-            >
-              {code}
-            </button>
-          ))}
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label={menuOpen ? t('Fermer le menu') : t('Ouvrir le menu')}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? <FiX /> : <FiMenu />}
+          </button>
         </div>
-        <Link to={donHref} className="nav-don nav-don-desktop">
-          Faire un don
-        </Link>
-        <button
-          type="button"
-          className="nav-toggle"
-          aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <FiX /> : <FiMenu />}
-        </button>
-      </div>
-    </nav>
+      </nav>
+    </header>
   )
 }

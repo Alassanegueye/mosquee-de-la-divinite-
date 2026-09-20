@@ -1,561 +1,470 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  FiEye, FiShoppingBag, FiArrowRight, FiAlertTriangle,
+  FiTruck, FiMapPin, FiUser,
+} from 'react-icons/fi'
 import '../assets/css/Boutique.css'
-import puzzleImg from '../assets/photo/puzzle.webp'
-import blocNoteImg from '../assets/photo/Bloc-Note.webp'
-import hoodieImg from '../assets/photo/Hoodie.webp'
+import { useT } from '../utils/useT'
+import { usePanier } from '../context/usePanier'
+import { chargerProduits } from '../service/api'
+import { visuelProduit, formaterPrix } from '../utils/catalogue'
 import bagImg from '../assets/photo/Shopping_Bag_Mockup_v01.jpg'
+import heroImg from '../assets/photo/DJI_0681.jpg'
+import enfantsImg from '../assets/photo/Korite.jpg'
 
-// Filtres de la galerie boutique (le premier affiche tout)
-const FILTERS = ['Tous les objets', 'Éditions', 'Textile', 'Papeterie']
-
-// Catalogue affiché dans la galerie filtrable
-const SHOP_PRODUCTS = [
-  {
-    id: 1,
-    filter: 'Éditions',
-    cat: 'Éditions Limitées',
-    name: 'Puzzle · Façade',
-    desc: "Assembler la mosquée pièce par pièce. Ce que des mains ont bâti, d'autres mains le reconstituent.",
-    price: '45.000 FCFA',
-    img: puzzleImg,
-    badge: 'Édition limitée',
-  },
-  {
-    id: 2,
-    filter: 'Textile',
-    cat: 'Textiles',
-    name: 'Tote Bag · Jub',
-    desc: 'Les trois mots en calligraphie sur le fond vert de la mosquée. Le message à porter chaque jour.',
-    price: '15.000 FCFA',
-    img: bagImg,
-  },
-  {
-    id: 3,
-    filter: 'Textile',
-    cat: 'Textiles',
-    name: 'Hoodie · Héritage',
-    desc: "Molleton lourd, coupe architecturale et insigne brodé de Masdjidou Rabbani.",
-    price: '25.000 FCFA',
-    img: hoodieImg,
-  },
-  {
-    id: 4,
-    filter: 'Papeterie',
-    cat: "Papeterie d'art",
-    name: 'Carnet · 1973',
-    desc: 'Couverture inspirée du cahier où Sangabi a dessiné la mosquée révélée en songe.',
-    price: '20.000 FCFA',
-    img: blocNoteImg,
-  },
+// Les trois raisons d'acheter (section institutionnelle)
+const POINTS = [
+  ['01', 'Pérennité', "Financement direct de l'entretien du site."],
+  ['02', 'Transmission', 'Supports pédagogiques pour la jeunesse.'],
+  ['03', 'Patrimoine', "Rayonnement de l'architecture islamique."],
 ]
 
+// Carte produit de la galerie. Tout article affiché vient du catalogue
+// géré dans le dashboard : il porte donc toujours un identifiant en base
+// et peut être mis au panier.
+function CarteProduit({ p }) {
+  const t = useT()
+  const { ajouter } = usePanier()
+  const [ajoute, setAjoute] = useState(false)
+  // Packshot (produit détouré, cadre carré) ou photo de mise en scène ?
+  // Un packshot carré recadré en 3:4 perd un quart de sa largeur, soit
+  // le produit lui-même. On lit les dimensions réelles au chargement
+  // plutôt que de demander à l’équipe de cocher une case de plus.
+  const [packshot, setPackshot] = useState(false)
+
+  function ajouterAuPanier() {
+    // On transmet le visuel déjà résolu : le tiroir du panier n'a pas à
+    // refaire le choix entre l'image de l'API et le repli.
+    ajouter({ ...p.produit, image: p.img }, 1)
+    // Retour visuel court : l'ouverture du tiroir confirme déjà l'action,
+    // ce libellé sert aux ajouts successifs sans fermer le tiroir.
+    setAjoute(true)
+    setTimeout(() => setAjoute(false), 1600)
+  }
+
+  return (
+    <article className="shopg-card">
+      <div className={`shopg-media${p.img ? '' : ' shopg-media--empty'}${packshot ? ' shopg-media--contain' : ''}`}>
+        {p.badge && <span className="shopg-badge">{t(p.badge)}</span>}
+        {/* Un article saisi sans photo garde une carte lisible plutôt
+            qu'une image cassée. */}
+        {p.img ? (
+          <>
+            <img
+              src={p.img}
+              alt={p.name}
+              loading="lazy"
+              onLoad={(e) => {
+                const { naturalWidth: l, naturalHeight: h } = e.currentTarget
+                if (l && h && Math.abs(l / h - 1) < 0.08) setPackshot(true)
+              }}
+            />
+            <div className="shopg-discover">
+              <span><FiEye /> {t('Découvrir')}</span>
+            </div>
+          </>
+        ) : (
+          <FiShoppingBag aria-hidden="true" />
+        )}
+      </div>
+      <div className="shopg-body">
+        <p className="shopg-cat">{p.cat}</p>
+        <h4 className="shopg-name">{p.name}</h4>
+        <p className="shopg-desc">{p.desc}</p>
+        <div className="shopg-price-row">
+          <span className="shopg-price-label">{t('Prix')}</span>
+          <span className="shopg-price">{p.price}</span>
+        </div>
+        {p.rupture ? (
+          <button type="button" className="shopg-add shopg-add--indispo" disabled>
+            {t('Momentanément indisponible')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`shopg-add${ajoute ? ' shopg-add--ok' : ''}`}
+            onClick={ajouterAuPanier}
+          >
+            <FiShoppingBag /> {ajoute ? t('Ajouté au panier') : t('Ajouter au panier')}
+          </button>
+        )}
+      </div>
+    </article>
+  )
+}
+
+/** Variante de présentation pour la gamme spirituelle : même source de
+ *  données, mise en page plus contemplative. */
+function CarteSpirituelle({ p }) {
+  const t = useT()
+  const { ajouter } = usePanier()
+
+  return (
+    <article className="shop-spirit">
+      <div className={`shop-spirit-photo${p.img ? '' : ' shopg-media--empty'}`}>
+        {p.img ? <img src={p.img} alt={p.name} loading="lazy" /> : <FiShoppingBag aria-hidden="true" />}
+      </div>
+      <h4>{p.name}</h4>
+      <p className="txt">{p.desc}</p>
+      <p className="shopg-price">{p.price}</p>
+      {p.rupture ? (
+        <button type="button" className="btn-gold btn-inline" disabled>
+          {t('Momentanément indisponible')}
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="btn-gold btn-inline"
+          onClick={() => ajouter({ ...p.produit, image: p.img }, 1)}
+        >
+          {t('Ajouter au panier')}
+        </button>
+      )}
+    </article>
+  )
+}
+
+
+/** Carte fantôme affichée pendant le chargement du catalogue. La grille
+ *  garde ainsi sa hauteur : sans elle, la page saute au moment où les
+ *  articles arrivent. */
+function CarteSquelette() {
+  return (
+    <article className="shopg-card shopg-skeleton" aria-hidden="true">
+      <div className="shopg-skeleton-media" />
+      <div className="shopg-skeleton-corps">
+        <span className="shopg-skeleton-ligne shopg-skeleton-ligne--court" />
+        <span className="shopg-skeleton-ligne" />
+        <span className="shopg-skeleton-ligne" />
+        <span className="shopg-skeleton-ligne shopg-skeleton-ligne--bouton" />
+      </div>
+    </article>
+  )
+}
+/** Traduit un produit de l'API vers la forme attendue par CarteProduit.
+ *  Les libellés ne passent pas par t() : ils sont saisis dans le
+ *  dashboard, le dictionnaire i18n ne les connaît pas. */
+function versCarte(produit) {
+  const rupture = !produit.surCommande && produit.stock !== null && produit.stock <= 0
+  return {
+    id: produit.id,
+    filter: produit.categorie?.slug || '',
+    cat: produit.categorie?.nom || '',
+    name: produit.nom,
+    desc: produit.description || '',
+    price: formaterPrix(produit.prix, produit.devise),
+    img: visuelProduit(produit),
+    badge: produit.badge || undefined,
+    rupture,
+    // Objet transmis au panier : identifiant + prix d'affichage.
+    produit,
+  }
+}
+
 export default function BoutiquePage() {
+  const t = useT()
   const [activeFilter, setActiveFilter] = useState('Tous les objets')
-  const visibleProducts =
-    activeFilter === 'Tous les objets'
-      ? SHOP_PRODUCTS
-      : SHOP_PRODUCTS.filter((p) => p.filter === activeFilter)
+
+  // Le catalogue vient entièrement de l'API : aucun article n'est écrit
+  // dans le code. Ce que l'équipe saisit dans le dashboard est ce que le
+  // visiteur voit — sinon la boutique afficherait des prix qui n'engagent
+  // personne.
+  const [produits, setProduits] = useState([])
+  const [chargement, setChargement] = useState(true)
+  const [horsLigne, setHorsLigne] = useState(false)
 
   useEffect(() => {
-    // 1. Appliquer les styles de réinitialisation sur le body
-    document.body.classList.add('boutique-body-reset')
-
-    // 2. Ajouter les icônes Material Symbols
-    const linkIcons = document.createElement('link')
-    linkIcons.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
-    linkIcons.rel = 'stylesheet'
-    linkIcons.id = 'boutique-icons'
-    document.head.appendChild(linkIcons)
-
-    // Gestion du scroll vers les ancres
-    const handleAnchorClick = (e) => {
-      const href = e.currentTarget.getAttribute('href')
-      if (href && href.startsWith('#')) {
-        e.preventDefault()
-        const targetId = href.substring(1)
-        const targetElement = document.getElementById(targetId)
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' })
-        }
-      }
-    }
-
-    const anchors = document.querySelectorAll('a[href^="#"]')
-    anchors.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick))
-
-    // Nettoyage au démontage
+    let annule = false
+    chargerProduits({ limit: 100 })
+      .then((donnees) => {
+        if (annule) return
+        setProduits((donnees.items || []).map(versCarte))
+      })
+      .catch(() => {
+        // Plutôt qu'un faux catalogue : on le dit. Le reste de la page
+        // (philosophie, retrait, livraison) tient debout sans articles.
+        if (!annule) setHorsLigne(true)
+      })
+      .finally(() => {
+        if (!annule) setChargement(false)
+      })
     return () => {
-      document.body.classList.remove('boutique-body-reset')
-      document.getElementById('boutique-icons')?.remove()
-      anchors.forEach((anchor) => anchor.removeEventListener('click', handleAnchorClick))
+      annule = true
     }
   }, [])
 
+  // Filtres construits à partir des gammes réellement présentes : une
+  // gamme vide ne doit pas afficher un onglet qui ne renvoie rien.
+  const gammes = Array.from(
+    new Map(
+      produits
+        .filter((p) => p.filter && p.cat)
+        .map((p) => [p.filter, p.cat])
+    ).entries()
+  )
+
+  const visibleProducts =
+    activeFilter === 'Tous les objets'
+      ? produits
+      : produits.filter((p) => p.filter === activeFilter || p.cat === activeFilter)
+
+  /** Articles d'une gamme, pour les sections thématiques de la page. */
+  const parGamme = (slug) => produits.filter((p) => p.filter === slug)
+
   return (
-    <div className="boutique-page-root bg-surface text-on-surface font-body" style={{ minHeight: '100vh', textDecoration: 'none' }}>
-      <div>
-        {/* Hero Section */}
-        <section className="relative min-h-[80vh] flex items-center px-gutter-h overflow-hidden bg-surface pt-28 pb-16 md:pt-32">
-          <div className="absolute inset-0 z-0">
-            <img
-              className="w-full h-full object-cover opacity-20"
-              alt="A cinematic, wide shot of the Mosque of Divinity at dusk, situated on the rocky coast of Ouakam, Dakar."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPA64UfGEDiaTIZpnfdSDQ9F7risBjme1VfVgu6abSED78tTutfTmskbrV9KsKBF2AfZzshfQVinXGSxgWjgC5jEjiNRBNLOdZXxbkhlmAXHDW-zAAcR7LU1yKmQAcHWOlTvOwAcll8y2o4hvop-uGHla80FHr_n7Pv3Zvmoy4cQFBYttmuXacFVZf9p49lqECXbNUAtUPtNWKpuTvqW1hc7agOxiXHCCxtn17P_W9kOffXSR4e7PUI18bervflKDS4TtO69lto8aviA"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-surface via-surface/95 to-surface z-10"></div>
+    <div className="boutique-page-root shop-page bg-surface text-on-surface font-body" style={{ minHeight: '100vh' }}>
+      {/* ---------- HERO ---------- */}
+      <section className="shop-hero">
+        <div className="shop-hero-bg" aria-hidden="true">
+          <img src={heroImg} alt="" />
+        </div>
+        <div className="shop-in shop-hero-in">
+          <span className="shop-eyebrow">{t('Boutique Officielle')}</span>
+          <h1 className="shop-hero-title">
+            {t('Porter le message.')}
+            <span className="solid">{t('Soutenir l’œuvre.')}</span>
+          </h1>
+          <p className="shop-hero-lead">
+            {t('Chaque acquisition contribue directement à la préservation et au rayonnement de la Mosquée de la Divinité. Un pont entre le spirituel et le matériel.')}
+          </p>
+          <div className="shop-hero-ctas">
+            <a className="btn-gold" href="#catalogue">{t('Explorer les gammes')}</a>
+            <Link className="btn-dk" to="/#message">{t('Notre Philosophie')}</Link>
           </div>
-          <div className="relative z-20 max-w-4xl">
-            <p className="text-secondary font-label tracking-[0.3em] uppercase mb-4 text-sm font-semibold">
-              Boutique Officielle
-            </p>
-            <h2 className="font-headline text-5xl md:text-8xl italic mb-8 leading-[1.1] red-thread">
-              Porter le message.<br />
-              <span className="text-primary not-italic font-bold">Soutenir l'œuvre.</span>
-            </h2>
-            <p className="font-body text-on-surface-variant text-xl max-w-xl mb-10 leading-relaxed">
-              Chaque acquisition contribue directement à la préservation et au rayonnement de la Mosquée de la Divinité.
-              Un pont entre le spirituel et le matériel.
-            </p>
-            <div className="flex flex-wrap gap-6">
-              <a className="btn-gold" href="#catalogue">
-                Explorer les gammes
-              </a>
-              <a className="btn-gold" href="/#message">
-                Notre Philosophie
-              </a>
-            </div>
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Galerie filtrable — produits affichés selon la catégorie choisie */}
-        <section className="shopg" id="catalogue">
-          <div className="shopg-inner">
-            <div className="shopg-filters">
-              {FILTERS.map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  className={`shopg-filter${activeFilter === f ? ' active' : ''}`}
-                  onClick={() => setActiveFilter(f)}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-            <div className="shopg-divider" />
-            <div className="shopg-grid">
-              {visibleProducts.map((p) => (
-                <article className="shopg-card" key={p.id}>
-                  <div className="shopg-media">
-                    {p.badge && <span className="shopg-badge">{p.badge}</span>}
-                    <img src={p.img} alt={p.name} loading="lazy" />
-                    <div className="shopg-discover">
-                      <span>
-                        <span className="material-symbols-outlined">visibility</span>
-                        Découvrir
-                      </span>
-                    </div>
-                  </div>
-                  <div className="shopg-body">
-                    <p className="shopg-cat">{p.cat}</p>
-                    <h4 className="shopg-name">{p.name}</h4>
-                    <p className="shopg-desc">{p.desc}</p>
-                    <div className="shopg-price-row">
-                      <span className="shopg-price-label">Prix</span>
-                      <span className="shopg-price">{p.price}</span>
-                    </div>
-                    <button type="button" className="shopg-add">
-                      <span className="material-symbols-outlined">shopping_bag</span>
-                      Ajouter au panier
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Gamme Enfants - Alassane */}
-        <section className="py-section-v-desktop px-gutter-h max-w-[1440px] mx-auto" id="gamme-enfants">
-          <div className="grid md:grid-cols-2 gap-20 items-center">
-            <div>
-              <span className="text-secondary font-label tracking-widest uppercase text-xs mb-4 block">
-                Éducation &amp; Éveil
-              </span>
-              <h3 className="font-headline text-5xl mb-6 italic">Gamme Yeete</h3>
-              <p className="text-on-surface-variant text-lg leading-relaxed mb-12 max-w-md">
-                Inspirée par la pédagogie Montessori, cette collection propose des jeux et supports éducatifs pour
-                transmettre l'héritage spirituel et architectural dès le plus jeune âge.
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="aspect-[4/5] bg-surface-container-lowest p-6 flex flex-col justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
-                  <div className="w-full aspect-square overflow-hidden mb-4">
-                    <img
-                      className="w-full h-full object-cover"
-                      alt="A collection of high-quality wooden Montessori educational toys and puzzles featuring minimalist mosque silhouettes and geometric Islamic patterns."
-                      src={puzzleImg}
-                    />
-                  </div>
-                  <div>
-                    <p className="font-label text-[10px] uppercase tracking-tighter text-on-surface-variant mb-1">
-                      Jeux en bois
-                    </p>
-                    <h4 className="font-headline text-lg italic group-hover:text-primary transition-colors">
-                      Puzzle de la Mosquée
-                    </h4>
-                    <p className="text-primary mt-2">15.000 FCFA</p>
-                  </div>
-                </div>
-                <div className="aspect-[4/5] bg-surface-container-lowest p-6 flex flex-col justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
-                  <div className="w-full aspect-square overflow-hidden mb-4">
-                    <img
-                      className="w-full h-full object-cover"
-                      alt="Modern educational activity books for children featuring minimalist illustrations of Islamic heritage and the Mosque of Divinity."
-                      src={blocNoteImg}
-                    />
-                  </div>
-                  <div>
-                    <p className="font-label text-[10px] uppercase tracking-tighter text-on-surface-variant mb-1">
-                      Édition
-                    </p>
-                    <h4 className="font-headline text-lg italic group-hover:text-primary transition-colors">
-                      Cahier d'activités
-                    </h4>
-                    <p className="text-primary mt-2">5.000 FCFA</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="arch-mask aspect-[3/4] bg-surface-container-lowest overflow-hidden border border-outline-variant">
-                <img
-                  className="w-full h-full object-cover"
-                  alt="A portrait of a young child playing with wooden geometric shapes in a bright, modern room."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTBnBKrC7af66KCvXDWm9wTTqQBZSZJMXpXJhancbiJDv7vYWuqb8SGEvuPIBz0JONEStweV9Ssjo__T56V6009yE_0pMzsyGP1yPrZkJtp89oz9aPAoFZRDPIgoHmTXGgfv30Par-vtJTzNx4Bk6Ey2-L5mo2ap9IRWO5-BySLrzSUh14Wo6H9GGP4yofG7_m96PDsdCDbm7u3vT23ivFrPlkEPx_rYDqRrZpRzlm8F_j9ZNKy9_Ouk1Z-IpLeLJN612nMtYDYCA"
-                />
-              </div>
-              <div className="absolute -bottom-10 -right-10 bg-primary p-12 hidden md:block">
-                <h4 className="font-arabic text-surface text-4xl mb-2 text-white">الأولاد</h4>
-                <p className="font-label text-surface text-[10px] uppercase tracking-[0.2em] font-bold text-white">
-                  Pour les futurs bâtisseurs
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Textile & Accessoires Section */}
-        <section className="bg-surface-container-lowest py-section-v-desktop" id="textile">
-          <div className="max-w-[1440px] mx-auto px-gutter-h">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-              <div className="max-w-xl">
-                <span className="text-secondary font-label tracking-widest uppercase text-xs mb-4 block">
-                  Identité Visuelle
-                </span>
-                <h3 className="font-headline text-5xl italic mb-6">
-                  Textile &amp; <span className="text-primary not-italic font-bold">Équipement</span>
-                </h3>
-                <p className="text-on-surface-variant text-lg leading-relaxed">
-                  Une gamme premium conçue pour les membres, les bénévoles et les sympathisants. Chaque pièce arbore
-                  l'insigne officiel de Masdjidou Rabbani.
-                </p>
-              </div>
-              <a
-                className="text-primary font-label text-xs uppercase tracking-widest flex items-center gap-4 hover:translate-x-2 transition-transform"
-                href="#textile"
+      {/* ---------- GALERIE FILTRABLE ---------- */}
+      <section className="shopg" id="catalogue">
+        <div className="shopg-inner">
+          <div className="shopg-filters">
+            <button
+              type="button"
+              className={`shopg-filter${activeFilter === 'Tous les objets' ? ' active' : ''}`}
+              onClick={() => setActiveFilter('Tous les objets')}
+            >
+              {t('Tous les objets')}
+            </button>
+            {gammes.map(([valeur, libelle]) => (
+              <button
+                key={valeur}
+                type="button"
+                className={`shopg-filter${activeFilter === valeur ? ' active' : ''}`}
+                onClick={() => setActiveFilter(valeur)}
               >
-                Voir tout le textile <span className="material-symbols-outlined">trending_flat</span>
-              </a>
-            </div>
+                {libelle}
+              </button>
+            ))}
+          </div>
+          <div className="shopg-divider" />
+
+          {chargement ? (
             <div className="shopg-grid">
-              {/* Polo */}
-              <article className="shopg-card">
-                <div className="shopg-media shopg-media--contain">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI2A5jsXdeHKRZ0bi_Fh6z9w0fx21daIPmd1jxEsTIZ96MXF4Q4qdgK_QqZFvXjOXqqgm-420u3WwpgFYYJBoMk5Jli-mPDCAaiFVhHXogDjZ83sZi_tqHV9pP_WMU5JbiiCW3H6n_Dl2vl7v7PcsY1PLmfgbJ_rpBTRHgGgT00k-0LPVh1qXW1OQIE2A8G4vJTJB-erA8ifbYCGBa8B0-vi15kz6izW3JuaBp2BDwfhHvF7yqQNf_VnL1j4moEoCmG3sEFU_l4KY"
-                    alt="Polo Officiel de la Mosquée de la Divinité"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="shopg-body">
-                  <p className="shopg-cat">Vêtement</p>
-                  <h4 className="shopg-name">Polo Officiel</h4>
-                  <p className="shopg-desc">Piqué de coton premium, broderie dorée.</p>
-                  <div className="shopg-price-row">
-                    <span className="shopg-price-label">Prix</span>
-                    <span className="shopg-price">12.500 FCFA</span>
-                  </div>
-                  <button type="button" className="shopg-add">
-                    <span className="material-symbols-outlined">shopping_bag</span>
-                    Ajouter au panier
-                  </button>
-                </div>
-              </article>
-              {/* Hoodie */}
-              <article className="shopg-card">
-                <div className="shopg-media shopg-media--contain">
-                  <img src={hoodieImg} alt="Hoodie Héritage de la Mosquée de la Divinité" loading="lazy" />
-                </div>
-                <div className="shopg-body">
-                  <p className="shopg-cat">Vêtement</p>
-                  <h4 className="shopg-name">Hoodie Héritage</h4>
-                  <p className="shopg-desc">Molleton lourd, coupe architecturale.</p>
-                  <div className="shopg-price-row">
-                    <span className="shopg-price-label">Prix</span>
-                    <span className="shopg-price">25.000 FCFA</span>
-                  </div>
-                  <button type="button" className="shopg-add">
-                    <span className="material-symbols-outlined">shopping_bag</span>
-                    Ajouter au panier
-                  </button>
-                </div>
-              </article>
-              {/* Thermos */}
-              <article className="shopg-card">
-                <div className="shopg-media shopg-media--contain">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEuLeScPPhSr3rZ5oOQQzPR43g59GId3T-v1evS_6msHXKUNvcnGuFL1c-91LZ5YeDv2YUGqVBLfYPbZ7Bk5c85Z5SLm4GEmtXV8_ikRdiT-Nks7jRHyWNkq4Youp-t3IF3WOVZEBlayZVNhS4LRXn3ZU8np1xebcFhmf-JVGXKxGD2uSFafQq1yWkBkiim-NyfhsZguRXGabG5tmC5RbZhs4QA4FnmUKU7sZ0pKKQF2omQHTS-PaBuo483Ny68-FdLYmWPWF4R8g"
-                    alt="Thermos Signature"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="shopg-body">
-                  <p className="shopg-cat">Accessoire</p>
-                  <h4 className="shopg-name">Thermos Signature</h4>
-                  <p className="shopg-desc">Acier inoxydable, isolation 24h.</p>
-                  <div className="shopg-price-row">
-                    <span className="shopg-price-label">Prix</span>
-                    <span className="shopg-price">18.000 FCFA</span>
-                  </div>
-                  <button type="button" className="shopg-add">
-                    <span className="material-symbols-outlined">shopping_bag</span>
-                    Ajouter au panier
-                  </button>
-                </div>
-              </article>
-              {/* Vestes Équipes — sur commande */}
-              <article className="shopg-card">
-                <div className="shopg-media shopg-media--contain shopg-media--empty">
-                  <span className="material-symbols-outlined">shield</span>
-                </div>
-                <div className="shopg-body">
-                  <p className="shopg-cat">Équipement</p>
-                  <h4 className="shopg-name">Vestes Équipes</h4>
-                  <p className="shopg-desc">Accueil, Logistique &amp; Media.</p>
-                  <div className="shopg-price-row">
-                    <span className="shopg-price-label">Disponibilité</span>
-                    <span className="shopg-price shopg-price--soft">Sur commande</span>
-                  </div>
-                  <button type="button" className="shopg-add">
-                    <span className="material-symbols-outlined">info</span>
-                    Nous contacter
-                  </button>
-                </div>
-              </article>
+              {Array.from({ length: 4 }, (_, i) => (
+                <CarteSquelette key={i} />
+              ))}
             </div>
-          </div>
-        </section>
+          ) : horsLigne ? (
+            <div className="shopg-grid">
+              <div className="shopg-etat">
+                <FiAlertTriangle aria-hidden="true" />
+                <p>{t('Le catalogue est momentanément indisponible. Merci de réessayer dans un instant.')}</p>
+              </div>
+            </div>
+          ) : visibleProducts.length === 0 ? (
+            <div className="shopg-grid">
+              <div className="shopg-etat">
+                <FiShoppingBag aria-hidden="true" />
+                <p>{t('Aucun article en vente pour le moment.')}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="shopg-grid" data-reveal>
+              {visibleProducts.map((p) => (
+                <CarteProduit p={p} key={p.id} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
-        {/* Gamme Spirituelle */}
-        <section className="py-section-v-desktop px-gutter-h max-w-[1440px] mx-auto" id="spirituelle">
-          <div className="text-center mb-20">
-            <span className="text-secondary font-label tracking-[0.4em] uppercase text-xs mb-4 block">
-              La Paix Intérieure
-            </span>
-            <h3 className="font-headline text-6xl italic">Spirituelle</h3>
-            <div className="w-24 h-[1px] bg-primary mx-auto mt-6"></div>
+      {/* ---------- GAMME YEETE (éducation & éveil) ---------- */}
+      <section className="shop-sec" id="gamme-enfants">
+        <div className="shop-in shop-yeete-grid">
+          <div data-reveal>
+            <span className="shop-eyebrow">{t('Éducation & Éveil')}</span>
+            <h3 className="shop-h2">{t('Gamme Yeete')}</h3>
+            <p className="shop-lead">
+              {t('Inspirée par la pédagogie Montessori, cette collection propose des jeux et supports éducatifs pour transmettre l’héritage spirituel et architectural dès le plus jeune âge.')}
+            </p>
+            {/* Section éditoriale : les articles de la gamme se retrouvent
+                dans le catalogue ci-dessus, avec leurs prix réels. */}
+            <a className="shop-link" href="#catalogue">
+              {t('Voir les articles disponibles')} <FiArrowRight />
+            </a>
           </div>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="relative group">
-              <div className="overflow-hidden mb-8 aspect-[4/5] bg-surface-container-lowest">
-                <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                  alt="Natte de Prière artisanale de la Mosquée"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdpNBB0x1VLUm5-zkqZ344kDsQEvkDHQSx0lo1SVxvbGOZXS6AqjpYFNJ8Xd5oFjrEe2Gf5kUbWB-6UXXgSE3SSqbOq6yuv1OkS5iKqQfQk5wjxXnn2ArWZeUjgPiaw8oATP3agtKsVDICXCIBSetIwyTua8U51b0ajyx-9g6i4N3mB3cNChRpqbAB1u2WYo8oMdsQr_Ei9dHatgjhUaiTKMGeFYStVkIEPSgElnkjI8g0c2wKv3vnWh10IRB-jbEOPGedIxaiddw"
-                />
-              </div>
-              <div className="text-center">
-                <h4 className="font-headline text-2xl mb-2 italic">Natte de Prière</h4>
-                <p className="font-arabic text-primary text-xl mb-4">سجادة الصلاة</p>
-                <p className="text-on-surface-variant text-sm mb-6 max-w-[280px] mx-auto">
-                  Tissage artisanal, motifs géométriques inspirés de la coupole centrale.
-                </p>
-                <button type="button" className="btn-gold">
-                  Découvrir l'artisanat
-                </button>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="overflow-hidden mb-8 aspect-[4/5] bg-surface-container-lowest">
-                <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                  alt="Coffret Tasbih &amp; Parfums"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEQriJ4ddVvAoxBInGZheTFLaO3v6aMT5F1l9SZMcBc4K6okg7pUWJKl5GkQgY2_nDF33l-WbaeNBXNkcqwt_TKrzzXwbkm_QLP2FoqjpSDjaJbCKSI9-mBnrv1lRNhcIUGOh9c8UgauK39RqzYZBkTlOgEyDctoOCBGfomBK4OSfPj0uVgJAw2iIwj9R4rHw3p6CYGhwEBeoU3ehxBTRrl0WLpZeiw8LgUKVDT5gWN5-6cDclxVSrzJ-O0c9Sc68Ps7IHzeQfEeU"
-                />
-              </div>
-              <div className="text-center">
-                <h4 className="font-headline text-2xl mb-2 italic">Tasbih &amp; Parfums</h4>
-                <p className="font-arabic text-primary text-xl mb-4">تسبيح و عطر</p>
-                <p className="text-on-surface-variant text-sm mb-6 max-w-[280px] mx-auto">
-                  Coffret précieux : bois d'ébène et essences pures de musc.
-                </p>
-                <button type="button" className="btn-gold">
-                  Commander le coffret
-                </button>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="overflow-hidden mb-8 aspect-[4/5] bg-surface-container-lowest">
-                <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                  alt="Dattes de Prestige"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC68NtKk33n9I93I725sljyWWRim8ZPRhtIc0lGC0FmToFW1_FPLGdznwA4GPpS-CJ5LwnnW9xzTTJv2YqaQoe5GNWv7NfZgobwzFLyOODhyD9mlX_eMKQJhQJ7W5VAKcSkCUukuSygJ-iF8DjGplnDEr_onHMVWB1Ji_IzzHumAQJwNu1WbkA-QAVDTkkNuOVBJbkjn7RfW7WxDDasSv-TQepLdbzKfs4KJichFANJHvNyGxaAQt8Uq_qIEWDumfrg9lPj-4Lc0gw"
-                />
-              </div>
-              <div className="text-center">
-                <h4 className="font-headline text-2xl mb-2 italic">Dattes de Prestige</h4>
-                <p className="font-arabic text-primary text-xl mb-4">تمر مبارك</p>
-                <p className="text-on-surface-variant text-sm mb-6 max-w-[280px] mx-auto">
-                  Sélection exclusive pour le mois béni et les occasions sacrées.
-                </p>
-                <button type="button" className="btn-gold">
-                  Voir les formats
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Signalétique Section (Asymmetrical 60/40) */}
-        <section className="bg-surface-container-lowest border-y border-outline-variant" id="signaletique">
-          <div className="grid md:grid-cols-10">
-            <div className="md:col-span-6 p-gutter-h md:p-24 border-r border-outline-variant">
-              <span className="text-secondary font-label tracking-widest uppercase text-xs mb-8 block">
-                Institutionnel
-              </span>
-              <h3 className="font-headline text-6xl italic mb-12 leading-tight">
-                L'Empreinte de la <span className="text-on-surface not-italic font-bold">Divinité</span>
-              </h3>
-              <div className="grid grid-cols-2 gap-12">
-                <div>
-                  <div className="aspect-[2/3] overflow-hidden mb-6 bg-surface flex items-center justify-center">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={bagImg}
-                      alt="Tote Bag Premium Mosquée de la Divinité"
-                    />
-                  </div>
-                  <h5 className="font-headline text-xl mb-2">Tote Bag Premium</h5>
-                  <p className="text-sm text-on-surface-variant">
-                    Toile de coton robuste avec marquage sérigraphié haute définition.
-                  </p>
-                </div>
-                <div className="pt-20">
-                  <div className="aspect-[2/3] overflow-hidden mb-6 bg-surface flex items-center justify-center">
-                    {/* Laisser la place pour l'image de la casquette, pas d'image encore dispo */}
-                    <span className="material-symbols-outlined text-primary/30 !text-6xl">face</span>
-                  </div>
-                  <h5 className="font-headline text-xl mb-2">Casquettes Officielles</h5>
-                  <p className="text-sm text-on-surface-variant">
-                    Modèles ajustables avec broderie relief de l'emblème Rabbani.
-                  </p>
-                </div>
-              </div>
+          <div className="shop-yeete-visual" data-reveal>
+            <div className="shop-yeete-photo arch-mask">
+              <img
+                src={enfantsImg}
+                alt={t('Enfants et familles de la communauté un jour de fête')}
+                loading="lazy"
+              />
             </div>
-            <div className="md:col-span-4 p-gutter-h md:p-24 flex flex-col justify-center items-center text-center bg-surface">
-              <h4 className="font-headline text-4xl mb-8 leading-snug italic">
-                "L'achat est un don avec un objet en retour. Le don est un achat sans objet."
-              </h4>
-              <p className="text-on-surface-variant mb-12 italic">Philosophie de la Boutique Officielle</p>
-              <div className="w-full h-[1px] bg-outline-variant mb-12"></div>
-              <div className="space-y-8">
-                <div className="flex items-start gap-4 text-left">
-                  <span className="font-headline text-3xl text-on-surface">01</span>
-                  <div>
-                    <h6 className="font-bold uppercase text-xs tracking-widest mb-1">Pérennité</h6>
-                    <p className="text-xs text-on-surface-variant">Financement direct de l'entretien du site.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 text-left">
-                  <span className="font-headline text-3xl text-on-surface">02</span>
-                  <div>
-                    <h6 className="font-bold uppercase text-xs tracking-widest mb-1">Transmission</h6>
-                    <p className="text-xs text-on-surface-variant">Supports pédagogiques pour la jeunesse.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 text-left">
-                  <span className="font-headline text-3xl text-on-surface">03</span>
-                  <div>
-                    <h6 className="font-bold uppercase text-xs tracking-widest mb-1">Patrimoine</h6>
-                    <p className="text-xs text-on-surface-variant">Rayonnement de l'architecture islamique.</p>
-                  </div>
-                </div>
-              </div>
+            <div className="shop-yeete-badge">
+              <h4>الأولاد</h4>
+              <p>{t('Pour les futurs bâtisseurs')}</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Livraison & Retrait */}
-        <section className="py-section-v-desktop px-gutter-h" id="assistance">
-          <div className="max-w-[1440px] mx-auto bg-surface-container-lowest p-12 md:p-20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
-              <span className="material-symbols-outlined !text-[400px] text-primary rotate-12">local_shipping</span>
-            </div>
-            <div className="relative z-10 grid md:grid-cols-2 gap-20">
+      {/* ---------- TEXTILE & ÉQUIPEMENT ---------- */}
+      {/* Vue par gamme, alimentée par le catalogue. La section disparaît
+          quand la gamme est vide : mieux vaut pas de section qu'une
+          section vide. */}
+      {parGamme('textile').length > 0 && (
+        <section className="shop-sec shop-textile" id="textile">
+          <div className="shop-in">
+            <div className="shop-head-row">
               <div>
-                <h3 className="font-headline text-4xl mb-6 italic">Logistique &amp; Retraits</h3>
-                <p className="text-on-surface-variant text-lg mb-10 leading-relaxed">
-                  Nous assurons une livraison fluide sur tout le territoire sénégalais. Les commandes peuvent également
-                  être retirées directement au guichet officiel de la Mosquée à Ouakam.
+                <span className="shop-eyebrow">{t('Identité Visuelle')}</span>
+                <h3 className="shop-h2">
+                  {t('Textile &')} <span className="solid">{t('Équipement')}</span>
+                </h3>
+                <p className="shop-lead">
+                  {t('Une gamme premium conçue pour les membres, les bénévoles et les sympathisants. Chaque pièce arbore l’insigne officiel de Masdjidou Rabbani.')}
                 </p>
-                <div className="space-y-6">
-                  <div className="flex gap-4 items-center">
-                    <span className="w-10 h-10 rounded-full border border-primary flex items-center justify-center text-primary material-symbols-outlined">
-                      location_on
-                    </span>
+              </div>
+              <button
+                type="button"
+                className="shop-link"
+                onClick={() => setActiveFilter('textile')}
+              >
+                {t('Voir tout le textile')} <FiArrowRight />
+              </button>
+            </div>
+
+            <div className="shopg-grid" data-reveal>
+              {parGamme('textile').map((p) => (
+                <CarteProduit p={p} key={p.id} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ---------- GAMME SPIRITUELLE ---------- */}
+      {parGamme('spirituelle').length > 0 && (
+        <section className="shop-sec" id="spirituelle">
+          <div className="shop-in">
+            <div className="shop-center-head">
+              <span className="shop-eyebrow">{t('La Paix Intérieure')}</span>
+              <h3 className="shop-h2">{t('Spirituelle')}</h3>
+              <div className="shop-center-rule" />
+            </div>
+
+            <div className="shop-spirit-grid" data-reveal>
+              {parGamme('spirituelle').map((p) => (
+                <CarteSpirituelle p={p} key={p.id} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ---------- SIGNALÉTIQUE (institutionnel) ---------- */}
+      <section className="shop-sign" id="signaletique">
+        <div className="shop-sign-grid">
+          <div className="shop-sign-left">
+            <span className="shop-eyebrow">{t('Institutionnel')}</span>
+            <h3 className="shop-h2">
+              {t('L’Empreinte de la')} <span className="solid">{t('Divinité')}</span>
+            </h3>
+            <div className="shop-sign-products">
+              <div>
+                <div className="shop-sign-photo">
+                  <img src={bagImg} alt={t('Tote Bag Premium Mosquée de la Divinité')} loading="lazy" />
+                </div>
+                <h5>{t('Tote Bag Premium')}</h5>
+                <p>{t('Toile de coton robuste avec marquage sérigraphié haute définition.')}</p>
+              </div>
+              <div className="shop-sign-offset">
+                <div className="shop-sign-photo">
+                  {/* Emplacement réservé : visuel des casquettes à venir */}
+                  <FiUser />
+                </div>
+                <h5>{t('Casquettes Officielles')}</h5>
+                <p>{t('Modèles ajustables avec broderie relief de l’emblème Rabbani.')}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="shop-sign-right">
+            <p className="shop-quote">
+              «&nbsp;{t('L’achat est un don avec un objet en retour. Le don est un achat sans objet.')}&nbsp;»
+            </p>
+            <p className="shop-quote-sub">{t('Philosophie de la Boutique Officielle')}</p>
+            <div className="shop-sign-rule" />
+            <div className="shop-points">
+              {POINTS.map(([num, titre, texte]) => (
+                <div className="shop-point" key={num}>
+                  <span className="shop-point-num">{num}</span>
+                  <div>
+                    <h6>{t(titre)}</h6>
+                    <p>{t(texte)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- LIVRAISON & RETRAIT ---------- */}
+      <section className="shop-sec" id="assistance">
+        <div className="shop-in">
+          <div className="shop-logi-card">
+            <FiTruck className="shop-logi-ico" aria-hidden="true" />
+            <div className="shop-logi-grid">
+              <div>
+                <h3 className="shop-h3">{t('Logistique & Retraits')}</h3>
+                <p className="shop-lead">
+                  {t('Nous assurons une livraison fluide sur tout le territoire sénégalais. Les commandes peuvent également être retirées directement au guichet officiel de la Mosquée à Ouakam.')}
+                </p>
+                <div className="shop-logi-list">
+                  <div className="shop-logi-item">
+                    <span className="ico"><FiMapPin /></span>
                     <div>
-                      <p className="font-bold text-sm">Point de Retrait Ouakam</p>
-                      <p className="text-xs text-on-surface-variant">Lundi - Dimanche | 09h00 - 18h00</p>
+                      <b>{t('Point de Retrait Ouakam')}</b>
+                      <span>{t('Lundi - Dimanche | 09h00 - 18h00')}</span>
                     </div>
                   </div>
-                  <div className="flex gap-4 items-center">
-                    <span className="w-10 h-10 rounded-full border border-primary flex items-center justify-center text-primary material-symbols-outlined">
-                      local_shipping
-                    </span>
+                  <div className="shop-logi-item">
+                    <span className="ico"><FiTruck /></span>
                     <div>
-                      <p className="font-bold text-sm">Livraison Dakar &amp; Régions</p>
-                      <p className="text-xs text-on-surface-variant">Sous 24h à 72h ouvrés</p>
+                      <b>{t('Livraison Dakar & Régions')}</b>
+                      <span>{t('Sous 24h à 72h ouvrés')}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="bg-surface p-10 border border-outline-variant z-10">
-                <h4 className="font-headline text-2xl mb-6 italic text-primary">Besoin d'assistance ?</h4>
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                  <input
-                    className="w-full bg-surface-container-lowest border-outline-variant text-on-surface p-4 text-sm focus:ring-primary focus:border-primary"
-                    placeholder="Votre nom"
-                    type="text"
-                  />
-                  <input
-                    className="w-full bg-surface-container-lowest border-outline-variant text-on-surface p-4 text-sm focus:ring-primary focus:border-primary"
-                    placeholder="Votre email"
-                    type="email"
-                  />
-                  <textarea
-                    className="w-full bg-surface-container-lowest border-outline-variant text-on-surface p-4 text-sm focus:ring-primary focus:border-primary"
-                    placeholder="Votre message"
-                    rows="3"
-                  ></textarea>
-                  <button type="submit" className="btn-gold" style={{ width: '100%', textAlign: 'center' }}>
-                    Envoyer la demande
-                  </button>
+
+              <div className="shop-form">
+                <h4>{t('Besoin d’assistance ?')}</h4>
+                <form onSubmit={(e) => e.preventDefault()}>
+                  <input type="text" placeholder={t('Votre nom')} />
+                  <input type="email" placeholder={t('Votre email')} />
+                  <textarea placeholder={t('Votre message')} rows="3" />
+                  <button type="submit" className="btn-gold">{t('Envoyer la demande')}</button>
                 </form>
               </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

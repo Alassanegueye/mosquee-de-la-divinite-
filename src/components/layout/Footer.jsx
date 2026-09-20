@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import logo from '../../assets/photo/Logo.png'
 import { FaYoutube, FaFacebookF, FaInstagram, FaXTwitter, FaTiktok, FaSnapchat } from 'react-icons/fa6'
 import { FOOTER_NAV } from '../../data/content'
+import { useT } from '../../utils/useT'
 
 // Réseaux sociaux : icône monochrome + lien (à remplacer par les vraies URL).
 const SOCIAL_LINKS = [
@@ -13,6 +15,8 @@ const SOCIAL_LINKS = [
 ]
 
 export default function Footer() {
+  const t = useT()
+
   return (
     <footer>
       <div className="footer-main">
@@ -20,12 +24,12 @@ export default function Footer() {
         <div>
           <span className="footer-brand-name">Mosquée de la Divinité</span>
           <span className="footer-brand-sub">
-            Masdjidou Rabbani · Ouakam · Corniche-Ouest · Dakar · Sénégal
+            {t('Masdjidou Rabbani · Ouakam · Corniche-Ouest · Dakar · Sénégal')}
           </span>
         </div>
 
         <div className="footer-follow">
-          <span className="footer-follow-label">Suivez-nous sur</span>
+          <span className="footer-follow-label">{t('Suivez-nous sur')}</span>
           <div className="footer-socials">
             {SOCIAL_LINKS.map(({ Icon, label, url }) => (
               <a
@@ -42,17 +46,20 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Link et non <a> : depuis une autre page, une ancre nue ajoute le
+            hash sans jamais ramener sur l'accueil. */}
         <ul className="footer-nav">
           {FOOTER_NAV.map(([label, href]) => (
-            <li key={href + label}><a href={href}>{label}</a></li>
+            <li key={href + label}><Link to={`/${href}`}>{t(label)}</Link></li>
           ))}
+          <li><Link to="/patrimoine">{t('Patrimoine')}</Link></li>
         </ul>
       </div>
       <div className="footer-bottom">
         <span className="footer-copy">
-          mosqueedeladivinite.org · Site officiel · Mouvement Naby Allah
+          mosqueedeladivinite.org · {t('Site officiel')} · {t('Mouvement Naby Allah')}
         </span>
-        <span className="footer-copy">© 2026 Mouvement Naby Allah</span>
+        <span className="footer-copy">© 2026 {t('Mouvement Naby Allah')}</span>
       </div>
     </footer>
   )

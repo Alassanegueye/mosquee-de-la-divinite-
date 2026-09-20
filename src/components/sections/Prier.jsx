@@ -4,6 +4,7 @@ import koriteImg from '../../assets/photo/Korite.jpg'
 import tabaskiImg from '../../assets/photo/Tabaski.jpg'
 import fayfaatImg from '../../assets/photo/Fayfaat.jpg'
 import tasbihImg from '../../assets/photo/Journées prieres.jpg'
+import { useT } from '../../utils/useT'
 
 // PRIER — « Les Heures Sacrées » : grille des 5 prières (réf)
 const PRAYERS = [
@@ -53,24 +54,25 @@ const PROPRES = [
 ]
 
 export default function Prier() {
+  const t = useT()
+
   return (
     <section id="prier" className="section bg-teal">
       <div className="sw">
         <div className="prier-head">
           <div className="prier-head-left">
-            <span className="eyebrow red">Prière</span>
-            <h2 className="prier-title">La prière,<br />au cœur du lieu.</h2>
-            <span className="eyebrow gold">Les Cinq Prières Quotidiennes</span>
+            <span className="eyebrow red">{t('Prière')}</span>
+            <h2 className="prier-title">{t('La prière,')}<br />{t('au cœur du lieu.')}</h2>
+            <span className="eyebrow gold">{t('Les Cinq Prières Quotidiennes')}</span>
           </div>
           <div className="prier-head-right">
             <p>
-              La Mosquée de la Divinité accueille les cinq prières quotidiennes et l’ensemble
-              du calendrier islamique. Tous les fidèles sont les bienvenus.
+              {t('La Mosquée de la Divinité accueille les cinq prières quotidiennes et l’ensemble du calendrier islamique. Tous les fidèles sont les bienvenus.')}
             </p>
           </div>
         </div>
 
-        <div className="prayers2">
+        <div className="prayers2" data-reveal>
           {PRAYERS.map(([ar, name, time, img]) => (
             <div className="prayer2" key={name}>
               <div className="prayer2-top">
@@ -88,27 +90,27 @@ export default function Prier() {
         </div>
 
         {/* Jumaah — prière du vendredi */}
-        <div className="jumaah">
-          <span className="eyebrow gold">Prière du vendredi</span>
+        <div className="jumaah" data-reveal>
+          <span className="eyebrow gold">{t('Prière du vendredi')}</span>
           <div className="jumaah-photo">
-            <img src={images.jumaaImg} alt="Prière du vendredi à la Mosquée de la Divinité" loading="lazy" />
+            <img src={images.jumaaImg} alt={t('Prière du vendredi à la Mosquée de la Divinité')} loading="lazy" />
           </div>
           <div className="jumaah-card">
             <div className="jumaah-ar">الجُمُعَة</div>
             <div className="jumaah-content">
               <span className="jumaah-label">Jumaah</span>
-              <h3 className="jumaah-time">Chaque vendredi à 14h00</h3>
+              <h3 className="jumaah-time">{t('Chaque vendredi à 14h00')}</h3>
               <div className="jumaah-note">
-                <span className="jumaah-note-k">Tenue recommandée</span>
-                <p>La tenue blanche est de mise pour la prière du vendredi.</p>
+                <span className="jumaah-note-k">{t('Tenue recommandée')}</span>
+                <p>{t('La tenue blanche est de mise pour la prière du vendredi.')}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Prières spéciales (fêtes) */}
-        <div className="special">
-          <span className="eyebrow gold">Prières spéciales</span>
+        <div className="special" data-reveal>
+          <span className="eyebrow gold">{t('Prières spéciales')}</span>
           <div className="special-grid">
             {SPECIALS.map((s) => (
               <article className="special-card" key={s.name}>
@@ -119,7 +121,7 @@ export default function Prier() {
                   <p className="special-ar">{s.ar}</p>
                   <p className="special-name">{s.name}</p>
                   <p className="special-sub">{s.sub}</p>
-                  <p className="special-time">{s.time}</p>
+                  <p className="special-time">{t(s.time)}</p>
                 </div>
               </article>
             ))}
@@ -127,8 +129,8 @@ export default function Prier() {
         </div>
 
         {/* Prières propres à la Mosquée de la Divinité */}
-        <div className="pp">
-          <span className="eyebrow gold">Prières propres à la Mosquée de la Divinité</span>
+        <div className="pp" data-reveal>
+          <span className="eyebrow gold">{t('Prières propres à la Mosquée de la Divinité')}</span>
           <div className="pp-grid">
             {PROPRES.map((p) => (
               <article className="pp-card" key={p.name}>
@@ -138,9 +140,9 @@ export default function Prier() {
                 <div className="pp-body">
                   <p className="pp-ar">{p.ar}</p>
                   <h4 className="pp-name">{p.name}</h4>
-                  <p className="pp-when">{p.when}</p>
+                  <p className="pp-when">{t(p.when)}</p>
                   <div className="pp-rule" aria-hidden="true" />
-                  <p className="pp-desc">{p.desc}</p>
+                  <p className="pp-desc">{t(p.desc)}</p>
                 </div>
               </article>
             ))}

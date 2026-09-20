@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Building2, 
@@ -19,151 +19,51 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import heroImage from '../assets/photo/DJI_0681.jpg';
-import projectAImage from '../assets/photo/Structure_Béton_2.png';
-import projectBImage from '../assets/photo/Toilettes.png';
-import projectCImage from '../assets/photo/Electricité.jpg';
-import projectDImage from '../assets/photo/Sonorisation.jpeg';
-import leaderNabyImage from '../assets/photo/MNG.jpg';
-import leaderAbabacarImage from '../assets/photo/ASN.jpg';
-import leaderTidianeImage from '../assets/photo/CATG.jpeg';
+import { chargerRenovation, urlMedia } from '../service/api';
+import { useT } from '../utils/useT';
+import logoRenovation from '../assets/photo/LOGO_RENOVATION-02.png';
+
+// La base ne stocke qu'un nom d'icône : y mettre un composant React
+// obligerait à redéployer le site pour changer le pictogramme d'un chantier.
+const ICONES = { HardHat, Building2, Zap, Volume2, Building, ShieldCheck, Layers, PackageCheck, Sparkles };
+
+/** 1 -> « Un », 4 -> « Quatre »… au-delà, le chiffre suffit. */
+const EN_LETTRES = ['Aucun', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit'];
+function enLettres(n) {
+  return EN_LETTRES[n] || String(n);
+}
+
+/** 123000000 -> « 123.000.000 FCFA », la notation de la brochure. */
+function montant(valeur, devise = 'FCFA') {
+  return `${Number(valeur || 0).toLocaleString('fr-FR').split(/\s/).join('.')} ${devise}`;
+}
+
 
 // =========================================================================
-// LOGO OFFICIEL VECTORIEL DE LA CHARTE (Inclus directement pour faciliter l'intégration)
+// LOGO OFFICIEL DE LA CAMPAGNE
 // =========================================================================
-function RenovationLogo({ className = '', variant = 'light', size = 'md' }) {
-  const isDark = variant === 'dark';
-  const isBanner = variant === 'banner';
-  const subTextColor = isDark || isBanner ? '#a4ced4' : '#115259';
-  const redAccent = '#C11616';
+// Le logo vient de la base (modifiable au dashboard) ; le fichier livré
+// avec le site sert de repli pour qu'une base vierge reste signée.
+// Fichier image et non SVG inline : le logo est un visuel de charte, pas
+// une illustration a redessiner. Les props restent celles de l ancien
+// composant pour ne pas toucher aux appels.
+function RenovationLogo({ className = '', size = 'md', source }) {
+  // Ce composant vit hors de la page : il lui faut son propre hook pour
+  // traduire le texte alternatif de l'image.
+  const t = useT();
+  const hauteur =
+    size === 'sm' ? 'max-h-16'
+    : size === 'md' ? 'max-h-24 sm:max-h-28'
+    : size === 'lg' ? 'max-h-36 sm:max-h-44'
+    : 'max-h-56';
 
   return (
     <div className={`inline-flex flex-col items-center select-none ${className}`}>
-      <svg
-        viewBox="0 0 880 320"
-        className={`w-full h-auto max-w-full ${
-          size === 'sm' ? 'max-h-16' : size === 'md' ? 'max-h-24 sm:max-h-28' : size === 'lg' ? 'max-h-36 sm:max-h-44' : 'max-h-56'
-        }`}
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="Logo Projet Rénovation Mosquée de la Divinité"
-      >
-        <defs>
-          <linearGradient id="textTealGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={isBanner ? "#ffffff" : "#0e4b50"} />
-            <stop offset="100%" stopColor={isBanner ? "#e0f2f1" : "#0a363a"} />
-          </linearGradient>
-        </defs>
-
-        {/* Word "PROJET" */}
-        <text
-          x="30"
-          y="78"
-          fill={isBanner ? "#ffffff" : subTextColor}
-          fontFamily="system-ui, -apple-system, sans-serif"
-          fontWeight="700"
-          fontSize="36"
-          letterSpacing="0.48em"
-        >
-          P R O J E T
-        </text>
-
-        {/* Word "RÉN" */}
-        <text
-          x="26"
-          y="188"
-          fill="url(#textTealGrad)"
-          fontFamily="system-ui, -apple-system, sans-serif"
-          fontWeight="900"
-          fontSize="116"
-          letterSpacing="-0.02em"
-        >
-          RÉN
-        </text>
-
-        {/* Central "O" - The Renovation Cycle Badge */}
-        <g transform="translate(290, 84)">
-          <path
-            d="M 68 12 A 66 66 0 0 1 122 84 L 132 80 L 126 102 L 104 98 L 114 94 A 56 56 0 0 0 68 22 Z"
-            fill={redAccent}
-          />
-          <path
-            d="M 68 132 A 66 66 0 0 1 14 60 L 4 64 L 10 42 L 32 46 L 22 50 A 56 56 0 0 0 68 122 Z"
-            fill={redAccent}
-          />
-          <rect
-            x="24"
-            y="20"
-            width="88"
-            height="88"
-            rx="24"
-            fill={redAccent}
-            filter="drop-shadow(0 4px 6px rgba(193, 22, 22, 0.25))"
-          />
-          <path
-            d="M 46 64 C 46 48 56 42 68 42 C 80 42 90 48 90 64 Z"
-            fill="#ffffff"
-          />
-          <rect x="65" y="39" width="6" height="24" rx="2" fill={redAccent} />
-          <path
-            d="M 42 64 C 42 63 46 62 68 62 C 90 62 94 63 94 64 C 94 67 90 68 68 68 C 46 68 42 67 42 64 Z"
-            fill="#ffffff"
-          />
-          <g transform="translate(56, 70)">
-            <circle cx="12" cy="12" r="5.5" fill={redAccent} />
-            <path
-              d="M 10 0 H 14 V 4 H 10 Z M 10 20 H 14 V 24 H 10 Z M 0 10 H 4 V 14 H 0 Z M 20 10 H 24 V 14 H 20 Z M 3 3 L 6 6 L 4 8 L 1 5 Z M 17 17 L 20 20 L 18 22 L 15 19 Z M 17 7 L 20 4 L 22 6 L 19 9 Z M 3 21 L 6 18 L 8 20 L 5 23 Z"
-              fill="#ffffff"
-            />
-          </g>
-        </g>
-
-        {/* Word "VATION" */}
-        <text
-          x="440"
-          y="188"
-          fill="url(#textTealGrad)"
-          fontFamily="system-ui, -apple-system, sans-serif"
-          fontWeight="900"
-          fontSize="116"
-          letterSpacing="-0.02em"
-        >
-          VATION
-        </text>
-
-        {/* Red rectangular badge underneath VATION: "MOSQUÉE DE LA DIVINITÉ" with Minarets */}
-        <g transform="translate(440, 212)">
-          <rect
-            x="0"
-            y="0"
-            width="412"
-            height="44"
-            rx="4"
-            fill={redAccent}
-          />
-          <g transform="translate(14, 8)">
-            <rect x="3" y="10" width="4" height="18" fill="#ffffff" />
-            <polygon points="5,3 1,10 9,10" fill="#ffffff" />
-            <circle cx="5" cy="2" r="1.5" fill="#ffffff" />
-            <path d="M 12 28 C 12 22 20 22 20 28 Z" fill="#ffffff" />
-            <circle cx="16" cy="21" r="1.5" fill="#ffffff" />
-            <rect x="23" y="10" width="4" height="18" fill="#ffffff" />
-            <polygon points="25,3 21,10 29,10" fill="#ffffff" />
-            <circle cx="25" cy="2" r="1.5" fill="#ffffff" />
-          </g>
-          <text
-            x="58"
-            y="28"
-            fill="#ffffff"
-            fontFamily="'Cinzel', 'Times New Roman', serif"
-            fontWeight="700"
-            fontSize="18"
-            letterSpacing="0.18em"
-          >
-            MOSQUÉE DE LA DIVINITÉ
-          </text>
-        </g>
-      </svg>
+      <img
+        src={source || logoRenovation}
+        alt={t("Projet Rénovation — Mosquée de la Divinité")}
+        className={`w-auto h-auto max-w-full object-contain ${hauteur}`}
+      />
     </div>
   );
 }
@@ -173,11 +73,29 @@ function RenovationLogo({ className = '', variant = 'light', size = 'md' }) {
 // =========================================================================
 export default function RenovationView() {
   const navigate = useNavigate();
-  // Budget officiel de la brochure : 123M + 52M + 10M + 15M = 200.000.000 FCFA
-  const TOTAL_BUDGET = 200000000;
-  
-  // Tous les compteurs à zéro au lancement officiel
-  const [currentCollected, setCurrentCollected] = useState(0);
+  // Traduction par texte source : le français reste écrit ici, l’anglais
+  // vit dans data/i18n.js. Une clé absente retombe sur le français.
+  const t = useT();
+  // Contenu de la page : campagne, chantiers, responsables et moyens de
+  // paiement viennent tous de la base, pilotés depuis le dashboard.
+  const [contenu, setContenu] = useState(null);
+  const [indisponible, setIndisponible] = useState(false);
+
+  useEffect(() => {
+    let annule = false;
+    chargerRenovation()
+      .then((donnees) => { if (!annule) setContenu(donnees); })
+      .catch(() => { if (!annule) setIndisponible(true); });
+    return () => { annule = true; };
+  }, []);
+
+  const campagne = contenu?.campagne;
+  const devise = campagne?.devise || 'FCFA';
+  const TOTAL_BUDGET = campagne?.objectif ?? 0;
+  const currentCollected = campagne?.collecte ?? 0;
+  // Aucune donnée encore reçue : on masque les montants au lieu
+  // d'annoncer un objectif nul.
+  const chiffresPrets = Boolean(campagne);
 
   // Modales
   const [donateModalOpen, setDonateModalOpen] = useState(false);
@@ -217,84 +135,27 @@ export default function RenovationView() {
     navigate('/dons');
   };
 
-  // LES 4 CHANTIERS OFFICIELS DE LA BROCHURE AVEC IMAGES DÉDIÉES ET COMPTEURS À ZÉRO
-  const projects = [
-    {
-      id: 'projet_a',
-      code: 'PROJET A',
-      title: 'Rénovations Structurelles',
-      estimate: 123000000,
-      formattedEstimate: '123.000.000 FCFA',
-      icon: HardHat,
-      color: '#C11616',
-      badge: 'Priorité 1 · Sauvegarde Urgente',
-      image: projectAImage,
-      summary: 'Renforcement du squelette avec du béton haute résistance et de l’acier marin, sécurisation des deux minarets de 45 mètres et de la coupole centrale.',
-      works: [
-        'Renforcement de la structure avec du béton haute résistance',
-        'Renforcement de la structure avec de l’acier marin et passivation des armatures',
-        'Sécurisation des minarets de 45 m et de la coupole'
-      ],
-      progress: 0
-    },
-    {
-      id: 'projet_b',
-      code: 'PROJET B',
-      title: 'Toilettes & Sanitaires Modernes',
-      estimate: 52000000,
-      formattedEstimate: '52.000.000 FCFA',
-      icon: Building2,
-      color: '#0e4b50',
-      badge: 'Confort & Salubrité des Fidèles',
-      image: projectBImage,
-      summary: 'Édification de blocs sanitaires et d’espaces d’ablutions modernes répartis sur deux niveaux indépendants.',
-      works: [
-        'Blocs sanitaires modernes : rez-de-chaussée pour les hommes',
-        'Premier étage indépendant dédié aux femmes',
-        'Raccordement à un assainissement étanche et robinetterie hydro-économe'
-      ],
-      progress: 0
-    },
-    {
-      id: 'projet_c',
-      code: 'PROJET C',
-      title: 'Électricité & Énergie Solaire',
-      estimate: 10000000,
-      formattedEstimate: '10.000.000 FCFA',
-      icon: Zap,
-      color: '#b78103',
-      badge: 'Autonomie & Transition Énergétique',
-      image: projectCImage,
-      summary: 'Remise aux normes intégrale des réseaux électriques et installation d’une centrale solaire photovoltaïque pour la mosquée et ses abords.',
-      works: [
-        'Installation de nouveaux circuits électriques sécurisés',
-        'Éclairage architectural de la mosquée et de ses abords',
-        'Installation de panneaux solaires photovoltaïques haute efficacité'
-      ],
-      progress: 0
-    },
-    {
-      id: 'projet_d',
-      code: 'PROJET D',
-      title: 'Sonorisation & Sauvegarde',
-      estimate: 15000000,
-      formattedEstimate: '15.000.000 FCFA',
-      icon: Volume2,
-      color: '#167078',
-      badge: 'Acoustique & Mémoire Numérique',
-      image: projectDImage,
-      summary: 'Équipement acoustique haute-fidélité tropicalisé résistant aux embruns marins, régie audio et numérisation des activités de la mosquée.',
-      works: [
-        'Système de sonorisation performant pour les minarets et l’esplanade',
-        'Sauvegarde numérique et archivage des enregistrements des activités de la mosquée : prêches, cérémonies…',
-        'Régie audio et gestion des évènements de la mosquée'
-      ],
-      progress: 0
-    }
-  ];
-
+  // Chantiers de la campagne. Les noms de champs restent ceux du
+  // composant : seule la source change, le rendu n'est pas touché.
+  const projects = (contenu?.chantiers || []).map((c) => ({
+    id: c.id,
+    code: c.code,
+    title: c.titre,
+    estimate: c.estimation,
+    formattedEstimate: montant(c.estimation, devise),
+    icon: ICONES[c.icone] || Building2,
+    color: c.couleur || '#0e4b50',
+    badge: c.badge,
+    image: urlMedia(c.image),
+    summary: c.resume,
+    works: c.travaux || [],
+    collected: c.collecte,
+    progress: c.estimation > 0 ? Math.min(100, Math.round((c.collecte / c.estimation) * 100)) : 0,
+  }));
   // Calcul du taux global (à 0% au démarrage)
-  const overallProgress = TOTAL_BUDGET > 0 ? Math.min(100, Math.round((currentCollected / TOTAL_BUDGET) * 100)) : 0;
+  // Le pourcentage vient du serveur : deux clients qui le recalculent
+  // finissent par diverger d'un arrondi.
+  const overallProgress = campagne?.pourcentage ?? 0;
 
   const handleDonationSubmit = (e) => {
     e.preventDefault();
@@ -303,7 +164,6 @@ export default function RenovationView() {
       showToast("Veuillez sélectionner ou saisir un montant valide.");
       return;
     }
-    setCurrentCollected(prev => prev + effectiveAmt);
     setDonationSuccess(true);
     setTimeout(() => {
       setDonationSuccess(false);
@@ -329,35 +189,29 @@ export default function RenovationView() {
   };
 
   // LES 3 RESPONSABLES DU CHANTIER ACTUELS (avec photos en cercle)
-  const activeLeaders = [
-    {
-      id: 'm-naby',
-      name: 'Mouhamed Naby Gueye',
-      roleTitle: 'Actuel Khalife du Mouvement Naby-Allah',
-      responsibility: 'Autorité morale & haut patronage spirituel',
-      image: leaderNabyImage,
-      bio: 'Mouhamed Naby Gueye est le fils aîné et Khalife de Mouhamed Seyni Gueye, bâtisseur de la Mosquée de la Divinité. Sous son Khalifat, d’importants travaux ont déjà été réalisés à la mosquée. Il assure le haut patronage et la supervision globale de ce grand chantier de rénovation.'
-    },
-    {
-      id: 'ababacar-ndoye',
-      name: 'Ababacar Sadikh Ndoye',
-      roleTitle: 'Président du Mouvement Naby-Allah',
-      responsibility: 'Responsable technique des travaux & ingénieur',
-      image: leaderAbabacarImage,
-      bio: 'Ingénieur en télécommunications et ancien collaborateur direct de Mouhamed Seyni Gueye lors de la construction de la mosquée en 1992. Il dirige la commission technique et pilote l’exécution des quatre chantiers.'
-    },
-    {
-      id: 'tidiane-gueye',
-      name: 'Cheikh Ahmet Tidiane Gueye',
-      roleTitle: 'Responsable de la Communication',
-      responsibility: 'Consultant international & relations mécènes',
-      image: leaderTidianeImage,
-      bio: 'Consultant international en communication, il supervise la campagne de mobilisation des dons, les relations médias et les partenariats institutionnels.'
-    }
-  ];
+  const activeLeaders = (contenu?.responsables || []).map((r) => ({
+    id: r.id,
+    name: r.nom,
+    roleTitle: r.roleTitre,
+    responsibility: r.responsabilite,
+    image: urlMedia(r.image),
+    bio: r.bio,
+  }));
 
   return (
     <div id="grands-travaux-light-page" className="renovation-preview w-full bg-[#f8fafb] text-[#1c3336] selection:bg-[#C11616] selection:text-white min-h-screen">
+
+      {/* Tant que les chiffres ne sont pas arrivés, un voile discret plutôt
+          qu un objectif à 0 FCFA qui passerait pour la réalité de la collecte. */}
+      {!contenu && !indisponible && (
+        <div className="fixed inset-x-0 top-0 h-0.5 bg-[#C11616]/70 animate-pulse z-50" aria-hidden="true" />
+      )}
+
+      {/* Contenu injoignable : on le dit plutot que d afficher une page de
+          chiffres a zero qui passerait pour la realite de la collecte. */}
+      {indisponible && (
+        <div className="bg-[#fcf3f3] border-b border-[#f5c6c6] text-[#C11616] text-center text-xs tracking-wider uppercase font-bold py-3 px-6">{t("Les chiffres de la campagne sont momentanement indisponibles.")}</div>
+      )}
       
       {/* Toast Notification */}
       <AnimatePresence>
@@ -381,16 +235,16 @@ export default function RenovationView() {
         <div className="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           
           <div className="flex items-center gap-4">
-            <RenovationLogo variant="light" size="md" />
+            <RenovationLogo size="md" source={urlMedia(campagne?.logo)} />
           </div>
 
           <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 text-xs tracking-wider">
             <div className="bg-[#f0f5f6] border border-[#c3d8da] text-[#0e4b50] px-4 py-2 rounded-full flex items-center gap-2 font-bold">
               <span className="w-2 h-2 rounded-full bg-[#C11616] animate-pulse" />
-              <span>CAMPAGNE OFFICIELLE DE SAUVEGARDE</span>
+              <span>{t("CAMPAGNE OFFICIELLE DE SAUVEGARDE")}</span>
             </div>
             <div className="bg-[#fcf3f3] border border-[#f5c6c6] text-[#C11616] px-4 py-2 rounded-full font-bold">
-              <span>FI SABÎLILAH · DAKAR</span>
+              <span>{t("FI SABILILAH · DAKAR")}</span>
             </div>
           </div>
 
@@ -406,11 +260,15 @@ export default function RenovationView() {
       >
         {/* Photo de fond authentique de la Mosquée de la Divinité face à l'Océan */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <img
-            src={heroImage}
-            alt="Mosquée de la Divinité de Dakar face à l'Océan Atlantique"
-            className="w-full h-full object-cover object-center filter contrast-105"
-          />
+          {/* Pas de <img> sans source : le navigateur afficherait une
+              icône de fichier cassé en plein écran. */}
+          {urlMedia(campagne?.imageHero) && (
+            <img
+              src={urlMedia(campagne.imageHero)}
+              alt={t("Mosquée de la Divinité de Dakar face à l'Océan Atlantique")}
+              className="w-full h-full object-cover object-center filter contrast-105"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/88 to-white/70 backdrop-blur-[1px]" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8fafb] via-transparent to-white/60" />
         </div>
@@ -421,43 +279,36 @@ export default function RenovationView() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#e8f1f2]/95 backdrop-blur-sm border border-[#b8d4d7] text-[#0e4b50] text-xs uppercase tracking-[0.2em] font-bold shadow-xs">
               <Building size={14} className="text-[#C11616]" />
-              <span>La mosquée a besoin de vous · 30 ans face à l'océan</span>
+              <span>{t("La Mosquée a Besoin de Vous · 30 Ans face à l'Océan")}</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-light text-[#0c282b] leading-[1.08] tracking-tight">
-              Ensemble, rénovons la <span className="text-[#C11616] font-normal italic block">Maison de Dieu</span>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-light text-[#0c282b] leading-[1.08] tracking-tight">{t("Ensemble, rénovons la")}<span className="text-[#C11616] font-normal italic block">{t("Maison de Dieu")}</span>
             </h1>
 
             {/* Citation officielle de la brochure */}
             <div className="bg-white/95 backdrop-blur-md border-l-4 border-[#C11616] p-5 rounded-r-xl shadow-md border-y border-r border-slate-200">
-              <p className="text-xs text-[#0e4b50] uppercase tracking-wider font-bold mb-1">
-                30 ans d’existence face à l’érosion maritime
-              </p>
-              <p className="text-lg sm:text-xl text-[#243e41] italic leading-relaxed">
-                « Depuis plus de 30 ans, la Mosquée de la Divinité résiste vaillamment à l’érosion maritime et aux embruns de l’Atlantique. Aujourd’hui, préserver ce sanctuaire sacré exige la mobilisation solidaire de chacun. »
-              </p>
+              <p className="text-xs text-[#0e4b50] uppercase tracking-wider font-bold mb-1">{t("30 Ans d'Existence face à l'Érosion Maritime")}</p>
+              <p className="text-lg sm:text-xl text-[#243e41] italic leading-relaxed">{t("« Depuis plus de 30 ans, la Mosquée de la Divinité résiste vaillamment à l’érosion maritime et aux embruns de l'Atlantique. Aujourd'hui, préserver ce sanctuaire sacré exige la mobilisation solidaire de chacun. »")}</p>
             </div>
 
             {/* Vignette photo de la Mosquée */}
+            {urlMedia(campagne?.imageHero) && (
             <div className="relative rounded-2xl overflow-hidden border-2 border-white/80 shadow-lg bg-slate-900 group max-w-xl">
               <img
-                src={heroImage}
-                alt="Vue de la Mosquée de la Divinité"
+                src={urlMedia(campagne.imageHero)}
+                alt={t("Vue de la Mosquée de la Divinité")}
                 className="w-full h-36 sm:h-44 object-cover object-[center_38%] group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
               <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#f1c11c] animate-pulse" />
-                  <span className="text-xs uppercase tracking-wider font-semibold">
-                    Mosquée de la Divinité · Ouakam, Dakar
-                  </span>
+                  <span className="text-xs uppercase tracking-wider font-semibold">{t("Mosquée de la Divinité · Ouakam, Dakar")}</span>
                 </div>
-                <span className="text-[10px] font-mono bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-md border border-white/20 text-slate-100">
-                  Édifiée en 1992
-                </span>
+                <span className="text-[10px] font-mono bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-md border border-white/20 text-slate-100">{t("Édifiée en 1992")}</span>
               </div>
             </div>
+            )}
 
             {/* Boutons d'action principaux */}
             <div className="pt-2 flex flex-wrap items-center gap-4">
@@ -482,17 +333,11 @@ export default function RenovationView() {
             {/* Indicateurs de réassurance */}
             <div className="pt-2 flex items-center gap-6 text-xs text-[#2d494c] tracking-wider font-semibold">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-[#0e4b50]" />
-                Devis Audités
-              </span>
+                <CheckCircle2 size={14} className="text-[#0e4b50]" />{t("Devis Audités")}</span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-[#0e4b50]" />
-                Comité d’Ingénieurs
-              </span>
+                <CheckCircle2 size={14} className="text-[#0e4b50]" />{t("Comité d’Ingénieurs")}</span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-[#0e4b50]" />
-                Transparence Totale
-              </span>
+                <CheckCircle2 size={14} className="text-[#0e4b50]" />{t("Transparence Totale")}</span>
             </div>
           </div>
 
@@ -502,20 +347,14 @@ export default function RenovationView() {
               
               <div className="flex items-center justify-between border-b border-[#e2e8f0] pb-4">
                 <div>
-                  <span className="text-[11px] tracking-widest text-[#C11616] uppercase font-bold block">
-                    Budget Global des Travaux
-                  </span>
-                  <span className="text-sm text-[#506e71]">
-                    Estimations officielles des 4 chantiers
-                  </span>
+                  <span className="text-[11px] tracking-widest text-[#C11616] uppercase font-bold block">{t("Budget Global des Travaux")}</span>
+                  <span className="text-sm text-[#506e71]">{t("Estimations officielles des 4 chantiers")}</span>
                 </div>
                 <div className="text-right">
                   <span className="font-mono text-3xl sm:text-4xl font-extrabold text-[#0e4b50] block">
-                    {overallProgress}%
+                    {chiffresPrets ? `${overallProgress}%` : '—'}
                   </span>
-                  <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold">
-                    Souscription
-                  </span>
+                  <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold">{t("Souscription")}</span>
                 </div>
               </div>
 
@@ -530,42 +369,40 @@ export default function RenovationView() {
                   />
                 </div>
                 <div className="flex justify-between text-xs font-mono text-[#3b595c] font-semibold">
-                  <span>Collecté : <strong className="text-[#C11616] text-sm">{currentCollected.toLocaleString('fr-FR')} FCFA</strong></span>
-                  <span>Objectif : <strong className="text-[#0e4b50] text-sm">{TOTAL_BUDGET.toLocaleString('fr-FR')} FCFA</strong></span>
+                  <span>{t("Collecté :")}<strong className="text-[#C11616] text-sm">{chiffresPrets ? montant(currentCollected, devise) : '—'}</strong></span>
+                  <span>{t("Objectif :")}<strong className="text-[#0e4b50] text-sm">{chiffresPrets ? montant(TOTAL_BUDGET, devise) : '—'}</strong></span>
                 </div>
               </div>
 
               {/* Synthèse des 4 montants de la brochure */}
               <div className="space-y-2 pt-1">
-                <span className="text-[11px] uppercase tracking-wider text-[#355255] font-bold block">
-                  Estimations par Chantier :
-                </span>
+                <span className="text-[11px] uppercase tracking-wider text-[#355255] font-bold block">{t("Estimations par Chantier :")}</span>
                 <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                   <div className="bg-[#fafbfc] p-3 rounded-xl border border-[#d6e3e5] flex justify-between items-center">
                     <div>
-                      <span className="text-[#C11616] text-[10px] font-bold block">PROJET A</span>
-                      <span className="text-[10px] text-[#557275] font-sans">Structure</span>
+                      <span className="text-[#C11616] text-[10px] font-bold block">{t("PROJET A")}</span>
+                      <span className="text-[10px] text-[#557275] font-sans">{t("Structure")}</span>
                     </div>
                     <span className="font-bold text-[#0c282b]">123 M</span>
                   </div>
                   <div className="bg-[#fafbfc] p-3 rounded-xl border border-[#d6e3e5] flex justify-between items-center">
                     <div>
-                      <span className="text-[#0e4b50] text-[10px] font-bold block">PROJET B</span>
-                      <span className="text-[10px] text-[#557275] font-sans">Toilettes</span>
+                      <span className="text-[#0e4b50] text-[10px] font-bold block">{t("PROJET B")}</span>
+                      <span className="text-[10px] text-[#557275] font-sans">{t("Toilettes")}</span>
                     </div>
                     <span className="font-bold text-[#0c282b]">52 M</span>
                   </div>
                   <div className="bg-[#fafbfc] p-3 rounded-xl border border-[#d6e3e5] flex justify-between items-center">
                     <div>
-                      <span className="text-[#b78103] text-[10px] font-bold block">PROJET C</span>
-                      <span className="text-[10px] text-[#557275] font-sans">Élec / Solaire</span>
+                      <span className="text-[#b78103] text-[10px] font-bold block">{t("PROJET C")}</span>
+                      <span className="text-[10px] text-[#557275] font-sans">{t("Élec / Solaire")}</span>
                     </div>
                     <span className="font-bold text-[#0c282b]">10 M</span>
                   </div>
                   <div className="bg-[#fafbfc] p-3 rounded-xl border border-[#d6e3e5] flex justify-between items-center">
                     <div>
-                      <span className="text-[#167078] text-[10px] font-bold block">PROJET D</span>
-                      <span className="text-[10px] text-[#557275] font-sans">Sonorisation</span>
+                      <span className="text-[#167078] text-[10px] font-bold block">{t("PROJET D")}</span>
+                      <span className="text-[10px] text-[#557275] font-sans">{t("Sonorisation")}</span>
                     </div>
                     <span className="font-bold text-[#0c282b]">15 M</span>
                   </div>
@@ -574,9 +411,7 @@ export default function RenovationView() {
 
               {/* Reste à collecter */}
               <div className="bg-[#f0f5f6] border border-[#b8d4d7] p-3.5 rounded-xl flex items-center justify-between text-xs">
-                <span className="text-[#0e4b50] font-bold uppercase tracking-wider">
-                  Reste à Financer :
-                </span>
+                <span className="text-[#0e4b50] font-bold uppercase tracking-wider">{t("Reste à Financer :")}</span>
                 <span className="font-mono font-extrabold text-[#C11616] text-sm">
                   {(TOTAL_BUDGET - currentCollected).toLocaleString('fr-FR')} FCFA
                 </span>
@@ -587,15 +422,11 @@ export default function RenovationView() {
                 <button
                   onClick={handleGoToFullDonation}
                   className="w-full bg-[#0e4b50] hover:bg-[#09363a] text-white text-xs tracking-wider uppercase font-bold py-3.5 rounded-xl transition-all text-center cursor-pointer shadow-sm"
-                >
-                  Faire un Don
-                </button>
+                >{t("Faire un Don")}</button>
                 <button
                   onClick={handleGoToFullDonation}
                   className="w-full bg-white hover:bg-slate-50 border border-[#c2d7da] text-[#0e4b50] text-xs tracking-wider uppercase font-bold py-3.5 rounded-xl transition-all text-center cursor-pointer shadow-sm"
-                >
-                  Modes de paiement
-                </button>
+                >{t("Modes de paiement")}</button>
               </div>
 
             </div>
@@ -613,14 +444,12 @@ export default function RenovationView() {
           <div className="max-w-3xl space-y-4 text-left">
             <div className="inline-flex items-center gap-2 text-[#C11616] text-xs tracking-[0.25em] uppercase font-bold">
               <Layers size={16} />
-              <span>Programme d’exécution · 4 chantiers prioritaires</span>
+              <span>Programme d'Exécution · {projects.length} Chantier{projects.length > 1 ? 's' : ''} Prioritaire{projects.length > 1 ? 's' : ''}</span>
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#0c282b] font-light tracking-tight leading-tight">
-              Quatre projets pour sauvegarder la mosquée
+              {enLettres(projects.length)} Projet{projects.length > 1 ? 's' : ''} pour Sauvegarder la Mosquée
             </h2>
-            <p className="text-lg md:text-xl text-[#39575a] leading-relaxed">
-              « Votre contribution servira à financer un ensemble de projets de rénovation de la mosquée. Chaque projet fait l’objet d’un devis technique rigoureux et peut être financé et exécuté individuellement. »
-            </p>
+            <p className="text-lg md:text-xl text-[#39575a] leading-relaxed">{t("« Votre contribution servira à financer un ensemble de projets de rénovation de la mosquée. » Chaque projet fait l’objet d’un devis technique rigoureux et peut être financé individuellement.")}</p>
           </div>
 
           {/* Grille des 4 projets avec images illustratives */}
@@ -635,11 +464,22 @@ export default function RenovationView() {
                   <div>
                     {/* Image illustrative du projet */}
                     <div className="relative h-60 sm:h-72 w-full overflow-hidden bg-slate-100">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter contrast-[1.05]"
-                      />
+                      {project.image ? (
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter contrast-[1.05]"
+                        />
+                      ) : (
+                        // Chantier sans photo : aplat aux couleurs du projet
+                        // plutôt qu'un cadre vide au milieu de la grille.
+                        <div
+                          className="w-full h-full flex items-center justify-center"
+                          style={{ backgroundColor: `${project.color}14` }}
+                        >
+                          <project.icon size={52} style={{ color: project.color, opacity: 0.45 }} />
+                        </div>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                       
                       {/* Badge Projet & Code */}
@@ -657,9 +497,7 @@ export default function RenovationView() {
 
                       {/* Devis Officiel */}
                       <div className="absolute bottom-4 right-4 text-right bg-white/95 backdrop-blur-sm border border-slate-200 py-1.5 px-4 rounded-xl shadow-lg">
-                        <span className="text-[9px] uppercase tracking-wider text-[#557275] block font-bold">
-                          Estimation du Chantier
-                        </span>
+                        <span className="text-[9px] uppercase tracking-wider text-[#557275] block font-bold">{t("Estimation du Chantier")}</span>
                         <span className="font-mono text-xl sm:text-2xl font-extrabold text-[#0c282b]">
                           {project.formattedEstimate}
                         </span>
@@ -686,9 +524,7 @@ export default function RenovationView() {
 
                       {/* Liste exacte des travaux de la brochure */}
                       <div className="bg-white border border-[#e2e8f0] rounded-2xl p-5 space-y-2.5 shadow-sm">
-                        <span className="text-xs text-[#0e4b50] uppercase tracking-wider font-bold block">
-                          Les Travaux Prévus :
-                        </span>
+                        <span className="text-xs text-[#0e4b50] uppercase tracking-wider font-bold block">{t("Les Travaux Prévus :")}</span>
                         <ul className="space-y-2 text-sm text-[#243e41]">
                           {project.works.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-2.5">
@@ -705,8 +541,8 @@ export default function RenovationView() {
                   <div className="p-7 sm:p-8 pt-0">
                     <div className="border-t border-[#e2e8f0] pt-4 space-y-3">
                       <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-[#557275]">Progression du financement :</span>
-                        <strong className="text-[#0c282b] font-bold">{project.progress}% (0 FCFA)</strong>
+                        <span className="text-[#557275]">{t("Progression du financement :")}</span>
+                        <strong className="text-[#0c282b] font-bold">{project.progress}% ({montant(project.collected, devise)})</strong>
                       </div>
                       <div className="w-full h-2 bg-[#e2e8f0] rounded-full overflow-hidden">
                         <div 
@@ -736,22 +572,14 @@ export default function RenovationView() {
           {/* Bannière de récapitulation globale */}
           <div className="bg-[#f0f5f6] border-2 border-[#b8d4d7] rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row justify-between items-center gap-6 text-left shadow-sm">
             <div className="space-y-2">
-              <span className="text-xs text-[#C11616] uppercase tracking-widest font-bold block">
-                Totalité des 4 Projets de la Brochure
-              </span>
-              <h4 className="text-2xl sm:text-3xl text-[#0c282b] font-medium">
-                200.000.000 FCFA pour la sauvegarde complète
-              </h4>
-              <p className="text-base text-[#446265]">
-                Vous pouvez affecter votre don à l'un des 4 chantiers ou au fonds global de sauvegarde du patrimoine.
-              </p>
+              <span className="text-xs text-[#C11616] uppercase tracking-widest font-bold block">{t("Totalité des 4 Projets de la Brochure")}</span>
+              <h4 className="text-2xl sm:text-3xl text-[#0c282b] font-medium">{t("200.000.000 FCFA pour la sauvegarde complète")}</h4>
+              <p className="text-base text-[#446265]">{t("Vous pouvez affecter votre don à l'un des 4 chantiers ou au fonds global de sauvegarde du patrimoine.")}</p>
             </div>
             <button
               onClick={handleGoToFullDonation}
               className="bg-[#C11616] hover:bg-[#a61313] text-white text-xs tracking-[0.2em] uppercase font-bold py-4 px-8 rounded-xl transition-all shrink-0 cursor-pointer shadow-md hover:shadow-lg"
-            >
-              Participer Maintenant
-            </button>
+            >{t("Participer Maintenant")}</button>
           </div>
 
         </div>
@@ -775,12 +603,8 @@ export default function RenovationView() {
               <Users size={16} className="text-[#f1c11c]" />
               <span>Gouvernance &amp; Exécution des Travaux</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl text-white font-light tracking-tight leading-tight">
-              Responsables des travaux de rénovation
-            </h2>
-            <p className="text-lg md:text-xl text-[#d0e5e7] leading-relaxed">
-              La conduite, l’engagement financier et la responsabilité technique du présent chantier sont assurés collégialement par les trois responsables en activité ci-dessous.
-            </p>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl text-white font-light tracking-tight leading-tight">{t("Responsables des Travaux de Rénovation")}</h2>
+            <p className="text-lg md:text-xl text-[#d0e5e7] leading-relaxed">{t("La conduite, l'engagement financier et la responsabilité technique du présent chantier sont assurés collégialement par les trois responsables en activité ci-dessous.")}</p>
           </div>
 
           {/* Les 3 Responsables Actuels présentés avec PHOTO EN CERCLE */}
@@ -795,15 +619,20 @@ export default function RenovationView() {
                   {/* Photo en cercle */}
                   <div className="relative">
                     <div className="renovation-leader-avatar w-36 h-36 sm:w-40 sm:h-40 rounded-full ring-4 ring-[#0e4b50] shadow-xl overflow-hidden bg-slate-100">
-                      <img
-                        src={leader.image}
-                        alt={leader.name}
-                        className="w-full h-full rounded-full object-cover filter contrast-[1.05]"
-                      />
+                      {leader.image ? (
+                        <img
+                          src={leader.image}
+                          alt={leader.name}
+                          className="w-full h-full rounded-full object-cover filter contrast-[1.05]"
+                        />
+                      ) : (
+                        // Initiales tant que le portrait n'est pas téléversé.
+                        <div className="w-full h-full flex items-center justify-center bg-[#0e4b50] text-white text-3xl font-light">
+                          {(leader.name || '?').trim().charAt(0).toUpperCase()}
+                        </div>
+                      )}
                     </div>
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#0e4b50] text-white text-[9px] uppercase tracking-wider font-bold py-1 px-3.5 rounded-full shadow-md whitespace-nowrap border border-white/30">
-                      Responsable Actif
-                    </span>
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#0e4b50] text-white text-[9px] uppercase tracking-wider font-bold py-1 px-3.5 rounded-full shadow-md whitespace-nowrap border border-white/30">{t("Responsable Actif")}</span>
                   </div>
 
                   <div className="pt-2 space-y-1">
@@ -826,7 +655,7 @@ export default function RenovationView() {
 
                 <div className="pt-4 border-t border-[#e2e8f0] flex items-center justify-center gap-2 text-xs text-[#0e4b50] font-bold tracking-wider">
                   <ShieldCheck size={16} className="text-[#C11616]" />
-                  <span>Comité Directeur du Chantier</span>
+                  <span>{t("Comité Directeur du Chantier")}</span>
                 </div>
               </div>
             ))}
@@ -844,9 +673,7 @@ export default function RenovationView() {
               <h4 className="text-xl text-white font-medium">
                 Feu Mouhamed Seyni Gueye (Sanga bi, 1926-2007)
               </h4>
-              <p className="text-sm text-[#d4ebea] leading-relaxed italic">
-                Bâtisseur originel de la Mosquée de la Divinité en 1992, rappelé à Dieu. Ce grand chantier perpétue sa vision sacrée sous la responsabilité exclusive du khalife Mouhamed Naby Gueye, du président des travaux Ababacar Sadikh Ndoye et du responsable communication Cheikh Ahmet Tidiane Gueye.
-              </p>
+              <p className="text-sm text-[#d4ebea] leading-relaxed italic">{t("Bâtisseur originel de la Mosquée de la Divinité en 1992, rappelé à Dieu. Ce grand chantier perpétue sa vision sacrée sous la responsabilité exclusive du Khalife Mouhamed Naby Gueye, du Président des Travaux Ababacar Sadikh Ndoye et du Responsable Communication Cheikh Ahmet Tidiane Gueye.")}</p>
             </div>
           </div>
 
@@ -862,146 +689,92 @@ export default function RenovationView() {
           <div className="max-w-3xl space-y-4 text-left">
             <div className="inline-flex items-center gap-2 text-[#C11616] text-xs tracking-[0.25em] uppercase font-bold">
               <CheckCircle2 size={16} />
-              <span>Modalités Officielles de Contribution</span>
+              <span>{t("Modalités Officielles de Contribution")}</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#0c282b] font-light tracking-tight leading-tight">
-              Comment participer ?
-            </h2>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#0c282b] font-light tracking-tight leading-tight">{t("Comment Participer ?")}</h2>
             <p className="text-lg md:text-xl text-[#39575a] leading-relaxed">
-              Pour que chaque fidèle et bienfaiteur puisse apporter sa pierre à l’édifice selon ses moyens, quatre voies sécurisées et directes sont ouvertes.
+              Pour que chaque fidèle et bienfaiteur puisse apporter sa pierre à l'édifice selon ses moyens,{' '}
+              {(contenu?.moyensPaiement || []).length > 1
+                ? `${enLettres((contenu?.moyensPaiement || []).length).toLowerCase()} voies sécurisées et directes sont ouvertes.`
+                : 'une voie sécurisée et directe est ouverte.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
-            
-            {/* 1. PAMECAS */}
-            <div className="bg-[#fafbfc] border border-[#d6e3e5] rounded-3xl p-6 sm:p-7 space-y-4 flex flex-col justify-between hover:border-[#0e4b50] hover:shadow-lg transition-all">
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#0e4b50] text-white flex items-center justify-center font-bold shadow-sm">
-                  <Building size={22} />
-                </div>
-                <span className="text-[10px] text-[#0e4b50] uppercase tracking-widest font-bold block">
-                  Virement / Versement Bancaire
-                </span>
-                <h3 className="text-2xl text-[#0c282b] font-medium">
-                  Compte PAMECAS
-                </h3>
-                <p className="text-sm text-[#446265]">
-                  Compte officiel ouvert auprès de l'institution financière PAMECAS.
-                </p>
-                <div className="bg-white p-3 rounded-xl border border-[#d6e3e5] font-mono text-sm text-[#0c282b] flex justify-between items-center shadow-sm">
-                  <span className="font-bold">123-456-7890</span>
-                  <button 
-                    onClick={() => copyToClipboard('123-456-7890', 'pamecas')}
-                    className="text-[#0e4b50] hover:text-[#C11616] transition-colors p-1"
-                    title="Copier le numéro"
+          {/* Colonnes calées sur le nombre de cartes : une grille en 4
+              colonnes avec deux moyens laisserait la moitié du bloc vide. */}
+          <div
+            className={`grid grid-cols-1 gap-6 text-left ${
+              (contenu?.moyensPaiement || []).length >= 4
+                ? 'sm:grid-cols-2 lg:grid-cols-4'
+                : (contenu?.moyensPaiement || []).length === 3
+                ? 'sm:grid-cols-2 lg:grid-cols-3'
+                : 'sm:grid-cols-2'
+            }`}
+          >
+
+            {/* Moyens de contribution : saisis dans le dashboard, numéros
+                compris. Une carte sans numéro n'affiche pas de bloc vide. */}
+            {(contenu?.moyensPaiement || []).map((moyen) => {
+              const accent = moyen.couleur || '#0e4b50';
+              const estNature = moyen.typeAction === 'nature';
+              const logo = urlMedia(moyen.logo);
+
+              return (
+                <div
+                  key={moyen.id}
+                  className="bg-[#fafbfc] border rounded-3xl p-6 sm:p-7 space-y-4 flex flex-col justify-between hover:shadow-lg transition-all"
+                  style={{ borderColor: `${accent}33` }}
+                >
+                  <div className="space-y-3">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shadow-sm"
+                      style={{ backgroundColor: logo ? '#ffffff' : accent }}
+                    >
+                      {logo ? (
+                        <img src={logo} alt={moyen.nom} className="w-full h-full object-contain p-1.5" />
+                      ) : estNature ? (
+                        <PackageCheck size={22} className="text-white" />
+                      ) : (
+                        <Building size={22} className="text-white" />
+                      )}
+                    </div>
+
+                    {moyen.categorie && (
+                      <span className="text-[10px] uppercase tracking-widest font-bold block" style={{ color: accent }}>
+                        {moyen.categorie}
+                      </span>
+                    )}
+
+                    <h3 className="text-2xl text-[#0c282b] font-medium">{moyen.nom}</h3>
+
+                    {moyen.description && (
+                      <p className="text-sm text-[#446265]">{moyen.description}</p>
+                    )}
+
+                    {moyen.numero && (
+                      <div className="bg-white p-3 rounded-xl border border-[#d6e3e5] font-mono text-sm text-[#0c282b] flex justify-between items-center shadow-sm">
+                        <span className="font-bold">{moyen.numero}</span>
+                        <button
+                          onClick={() => copyToClipboard(moyen.numero)}
+                          className="text-[#0e4b50] hover:text-[#C11616] transition-colors p-1"
+                          title={t("Copier le numéro")}
+                        >
+                          <Copy size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={estNature ? () => setNatureModalOpen(true) : handleGoToFullDonation}
+                    className="w-full text-white text-[10px] uppercase tracking-wider font-bold py-3 rounded-xl transition-opacity hover:opacity-90 text-center cursor-pointer shadow-sm"
+                    style={{ backgroundColor: accent }}
                   >
-                    <Copy size={16} />
+                    {moyen.libelleBouton || 'Contribuer'}
                   </button>
                 </div>
-              </div>
-              <button
-                onClick={handleGoToFullDonation}
-                className="w-full bg-[#0e4b50] hover:bg-[#082a2d] text-white text-[10px] uppercase tracking-wider font-bold py-3 rounded-xl transition-colors text-center cursor-pointer"
-              >
-                Détails du compte
-              </button>
-            </div>
-
-            {/* 2. WAVE */}
-            <div className="bg-[#fafbfc] border border-[#bce0e4] rounded-3xl p-6 sm:p-7 space-y-4 flex flex-col justify-between hover:border-[#1dc3d6] hover:shadow-lg transition-all">
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#0094a8] text-white flex items-center justify-center font-bold text-xl shadow-sm">
-                  🌊
-                </div>
-                <span className="text-[10px] text-[#0094a8] uppercase tracking-widest font-bold block">
-                  Mobile Money Direct
-                </span>
-                <h3 className="text-2xl text-[#0c282b] font-medium">
-                  Wave Sénégal
-                </h3>
-                <p className="text-sm text-[#446265]">
-                  Transfert instantané sans frais via l'application Wave.
-                </p>
-                <div className="bg-white p-3 rounded-xl border border-[#bce0e4] font-mono text-sm text-[#0c282b] flex justify-between items-center shadow-sm">
-                  <span className="font-bold">123-456-7890</span>
-                  <button 
-                    onClick={() => copyToClipboard('123-456-7890', 'wave')}
-                    className="text-[#0094a8] hover:text-[#0c282b] transition-colors p-1"
-                    title="Copier le numéro"
-                  >
-                    <Copy size={16} />
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={handleGoToFullDonation}
-                className="w-full bg-[#0094a8] hover:bg-[#007b8c] text-white text-[10px] uppercase tracking-wider font-bold py-3 rounded-xl transition-colors text-center cursor-pointer shadow-sm"
-              >
-                Payer avec Wave
-              </button>
-            </div>
-
-            {/* 3. ORANGE MONEY */}
-            <div className="bg-[#fafbfc] border border-[#fed7aa] rounded-3xl p-6 sm:p-7 space-y-4 flex flex-col justify-between hover:border-[#f97316] hover:shadow-lg transition-all">
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#f97316] text-white flex items-center justify-center font-bold text-xl shadow-sm">
-                  🟠
-                </div>
-                <span className="text-[10px] text-[#ea580c] uppercase tracking-widest font-bold block">
-                  Paiement &amp; USSD (*144#)
-                </span>
-                <h3 className="text-2xl text-[#0c282b] font-medium">
-                  Orange Money
-                </h3>
-                <p className="text-sm text-[#446265]">
-                  Transfert marchand ou validation rapide par code USSD.
-                </p>
-                <div className="bg-white p-3 rounded-xl border border-[#fed7aa] font-mono text-sm text-[#0c282b] flex justify-between items-center shadow-sm">
-                  <span className="font-bold">123-456-7890</span>
-                  <button 
-                    onClick={() => copyToClipboard('123-456-7890', 'om')}
-                    className="text-[#f97316] hover:text-[#0c282b] transition-colors p-1"
-                    title="Copier le numéro"
-                  >
-                    <Copy size={16} />
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={handleGoToFullDonation}
-                className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white text-[10px] uppercase tracking-wider font-bold py-3 rounded-xl transition-colors text-center cursor-pointer shadow-sm"
-              >
-                Payer Orange Money
-              </button>
-            </div>
-
-            {/* 4. DON EN NATURE */}
-            <div className="bg-[#fafbfc] border border-[#f5c6c6] rounded-3xl p-6 sm:p-7 space-y-4 flex flex-col justify-between hover:border-[#C11616] hover:shadow-lg transition-all">
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#C11616] text-white flex items-center justify-center font-bold shadow-sm">
-                  <PackageCheck size={22} />
-                </div>
-                <span className="text-[10px] text-[#C11616] uppercase tracking-widest font-bold block">
-                  Matériaux &amp; Équipements
-                </span>
-                <h3 className="text-2xl text-[#0c282b] font-medium">
-                  Don en Nature
-                </h3>
-                <p className="text-sm text-[#446265]">
-                  Ciment marin, fer, sanitaires, câbles solaires, sonorisation.
-                </p>
-                <div className="bg-white p-3 rounded-xl border border-[#f5c6c6] text-xs text-[#C11616] font-bold shadow-sm">
-                  Commission Logistique
-                </div>
-              </div>
-              <button
-                onClick={() => setNatureModalOpen(true)}
-                className="w-full bg-[#C11616] hover:bg-[#a61313] text-white text-[10px] uppercase tracking-wider font-bold py-3 rounded-xl transition-colors text-center cursor-pointer shadow-sm"
-              >
-                Donner des Matériaux
-              </button>
-            </div>
+              );
+            })}
 
           </div>
 
@@ -1011,9 +784,7 @@ export default function RenovationView() {
               <span className="text-xs text-[#0e4b50] uppercase font-bold tracking-wider block">
                 Site Web Officiel &amp; Suivi en Ligne
               </span>
-              <p className="text-base text-[#3d595c]">
-                Pour consulter en toute transparence l'état d'avancement des devis et travaux :
-              </p>
+              <p className="text-base text-[#3d595c]">{t("Pour consulter en toute transparence l'état d'avancement des devis et travaux :")}</p>
             </div>
             <a
               href="https://www.mosqueedeladivinite.org"
@@ -1037,34 +808,24 @@ export default function RenovationView() {
           
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-[#b8d4d7] shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-[#C11616] animate-pulse" />
-            <span className="text-xs tracking-[0.25em] text-[#0e4b50] uppercase font-bold">
-              FI SABILILAH · Appel Solennel
-            </span>
+            <span className="text-xs tracking-[0.25em] text-[#0e4b50] uppercase font-bold">{t("FI SABILILAH · Appel Solennel")}</span>
           </div>
 
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-light text-[#0c282b] leading-tight">
-            Soutenez la <span className="text-[#C11616] italic font-normal">Maison de Dieu</span>
+          <h2 className="text-4xl sm:text-6xl md:text-7xl font-light text-[#0c282b] leading-tight">{t("Soutenez la")}<span className="text-[#C11616] italic font-normal">{t("Maison de Dieu")}</span>
           </h2>
 
-          <p className="text-xl sm:text-2xl text-[#39575a] max-w-2xl mx-auto leading-relaxed">
-            « Quiconque construit ou répare une mosquée pour Allah, Allah lui construira une demeure au Paradis. »
-            Unissons nos forces pour que ce sanctuaire rayonne face à l’Océan pour les siècles à venir.
-          </p>
+          <p className="text-xl sm:text-2xl text-[#39575a] max-w-2xl mx-auto leading-relaxed">{t("« Quiconque construit ou répare une mosquée pour Allah, Allah lui construira une demeure au Paradis. » Unissons nos forces pour que ce sanctuaire rayonne face à l’Océan pour les siècles à venir.")}</p>
 
           <div className="pt-4 flex flex-wrap items-center justify-center gap-5">
             <button
               onClick={handleGoToFullDonation}
               className="bg-[#C11616] hover:bg-[#a61313] text-white text-sm sm:text-base tracking-[0.2em] uppercase font-bold py-5 px-10 rounded-2xl transition-all shadow-xl hover:shadow-2xl cursor-pointer"
-            >
-              JE FAIS UN DON IMMÉDIAT
-            </button>
+            >{t("JE FAIS UN DON IMMÉDIAT")}</button>
 
             <button
               onClick={() => setNatureModalOpen(true)}
               className="bg-white hover:bg-[#f0f5f6] border-2 border-[#0e4b50] text-[#0e4b50] text-xs sm:text-sm tracking-[0.2em] uppercase font-bold py-5 px-8 rounded-2xl transition-all cursor-pointer shadow-md"
-            >
-              Proposer un don matériel
-            </button>
+            >{t("Proposer un don matériel")}</button>
           </div>
 
         </div>
@@ -1084,9 +845,7 @@ export default function RenovationView() {
             >
               <div className="flex justify-between items-center border-b border-[#e2e8f0] pb-4">
                 <div>
-                  <span className="text-[10px] text-[#C11616] uppercase tracking-widest font-bold block">
-                    Mosquée de la Divinité · Les Grands Travaux
-                  </span>
+                  <span className="text-[10px] text-[#C11616] uppercase tracking-widest font-bold block">{t("Mosquée de la Divinité · Les Grands Travaux")}</span>
                   <h3 className="text-2xl sm:text-3xl text-[#0c282b] font-medium">
                     Faire un Don (Fi Sabililah)
                   </h3>
@@ -1104,19 +863,13 @@ export default function RenovationView() {
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
                     <CheckCircle2 size={36} />
                   </div>
-                  <h4 className="text-3xl text-[#0c282b] font-bold">
-                    Votre don a été pris en compte
-                  </h4>
-                  <p className="text-base text-[#3d595c]">
-                    Qu'Allah vous comble de Ses grâces et bénisse votre geste pour la Maison de Dieu.
-                  </p>
+                  <h4 className="text-3xl text-[#0c282b] font-bold">{t("Votre don a été pris en compte")}</h4>
+                  <p className="text-base text-[#3d595c]">{t("Qu'Allah vous comble de Ses grâces et bénisse votre geste pour la Maison de Dieu.")}</p>
                 </div>
               ) : (
                 <form onSubmit={handleDonationSubmit} className="space-y-5">
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Affectation de votre don
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Affectation de votre don")}</label>
                     <select
                       value={targetedProject}
                       onChange={(e) => setTargetedProject(e.target.value)}
@@ -1131,9 +884,7 @@ export default function RenovationView() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Montant du Don
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Montant du Don")}</label>
                     <div className="grid grid-cols-3 gap-2">
                       {[10000, 25000, 50000, 100000, 250000].map(amt => (
                         <button
@@ -1157,9 +908,7 @@ export default function RenovationView() {
                             ? 'bg-[#0e4b50] border-[#0e4b50] text-white shadow-sm'
                             : 'bg-[#f8fafb] border-[#d6e3e5] text-[#3d595c] hover:border-[#0e4b50]'
                         }`}
-                      >
-                        Autre
-                      </button>
+                      >{t("Autre")}</button>
                     </div>
 
                     {donationAmount === 'custom' && (
@@ -1169,7 +918,7 @@ export default function RenovationView() {
                         step="1000"
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        placeholder="Montant libre en FCFA"
+                        placeholder={t("Montant libre en FCFA")}
                         className="w-full bg-[#f8fafb] border border-[#0e4b50] rounded-xl p-3 text-[#0c282b] text-sm focus:outline-none font-mono mt-2"
                       />
                     )}
@@ -1187,15 +936,13 @@ export default function RenovationView() {
                       type="tel"
                       value={donorPhone}
                       onChange={(e) => setDonorPhone(e.target.value)}
-                      placeholder="Téléphone mobile"
+                      placeholder={t("Téléphone mobile")}
                       className="w-full bg-[#f8fafb] border border-[#c2d7da] rounded-xl p-3 text-sm text-[#0c282b] focus:outline-none font-mono"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Opérateur de Paiement
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Opérateur de Paiement")}</label>
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         type="button"
@@ -1239,7 +986,7 @@ export default function RenovationView() {
                       className="w-full bg-[#C11616] hover:bg-[#a61313] text-white text-xs tracking-widest uppercase font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
                     >
                       <Heart size={16} fill="currentColor" />
-                      <span>Confirmer mon Don</span>
+                      <span>{t("Confirmer mon Don")}</span>
                     </button>
                   </div>
                 </form>
@@ -1263,12 +1010,8 @@ export default function RenovationView() {
             >
               <div className="flex justify-between items-center border-b border-[#e2e8f0] pb-4">
                 <div>
-                  <span className="text-[10px] text-[#C11616] uppercase tracking-widest font-bold block">
-                    Commission Logistique des Travaux
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl text-[#0c282b] font-medium">
-                    Proposer un Don en Nature
-                  </h3>
+                  <span className="text-[10px] text-[#C11616] uppercase tracking-widest font-bold block">{t("Commission Logistique des Travaux")}</span>
+                  <h3 className="text-2xl sm:text-3xl text-[#0c282b] font-medium">{t("Proposer un Don en Nature")}</h3>
                 </div>
                 <button
                   onClick={() => setNatureModalOpen(false)}
@@ -1283,19 +1026,13 @@ export default function RenovationView() {
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
                     <CheckCircle2 size={36} />
                   </div>
-                  <h4 className="text-3xl text-[#0c282b] font-bold">
-                    Proposition Enregistrée
-                  </h4>
-                  <p className="text-base text-[#3d595c]">
-                    La commission des travaux vous contactera sous peu pour organiser la logistique sur le site de la mosquée.
-                  </p>
+                  <h4 className="text-3xl text-[#0c282b] font-bold">{t("Proposition Enregistrée")}</h4>
+                  <p className="text-base text-[#3d595c]">{t("La commission des travaux vous contactera sous peu pour organiser la logistique sur le site de la mosquée.")}</p>
                 </div>
               ) : (
                 <form onSubmit={handleNatureSubmit} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Type de Matériau ou Service
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Type de Matériau ou Service")}</label>
                     <select
                       value={natureItemType}
                       onChange={(e) => setNatureItemType(e.target.value)}
@@ -1305,32 +1042,28 @@ export default function RenovationView() {
                       <option value="sanitaires">Sanitaires, carrelage & plomberie (Projet B)</option>
                       <option value="solaire_elec">Panneaux solaires & câblage électrique (Projet C)</option>
                       <option value="sonorisation">Équipements audio, micros & enceintes (Projet D)</option>
-                      <option value="expertise">Expertise en ingénierie ou main-d'œuvre qualifiée</option>
+                      <option value="expertise">{t("Expertise en ingénierie ou main-d'œuvre qualifiée")}</option>
                     </select>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Description du don et quantités
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Description du don et quantités")}</label>
                     <textarea
                       rows={3}
                       value={natureDescription}
                       onChange={(e) => setNatureDescription(e.target.value)}
-                      placeholder="Ex: 50 sacs de ciment marin, 20 barres de fer 12mm, ou fourniture de 4 panneaux solaires..."
+                      placeholder={t("Ex: 50 sacs de ciment marin, 20 barres de fer 12mm, ou fourniture de 4 panneaux solaires...")}
                       className="w-full bg-[#f8fafb] border border-[#c2d7da] rounded-xl p-3 text-sm text-[#0c282b] focus:outline-none"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">
-                      Vos coordonnées complètes
-                    </label>
+                    <label className="text-xs text-[#0c282b] uppercase tracking-wider font-bold block">{t("Vos coordonnées complètes")}</label>
                     <input
                       type="text"
                       value={natureContact}
                       onChange={(e) => setNatureContact(e.target.value)}
-                      placeholder="Nom complet, téléphone et ville"
+                      placeholder={t("Nom complet, téléphone et ville")}
                       className="w-full bg-[#f8fafb] border border-[#c2d7da] rounded-xl p-3 text-sm text-[#0c282b] focus:outline-none"
                     />
                   </div>
@@ -1338,9 +1071,7 @@ export default function RenovationView() {
                   <button
                     type="submit"
                     className="w-full bg-[#0e4b50] hover:bg-[#082a2d] text-white text-xs tracking-widest uppercase font-bold py-4 rounded-xl transition-all cursor-pointer shadow-md mt-2"
-                  >
-                    Transmettre ma Proposition de Don
-                  </button>
+                  >{t("Transmettre ma Proposition de Don")}</button>
                 </form>
               )}
             </motion.div>

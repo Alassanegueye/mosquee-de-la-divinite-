@@ -1,6 +1,7 @@
 // src/pages/PaiementDon.jsx
 import { useState, useEffect } from 'react';
 import '../assets/css/PaiementDon.css';
+import { chargerRenovation, urlMedia } from '../service/api';
 import QRCode from 'qrcode';
 import { 
   Building2, 
@@ -16,6 +17,30 @@ import {
 export default function PaiementDon() {
   const [activeTab, setActiveTab] = useState('mobile'); // 'mobile' | 'virement'
   const [operator, setOperator] = useState('wave'); // 'wave' | 'om'
+
+  // Logos des opérateurs : gérés au dashboard, comme ceux de la page
+  // rénovation. Une seule source pour les deux écrans, sinon les visuels
+  // finissent par diverger.
+  const [logos, setLogos] = useState({ wave: null, om: null });
+
+  useEffect(() => {
+    let annule = false;
+    chargerRenovation()
+      .then((donnees) => {
+        if (annule) return;
+        const moyens = donnees?.moyensPaiement || [];
+        const trouver = (motif) =>
+          moyens.find((m) => new RegExp(motif, 'i').test(m.nom))?.logo || null;
+        setLogos({ wave: urlMedia(trouver('wave')), om: urlMedia(trouver('orange')) });
+      })
+      .catch(() => {
+        // Repli sur les pastilles lettrées : la page de don doit rester
+        // utilisable même si les visuels sont injoignables.
+      });
+    return () => {
+      annule = true;
+    };
+  }, []);
   const [selectedAmount, setSelectedAmount] = useState(15000);
   const [customAmount, setCustomAmount] = useState('');
   const [donorName, setDonorName] = useState('');
@@ -151,7 +176,12 @@ export default function PaiementDon() {
                         : 'bg-[#121414] border-white/10 hover:border-white/20'
                     }`}
                   >
-                    <span className="payment-brand payment-brand-wave" aria-hidden="true">W</span>
+                    <span
+                      className={`payment-brand payment-brand-wave${logos.wave ? ' payment-brand--image' : ''}`}
+                      aria-hidden="true"
+                    >
+                      {logos.wave ? <img src={logos.wave} alt="" /> : 'W'}
+                    </span>
                     <p className="payment-brand-name payment-brand-name-wave">Wave Sénégal</p>
                     <p className="payment-brand-description">Lien direct &amp; QR Code</p>
                   </button>
@@ -165,7 +195,12 @@ export default function PaiementDon() {
                         : 'bg-[#121414] border-white/10 hover:border-white/20'
                     }`}
                   >
-                    <span className="payment-brand payment-brand-orange" aria-hidden="true">OM</span>
+                    <span
+                      className={`payment-brand payment-brand-orange${logos.om ? ' payment-brand--image' : ''}`}
+                      aria-hidden="true"
+                    >
+                      {logos.om ? <img src={logos.om} alt="" /> : 'OM'}
+                    </span>
                     <p className="payment-brand-name payment-brand-name-orange">Orange Money</p>
                     <p className="payment-brand-description payment-brand-description-orange">Code marchand &amp; USSD</p>
                   </button>
@@ -261,8 +296,13 @@ export default function PaiementDon() {
               }`}>
                 <div className="flex justify-between items-center">
                   <h3 className="font-cinzel text-base font-bold flex items-center gap-2">
-                    <span className={`payment-brand payment-brand-small ${operator === 'wave' ? 'payment-brand-wave' : 'payment-brand-orange'}`} aria-hidden="true">
-                      {operator === 'wave' ? 'W' : 'OM'}
+                    <span
+                      className={`payment-brand payment-brand-small ${
+                        operator === 'wave' ? 'payment-brand-wave' : 'payment-brand-orange'
+                      }${logos[operator] ? ' payment-brand--image' : ''}`}
+                      aria-hidden="true"
+                    >
+                      {logos[operator] ? <img src={logos[operator]} alt="" /> : operator === 'wave' ? 'W' : 'OM'}
                     </span>
                     <span className={operator === 'wave' ? 'payment-brand-name-wave' : 'payment-brand-name-orange'}>
                       {operator === 'wave' ? 'Wave Sénégal' : 'Orange Money'}
