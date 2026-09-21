@@ -199,7 +199,7 @@ export default function RenovationView() {
   }));
 
   return (
-    <div id="grands-travaux-light-page" className="renovation-preview w-full bg-[#f8fafb] text-[#1c3336] selection:bg-[#C11616] selection:text-white min-h-screen">
+    <div id="grands-travaux-light-page" className="renovation-preview w-full bg-[#f8fafb] text-[#1c3336] selection:bg-[#C11616] selection:text-white">
 
       {/* Tant que les chiffres ne sont pas arrivés, un voile discret plutôt
           qu un objectif à 0 FCFA qui passerait pour la réalité de la collecte. */}
